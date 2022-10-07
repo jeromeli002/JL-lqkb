@@ -175,7 +175,9 @@ static bool encoder_update(uint8_t index, uint8_t state) {
             changed = true;
 #ifdef ENCODER_MAP_ENABLE
             encoder_exec_mapping(index, ENCODER_COUNTER_CLOCKWISE);
-#else  // ENCODER_MAP_ENABLE
+#elif defined(ENCODER_TRIGGER_ENABLE)
+        encoder_trigger(index, ENCODER_COUNTER_CLOCKWISE);
+#else
         encoder_update_kb(index, ENCODER_COUNTER_CLOCKWISE);
 #endif // ENCODER_MAP_ENABLE
         }
@@ -189,7 +191,9 @@ static bool encoder_update(uint8_t index, uint8_t state) {
             changed = true;
 #ifdef ENCODER_MAP_ENABLE
             encoder_exec_mapping(index, ENCODER_CLOCKWISE);
-#else  // ENCODER_MAP_ENABLE
+#elif defined(ENCODER_TRIGGER_ENABLE)
+        encoder_trigger(index, ENCODER_CLOCKWISE);
+#else
         encoder_update_kb(index, ENCODER_CLOCKWISE);
 #endif // ENCODER_MAP_ENABLE
         }

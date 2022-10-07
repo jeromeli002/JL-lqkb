@@ -29,6 +29,7 @@ enum hid_report_ids {
     REPORT_ID_MOUSE,
     REPORT_ID_SYSTEM,
     REPORT_ID_CONSUMER,
+    REPORT_ID_RADIAL,
     REPORT_ID_PROGRAMMABLE_BUTTON,
     REPORT_ID_NKRO,
     REPORT_ID_JOYSTICK,
@@ -42,7 +43,10 @@ enum mouse_buttons {
     MOUSE_BTN2 = (1 << 1),
     MOUSE_BTN3 = (1 << 2),
     MOUSE_BTN4 = (1 << 3),
-    MOUSE_BTN5 = (1 << 4)
+    MOUSE_BTN5 = (1 << 4),
+    MOUSE_BTN6 = (1 << 5),
+    MOUSE_BTN7 = (1 << 6),
+    MOUSE_BTN8 = (1 << 7)
 };
 
 /* Consumer Page (0x0C)
@@ -192,6 +196,11 @@ typedef struct {
     uint8_t  report_id;
     uint16_t usage;
 } __attribute__((packed)) report_extra_t;
+
+typedef struct {
+    uint8_t  report_id;
+    uint16_t usage;
+} __attribute__((packed)) report_radial_t;
 
 typedef struct {
     uint8_t  report_id;
