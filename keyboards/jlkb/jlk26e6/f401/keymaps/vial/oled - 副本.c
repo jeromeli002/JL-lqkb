@@ -95,7 +95,7 @@ switch (get_highest_layer(layer_state)) {
             oled_write_raw_P(music, sizeof(music));
             break;           
         case 10:
-            oled_write_raw_P(shezhi, sizeof(shezhi));
+            oled_write_raw_P(office, sizeof(office));
             break;           
         case 11:
             oled_write_raw_P(video, sizeof(video));
@@ -104,10 +104,10 @@ switch (get_highest_layer(layer_state)) {
             oled_write_raw_P(win, sizeof(win));
             break;           
         case 13:
-            oled_write_raw_P(apple, sizeof(apple));
+            oled_write_raw_P(excel, sizeof(excel));
             break;           
         case 14:
-            oled_write_raw_P(android, sizeof(android));
+            oled_write_raw_P(word, sizeof(word));
             break;           
         case 15:
             oled_write_raw_P(pronhub, sizeof(pronhub));
@@ -129,7 +129,7 @@ switch (get_highest_layer(layer_state)) {
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
-        return OLED_ROTATION_0;
+        return OLED_ROTATION_180;
     }
     return rotation;
 }
