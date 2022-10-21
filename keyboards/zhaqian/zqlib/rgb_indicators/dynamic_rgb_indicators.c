@@ -18,6 +18,41 @@
 #include <lib/lib8tion/lib8tion.h>
 #include "color.h"
 #include <stdlib.h>
+#include "eeprom.h"
+
+#ifdef DEFAULT_NUM_LOCK_ENABLE 
+#define DEFAULT_NUM_LOCK_ENABLE_VAL 1
+#else
+#define DEFAULT_NUM_LOCK_ENABLE_VAL 0
+#endif
+
+#ifdef DEFAULT_NUM_LOCK_ALL_LED
+#define DEFAULT_NUM_LOCK_ALL_LED_VAL 1
+#else
+#define DEFAULT_NUM_LOCK_ALL_LED_VAL 0
+#endif
+
+#ifdef DEFAULT_NUM_LOCK_KEY_LED
+#define DEFAULT_NUM_LOCK_KEY_LED_VAL 1
+#else
+#define DEFAULT_NUM_LOCK_KEY_LED_VAL 0
+#endif
+
+#ifdef DEFAULT_NUM_LOCK_UNDERGLOW_LED
+#define DEFAULT_NUM_LOCK_UNDERGLOW_LED_VAL 1
+#else
+#define DEFAULT_NUM_LOCK_UNDERGLOW_LED_VAL 0
+#endif
+
+#ifndef DEFAULT_NUM_LOCK_MODE
+#define DEFAULT_NUM_LOCK_MODE 1
+#endif
+
+#ifdef DEFAULT_NUM_LOCK_LOGO_LED
+#define DEFAULT_NUM_LOCK_LOGO_LED_VAL 1
+#else
+#define DEFAULT_NUM_LOCK_LOGO_LED_VAL 0
+#endif
 
 #ifndef DEFAULT_NUM_LOCK_LED
 #define DEFAULT_NUM_LOCK_LED 0
@@ -25,6 +60,40 @@
 
 #ifndef DEFAULT_NUM_LOCK_HSV
 #define DEFAULT_NUM_LOCK_HSV {240, 255, 200}
+#endif
+
+#ifdef DEFAULT_CAPS_LOCK_ENABLE 
+#define DEFAULT_CAPS_LOCK_ENABLE_VAL 1
+#else
+#define DEFAULT_CAPS_LOCK_ENABLE_VAL 0
+#endif
+
+#ifdef DEFAULT_CAPS_LOCK_ALL_LED
+#define DEFAULT_CAPS_LOCK_ALL_LED_VAL 1
+#else
+#define DEFAULT_CAPS_LOCK_ALL_LED_VAL 0
+#endif
+
+#ifdef DEFAULT_CAPS_LOCK_KEY_LED
+#define DEFAULT_CAPS_LOCK_KEY_LED_VAL 1
+#else
+#define DEFAULT_CAPS_LOCK_KEY_LED_VAL 0
+#endif
+
+#ifdef DEFAULT_CAPS_LOCK_UNDERGLOW_LED
+#define DEFAULT_CAPS_LOCK_UNDERGLOW_LED_VAL 1
+#else
+#define DEFAULT_CAPS_LOCK_UNDERGLOW_LED_VAL 0
+#endif
+
+#ifndef DEFAULT_CAPS_LOCK_MODE
+#define DEFAULT_CAPS_LOCK_MODE 1
+#endif
+
+#ifdef DEFAULT_CAPS_LOCK_LOGO_LED
+#define DEFAULT_CAPS_LOCK_LOGO_LED_VAL 1
+#else
+#define DEFAULT_CAPS_LOCK_LOGO_LED_VAL 0
 #endif
 
 #ifndef DEFAULT_CAPS_LOCK_LED
@@ -35,6 +104,40 @@
 #define DEFAULT_CAPS_LOCK_HSV {0, 255, 200}
 #endif
 
+#ifdef DEFAULT_SCROLL_LOCK_ENABLE 
+#define DEFAULT_SCROLL_LOCK_ENABLE_VAL 1
+#else
+#define DEFAULT_SCROLL_LOCK_ENABLE_VAL 0
+#endif
+
+#ifdef DEFAULT_SCROLL_LOCK_ALL_LED
+#define DEFAULT_SCROLL_LOCK_ALL_LED_VAL 1
+#else
+#define DEFAULT_SCROLL_LOCK_ALL_LED_VAL 0
+#endif
+
+#ifdef DEFAULT_SCROLL_LOCK_KEY_LED
+#define DEFAULT_SCROLL_LOCK_KEY_LED_VAL 1
+#else
+#define DEFAULT_SCROLL_LOCK_KEY_LED_VAL 0
+#endif
+
+#ifdef DEFAULT_SCROLL_LOCK_UNDERGLOW_LED
+#define DEFAULT_SCROLL_LOCK_UNDERGLOW_LED_VAL 1
+#else
+#define DEFAULT_SCROLL_LOCK_UNDERGLOW_LED_VAL 0
+#endif
+
+#ifndef DEFAULT_SCROLL_LOCK_MODE
+#define DEFAULT_SCROLL_LOCK_MODE 1
+#endif
+
+#ifdef DEFAULT_SCROLL_LOCK_LOGO_LED
+#define DEFAULT_SCROLL_LOCK_LOGO_LED_VAL 1
+#else
+#define DEFAULT_SCROLL_LOCK_LOGO_LED_VAL 0
+#endif
+
 #ifndef DEFAULT_SCROLL_LOCK_LED
 #define DEFAULT_SCROLL_LOCK_LED 2
 #endif
@@ -42,6 +145,7 @@
 #ifndef DEFAULT_SCROLL_LOCK_HSV
 #define DEFAULT_SCROLL_LOCK_HSV {120, 255, 200}
 #endif
+
 
 static const uint8_t rgb_indicators_effect_index[] = {
 // to enable mode step reverse (uint8_t >= 0)
@@ -71,7 +175,7 @@ static const uint8_t rgb_indicators_effect_index[] = {
 };
 
 static const uint8_t rgb_indicators_effect_num = sizeof(rgb_indicators_effect_index) / sizeof(uint8_t);
-static all_rgb_indicators_config_t rgb_indicators_config = {{1}, {1}, {1}};
+static all_rgb_indicators_config_t rgb_indicators_config = {{0}, {0}, {0}};
 static rgb_indicator_t rgb_indicators_state;
 
 #ifdef ENABLE_RGB_INDICATORS_RANDOM_ONCE
@@ -88,25 +192,38 @@ void update_dynamic_rgb_indicators(void) {
 
 static void update_dynamic_rgb_indicators_default(void) {
     HSV tmp_hsv[3] = {DEFAULT_NUM_LOCK_HSV, DEFAULT_CAPS_LOCK_HSV, DEFAULT_SCROLL_LOCK_HSV};
-    rgb_indicators_config.num_lock_config.enable = 1;
-    rgb_indicators_config.num_lock_config.all_led = 0;
-    rgb_indicators_config.num_lock_config.mode = 1;
+    rgb_indicators_config.num_lock_config.enable = DEFAULT_NUM_LOCK_ENABLE_VAL;
+    rgb_indicators_config.num_lock_config.all_led = DEFAULT_NUM_LOCK_ALL_LED_VAL;
+    rgb_indicators_config.num_lock_config.key_led = DEFAULT_NUM_LOCK_KEY_LED_VAL;
+    rgb_indicators_config.num_lock_config.underglow_led = DEFAULT_NUM_LOCK_UNDERGLOW_LED_VAL;
+    rgb_indicators_config.num_lock_config.logo_led = DEFAULT_NUM_LOCK_LOGO_LED_VAL;
+    rgb_indicators_config.num_lock_config.mode = DEFAULT_NUM_LOCK_MODE;
     rgb_indicators_config.num_lock_config.led = DEFAULT_NUM_LOCK_LED;
     rgb_indicators_config.num_lock_config.hsv = tmp_hsv[0];
 
-    rgb_indicators_config.caps_lock_config.enable = 1;
-    rgb_indicators_config.caps_lock_config.all_led = 0;
-    rgb_indicators_config.caps_lock_config.mode = 1;
+    rgb_indicators_config.caps_lock_config.enable = DEFAULT_CAPS_LOCK_ENABLE_VAL;
+    rgb_indicators_config.caps_lock_config.all_led = DEFAULT_CAPS_LOCK_ALL_LED_VAL;
+    rgb_indicators_config.caps_lock_config.key_led = DEFAULT_CAPS_LOCK_KEY_LED_VAL;
+    rgb_indicators_config.caps_lock_config.underglow_led = DEFAULT_CAPS_LOCK_UNDERGLOW_LED_VAL;
+    rgb_indicators_config.caps_lock_config.logo_led = DEFAULT_CAPS_LOCK_LOGO_LED_VAL;
+    rgb_indicators_config.caps_lock_config.mode = DEFAULT_CAPS_LOCK_MODE;
     rgb_indicators_config.caps_lock_config.led = DEFAULT_CAPS_LOCK_LED;
     rgb_indicators_config.caps_lock_config.hsv = tmp_hsv[1];
 
-    rgb_indicators_config.scroll_lock_config.enable = 1;
-    rgb_indicators_config.scroll_lock_config.all_led = 0;
-    rgb_indicators_config.scroll_lock_config.mode = 1;
+    rgb_indicators_config.scroll_lock_config.enable = DEFAULT_SCROLL_LOCK_ENABLE_VAL;
+    rgb_indicators_config.scroll_lock_config.all_led = DEFAULT_SCROLL_LOCK_ALL_LED_VAL;
+    rgb_indicators_config.scroll_lock_config.key_led = DEFAULT_SCROLL_LOCK_KEY_LED_VAL;
+    rgb_indicators_config.scroll_lock_config.underglow_led = DEFAULT_SCROLL_LOCK_UNDERGLOW_LED_VAL;
+    rgb_indicators_config.scroll_lock_config.logo_led = DEFAULT_SCROLL_LOCK_LOGO_LED_VAL;
+    rgb_indicators_config.scroll_lock_config.mode = DEFAULT_SCROLL_LOCK_MODE;
     rgb_indicators_config.scroll_lock_config.led = DEFAULT_SCROLL_LOCK_LED;
     rgb_indicators_config.scroll_lock_config.hsv = tmp_hsv[2];
 
     update_dynamic_rgb_indicators();
+}
+
+void via_init_kb(void) {
+    rgb_indicators_init();
 }
 
 void rgb_indicators_init(void) {
@@ -126,6 +243,16 @@ void rgb_indicators_state_update(void) {
 
 uint8_t is_rgb_indicators_enabled(void) {
     return (rgb_indicators_config.num_lock_config.enable || rgb_indicators_config.caps_lock_config.enable || rgb_indicators_config.scroll_lock_config.enable);
+}
+
+uint8_t is_rgb_indicator_enabled(uint8_t indicator) {
+    switch (indicator) {
+        case 0: return (rgb_indicators_config.num_lock_config.enable);
+        case 1: return (rgb_indicators_config.caps_lock_config.enable);
+        case 2: return (rgb_indicators_config.scroll_lock_config.enable);
+        default: break;
+    }
+    return 0;
 }
 
 uint8_t is_num_lock_enabled(void) {
@@ -242,7 +369,7 @@ void scroll_lock_indicator_mode_step(void) {
 void scroll_lock_indicator_mode_step_reverse(void) {
     if (rgb_matrix_is_enabled() && is_scroll_lock_enabled()) {
         uint8_t mod = rgb_indicators_config.scroll_lock_config.mode - 1;
-        rgb_indicators_config.scroll_lock_config.mode = mod < 1 ? rgb_indicators_effect_num  - 1 : mod;;
+        rgb_indicators_config.scroll_lock_config.mode = mod < 1 ? rgb_indicators_effect_num  - 1 : mod;
         update_dynamic_rgb_indicators();
     }
 }
@@ -274,6 +401,39 @@ void rgb_indicators_enable_all_led(uint8_t indicator, uint8_t enable, bool updat
         case 0: rgb_indicators_config.num_lock_config.all_led = enable; break;
         case 1: rgb_indicators_config.caps_lock_config.all_led = enable; break;
         case 2: rgb_indicators_config.scroll_lock_config.all_led = enable; break;
+        default: break;
+    }
+    if (update)
+        update_dynamic_rgb_indicators();
+}
+
+void rgb_indicators_enable_key_led(uint8_t indicator, uint8_t enable, bool update) {
+    switch (indicator) {
+        case 0: rgb_indicators_config.num_lock_config.key_led = enable; break;
+        case 1: rgb_indicators_config.caps_lock_config.key_led = enable; break;
+        case 2: rgb_indicators_config.scroll_lock_config.key_led = enable; break;
+        default: break;
+    }
+    if (update)
+        update_dynamic_rgb_indicators();
+}
+
+void rgb_indicators_enable_underglow_led(uint8_t indicator, uint8_t enable, bool update) {
+    switch (indicator) {
+        case 0: rgb_indicators_config.num_lock_config.underglow_led = enable; break;
+        case 1: rgb_indicators_config.caps_lock_config.underglow_led = enable; break;
+        case 2: rgb_indicators_config.scroll_lock_config.underglow_led = enable; break;
+        default: break;
+    }
+    if (update)
+        update_dynamic_rgb_indicators();
+}
+
+void rgb_indicators_enable_logo_led(uint8_t indicator, uint8_t enable, bool update) {
+    switch (indicator) {
+        case 0: rgb_indicators_config.num_lock_config.logo_led = enable; break;
+        case 1: rgb_indicators_config.caps_lock_config.logo_led = enable; break;
+        case 2: rgb_indicators_config.scroll_lock_config.logo_led = enable; break;
         default: break;
     }
     if (update)
@@ -328,11 +488,63 @@ void rgb_indicators_set_hsv(uint8_t indicator, uint8_t hue, uint8_t sat, uint8_t
         update_dynamic_rgb_indicators();
 }
 
+void rgb_indicators_set_val(uint8_t indicator, uint8_t val, bool update) {
+    switch (indicator) {
+        case 0: {
+            rgb_indicators_config.num_lock_config.hsv.v = val;
+            break;
+        }
+        case 1: {
+            rgb_indicators_config.caps_lock_config.hsv.v = val;
+            break;
+        }
+        case 2: {
+            rgb_indicators_config.scroll_lock_config.hsv.v = val;
+            break;
+        }
+        default: break;
+    }
+    if (update)
+        update_dynamic_rgb_indicators();
+}
+
+uint8_t rgb_indicators_get_multiple_led(uint8_t indicator) {
+    return rgb_indicators_get_all_led(indicator) || rgb_indicators_get_key_led(indicator) || \
+            rgb_indicators_get_underglow_led(indicator) || rgb_indicators_get_logo_led(indicator);
+}
+
 uint8_t rgb_indicators_get_all_led(uint8_t indicator) {
     switch (indicator) {
         case 0: return rgb_indicators_config.num_lock_config.all_led;
         case 1: return rgb_indicators_config.caps_lock_config.all_led;
         case 2: return rgb_indicators_config.scroll_lock_config.all_led;
+        default: return 0;
+    }
+}
+
+uint8_t rgb_indicators_get_key_led(uint8_t indicator) {
+    switch (indicator) {
+        case 0: return rgb_indicators_config.num_lock_config.key_led;
+        case 1: return rgb_indicators_config.caps_lock_config.key_led;
+        case 2: return rgb_indicators_config.scroll_lock_config.key_led;
+        default: return 0;
+    }
+}
+
+uint8_t rgb_indicators_get_underglow_led(uint8_t indicator) {
+    switch (indicator) {
+        case 0: return rgb_indicators_config.num_lock_config.underglow_led;
+        case 1: return rgb_indicators_config.caps_lock_config.underglow_led;
+        case 2: return rgb_indicators_config.scroll_lock_config.underglow_led;
+        default: return 0;
+    }
+}
+
+uint8_t rgb_indicators_get_logo_led(uint8_t indicator) {
+    switch (indicator) {
+        case 0: return rgb_indicators_config.num_lock_config.logo_led;
+        case 1: return rgb_indicators_config.caps_lock_config.logo_led;
+        case 2: return rgb_indicators_config.scroll_lock_config.logo_led;
         default: return 0;
     }
 }
@@ -391,13 +603,37 @@ HSV rgb_indicators_get_hsv(uint8_t indicator) {
     }
 }
 
+static void rgb_indicators_set_color_multiple(uint8_t indicator, RGB rgb) {
+    if (rgb_indicators_get_all_led(indicator) == 1) {
+        rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+    } else {
+        for (uint8_t i = 0; i < DRIVER_LED_TOTAL; i++) {
+            if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
+                if (rgb_indicators_get_underglow_led(indicator) == 1) {
+                    rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+                }
+#ifdef LOGO_RGB_CONTROL_ENABLE
+            } else if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_INDICATOR)) {
+                if (rgb_indicators_get_logo_led(indicator) == 1) {
+                    rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+                }
+#endif
+            } else {
+                if (rgb_indicators_get_key_led(indicator) == 1) {
+                    rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+                }
+            }
+        }
+    }
+}
+
 static void rgb_indicators_set_color(uint8_t indicator, HSV hsv) {
     switch (indicator) {
         case 0: {
             if (rgb_indicators_state.num_lock == 1) {
                 RGB rgb = hsv_to_rgb(hsv);
-                if (rgb_indicators_config.num_lock_config.all_led == 1)
-                    rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+                if (rgb_indicators_get_multiple_led(indicator) == 1)
+                    rgb_indicators_set_color_multiple(indicator, rgb);
                 else
                     rgb_matrix_set_color(rgb_indicators_config.num_lock_config.led, rgb.r, rgb.g, rgb.b);
             }
@@ -410,8 +646,8 @@ static void rgb_indicators_set_color(uint8_t indicator, HSV hsv) {
         case 1: {
             if (rgb_indicators_state.caps_lock == 1) {
                 RGB rgb = hsv_to_rgb(hsv);
-                if (rgb_indicators_config.caps_lock_config.all_led == 1)
-                    rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+                if (rgb_indicators_get_multiple_led(indicator) == 1)
+                    rgb_indicators_set_color_multiple(indicator, rgb);
                 else
                     rgb_matrix_set_color(rgb_indicators_config.caps_lock_config.led, rgb.r, rgb.g, rgb.b);
             }
@@ -424,8 +660,8 @@ static void rgb_indicators_set_color(uint8_t indicator, HSV hsv) {
         case 2: {
             if (rgb_indicators_state.scroll_lock == 1) {
                 RGB rgb = hsv_to_rgb(hsv);
-                if (rgb_indicators_config.scroll_lock_config.all_led == 1)
-                    rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+                if (rgb_indicators_get_multiple_led(indicator) == 1)
+                    rgb_indicators_set_color_multiple(indicator, rgb);
                 else
                     rgb_matrix_set_color(rgb_indicators_config.scroll_lock_config.led, rgb.r, rgb.g, rgb.b);
             }
@@ -462,7 +698,7 @@ static uint8_t hue_stepper[3] = {0};
 
 void rgb_indicators_cyclebreathing(uint8_t indicator) {
     HSV hsv = rgb_indicators_get_hsv(indicator);
-    uint16_t time = g_rgb_timer * (rgb_matrix_config.speed / 8) / 256;
+    uint16_t time = scale16by8(g_rgb_timer, rgb_matrix_config.speed / 8);
     hsv.v = scale8(abs8(sin8(time) - 128) * 2, hsv.v);
     if (is_breathing_lowest[indicator]){
         val_index[indicator] = hsv.v;

@@ -8,8 +8,8 @@ MCU_LDSCRIPT = f103
 BOARD = STM32_F103_STM32DUINO
 
 # Bootloader selection
-BOOTLOADER = stm32duino
-# stm32duino
+BOOTLOADER = custom
+# BOOTLOADER = stm32duino
 # PROGRAM_CMD = echo 'CLI flashing not supported' >&2
 
 # Disable unsupported hardware
