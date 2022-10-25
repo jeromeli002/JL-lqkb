@@ -101,16 +101,16 @@ switch (get_highest_layer(layer_state)) {
             oled_write_raw_P(a12, sizeof(a12));
             break;         
         case 12:
-            oled_write_raw_P(a013, sizeof(a013));
-            break;           
-        case 13:
             oled_write_raw_P(a13, sizeof(a13));
             break;           
-        case 14:
+        case 13:
             oled_write_raw_P(a14, sizeof(a14));
             break;           
-        case 15:
+        case 14:
             oled_write_raw_P(a15, sizeof(a15));
+            break;           
+        case 15:
+            oled_write_raw_P(a16, sizeof(a16));
             break;             
  /*       case 5:
             render_anime();          

@@ -22,7 +22,6 @@
 /* key matrix pins */
 #define MATRIX_ROW_PINS {  B14,A8,B4,B8,A0}
 #define MATRIX_COL_PINS {  B13,B15,B3,B5,B9}
-#define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
@@ -30,7 +29,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B10, A6, A4, C14 }
 #define ENCODERS_PAD_B { B1 , A5, A3, C13 }
-#define ENCODER_RESOLUTIONS  2
+#define ENCODER_RESOLUTION  2
 #define ENCODER_PAD_A_KEY_POS {4, 0}, {0, 3}, {2, 3}, {0, 4}
 #define ENCODER_PAD_B_KEY_POS {4, 1}, {1, 3}, {3, 3}, {1, 4}
 
@@ -69,7 +68,6 @@
 
 #define RGB_DI_PIN B12
 #ifdef RGB_DI_PIN 
-#define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 8
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
