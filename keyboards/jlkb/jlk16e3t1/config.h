@@ -21,7 +21,7 @@
 #define RGBLIGHT_LAYER_BLINK
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {  B5,B6,B7,B8,B9,A3,C14}
+#define MATRIX_ROW_PINS {  B5,A15,A3,B8,B9,A13,A14}
 #define MATRIX_COL_PINS {  B12,B13,B14,B15,A8,A10,B3}
 #define UNUSED_PINS
 
@@ -31,7 +31,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B0, A6 , A4, A1 }
 #define ENCODERS_PAD_B { A7, A5 , A2, A0 }
-#define ENCODER_RESOLUTION 2
+#define ENCODER_RESOLUTION 4
 #ifdef ENCODER_TRIGGER_ENABLE
 /* 映射矩阵未做 ROW ，COL*/
 #define ENCODER_PAD_A_KEY_POS {5, 2}, {5, 3}, {0, 5}, {2, 5}

@@ -28,6 +28,6 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
 
-MIDI_ENABLE = yes
+# MIDI_ENABLE = yes
 OLED_ENABLE = yes
 OLED_DRIVER = SSD1306    # Enable the OLED Driver
