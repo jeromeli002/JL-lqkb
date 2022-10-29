@@ -36,6 +36,10 @@
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
 
+/* boot loader矩阵位置 */
+#define BOOTMAGIC_LITE_ROW 0
+#define BOOTMAGIC_LITE_COLUMN 0
+
 /* 指示灯 */
 /* #define LED_CAPS_LOCK_PIN B10
 #define LED_NUM_LOCK_PIN C13
