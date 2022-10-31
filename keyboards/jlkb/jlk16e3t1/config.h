@@ -23,7 +23,6 @@
 /* key matrix pins */
 #define MATRIX_ROW_PINS {  B5,A15,A3,B8,B9,A13,A14}
 #define MATRIX_COL_PINS {  B12,B13,B14,B15,A8,A10,B3}
-#define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
@@ -73,7 +72,6 @@
 
 #define RGB_DI_PIN B4
 #ifdef RGB_DI_PIN 
-#define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 16
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
