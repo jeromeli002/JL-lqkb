@@ -30,7 +30,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B0, A6 , A4, A1 }
 #define ENCODERS_PAD_B { A7, A5 , A2, A0 }
-#define ENCODER_RESOLUTION 4
+#define ENCODER_RESOLUTION 2
 #ifdef ENCODER_TRIGGER_ENABLE
 /* 映射矩阵未做 ROW ，COL*/
 #define ENCODER_PAD_A_KEY_POS {5, 2}, {5, 3}, {0, 5}, {2, 5}
@@ -72,6 +72,7 @@
 
 #define RGB_DI_PIN B4
 #ifdef RGB_DI_PIN 
+#define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 16
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8

@@ -24,7 +24,6 @@
 /* key matrix pins */
 #define MATRIX_ROW_PINS {  B4, B3, A15, A10, A8}
 #define MATRIX_COL_PINS {  B9, B8, B7, B6, B5, A1}
-#define UNUSED_PINS
 
 
 /* COL2ROW or ROW2COL */
@@ -71,8 +70,8 @@
 
 #define RGB_DI_PIN B14
 #ifdef RGB_DI_PIN
-#define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 21
+#define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
