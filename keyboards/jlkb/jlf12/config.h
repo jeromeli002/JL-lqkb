@@ -28,7 +28,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A  { B8 }
 #define ENCODERS_PAD_B  { B7 }
-#define ENCODER_RESOLUTION 4
+#define ENCODER_RESOLUTION 2
 #define ENCODER_PAD_A_KEY_POS {2, 2}
 #define ENCODER_PAD_B_KEY_POS {4, 2}
 

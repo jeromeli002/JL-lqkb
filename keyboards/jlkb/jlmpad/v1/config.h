@@ -32,7 +32,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B13 }
 #define ENCODERS_PAD_B { B12 }
-#define ENCODER_RESOLUTION 4
+#define ENCODER_RESOLUTION 2
 #define ENCODER_PAD_A_KEY_POS {5, 0}
 #define ENCODER_PAD_B_KEY_POS {5, 2}
 
