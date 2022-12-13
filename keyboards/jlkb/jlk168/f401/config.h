@@ -5,8 +5,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x6004
 #define DEVICE_VER      0x0002
-#define MANUFACTURER    JL_K168
-#define PRODUCT         JL_K168
+#define MANUFACTURER    \u725b\u903c\u54c4\u54c4\u7684
+#define PRODUCT         \u9017\u903c\u952e\u76d8
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 8

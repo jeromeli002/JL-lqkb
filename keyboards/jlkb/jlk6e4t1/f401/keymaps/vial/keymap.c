@@ -114,46 +114,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		
+	LAYOUT(
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		
+	LAYOUT(
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
 
 };
-
-/* 编码器
-bool encoder_update_user(uint8_t index, bool clockwise) {
-if (index == 0) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 0, 4));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 4));
-}
-}if (index == 1) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 3, 0));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 3, 1));
-}
-}if (index == 2) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 3, 2));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 3, 3));
-}
-}if (index == 3) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 4, 0));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 4, 1));
-}
-}if (index == 4) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 4, 2));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 4, 3));
-}
-}
-         return true;
-} */
-
 
 // 按下 Capslock 的時候，第6颗RGB之后(也就第7颗) 的4颗灯会亮与第12個灯(也就是第12个) 之后的第4颗会亮紅色。
 
@@ -163,55 +140,69 @@ const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, RGB_BLUE}
+    {1,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, RGB_CHARTREUSE}
+    {2,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {3,1, RGB_CORAL}
+    {0,1, RGB_WHITE},
+    {2,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {4,1, RGB_CYAN}
+    {3,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {5,1, RGB_GOLD}
+    {0,1, RGB_WHITE},
+    {3,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_GOLDENROD},
-    {5,1, RGB_GOLDENROD}
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,2, RGB_AZURE},
-    {5,1, RGB_AZURE}
+    {0,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,3, RGB_MAGENTA},
-    {5,1, RGB_MAGENTA}
+    {1,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,4, RGB_MAGENTA},
-    {5,1, RGB_MAGENTA}
+    {2,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,5, RGB_PINK},
-    {5,1, RGB_PINK}
+    {0,1, RGB_WHITE},
+    {2,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_PURPLE},
-    {4,2, RGB_PURPLE}
+    {3,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,2, RGB_SPRINGGREEN},
-    {4,2, RGB_SPRINGGREEN}
+    {0,1, RGB_WHITE},
+    {3,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,3, RGB_TEAL},
-    {4,2, RGB_TEAL}
+    {1,1, RGB_WHITE},
+    {3,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer15_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,4, RGB_TURQUOISE},
-    {4,2, RGB_TURQUOISE}
+    {2,1, RGB_WHITE},
+    {3,1, RGB_WHITE},
+    {4,1, RGB_WHITE}
+);
+const rgblight_segment_t PROGMEM my_layer16_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0,1, RGB_WHITE},
+    {2,1, RGB_WHITE},
+    {3,1, RGB_WHITE},
+    {4,3, RGB_WHITE}
+);
+const rgblight_segment_t PROGMEM my_layer17_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0,5, RGB_WHITE}
 );
 // etc..
 
@@ -233,7 +224,9 @@ const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     my_layer12_layer, 
     my_layer13_layer, 
     my_layer14_layer, 
-    my_layer15_layer       
+    my_layer15_layer, 
+    my_layer16_layer, 
+    my_layer17_layer       
 );
 
 void keyboard_post_init_user(void) {
@@ -257,5 +250,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(13, layer_state_cmp(state, 13));
     rgblight_set_layer_state(14, layer_state_cmp(state, 14));
     rgblight_set_layer_state(15, layer_state_cmp(state, 15));
+    rgblight_set_layer_state(16, layer_state_cmp(state, 16));
+    rgblight_set_layer_state(17, layer_state_cmp(state, 17));
     return state;
 }
