@@ -9,7 +9,7 @@
 #define PRODUCT         \u5c0f\u73a9\u5177\u952e\u76d8
 
 /* 层数 */
-#define DYNAMIC_KEYMAP_LAYER_COUNT 18
+#define DYNAMIC_KEYMAP_LAYER_COUNT 19
 
 /* key matrix size */
 #define MATRIX_ROWS 5
