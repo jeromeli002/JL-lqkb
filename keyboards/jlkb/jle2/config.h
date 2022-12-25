@@ -21,8 +21,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x5009
 #define DEVICE_VER      0x0001
-#define MANUFACTURER    JL_E2
-#define PRODUCT         JL_E2
+#define MANUFACTURER    JL\u7684
+#define PRODUCT         \u952e\u76d8\u4f34\u4fa3
 
 
 /* 层数 */

@@ -5,8 +5,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x6004
 #define DEVICE_VER      0x0002
-#define MANUFACTURER    JL_K26e6
-#define PRODUCT         JL_K26e6
+#define MANUFACTURER    JL\u7684
+#define PRODUCT         \u591a\u529f\u80fd\u952e\u76d8
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
@@ -70,7 +70,7 @@
 #define RGB_DI_PIN B9
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 5
+#define RGBLED_NUM 28
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
