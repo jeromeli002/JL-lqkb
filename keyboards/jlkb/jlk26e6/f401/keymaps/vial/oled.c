@@ -65,52 +65,52 @@ static void print_status_narrow(void) {
 switch (get_highest_layer(layer_state)) {
         case 0:
  //         oled_set_cursor(1, 0);
-            oled_write_raw_P(a01, sizeof(a01));
+            oled_write_raw_P(kb, sizeof(jlkb));
             break;
         case 1:
-            oled_write_raw_P(a02, sizeof(a02));
+            oled_write_raw_P(ps, sizeof(ps));
             break;
         case 2:
-            oled_write_raw_P(a03, sizeof(a03));
+            oled_write_raw_P(ai, sizeof(ai));
             break;
         case 3:
-            oled_write_raw_P(a04, sizeof(a04));
+            oled_write_raw_P(pr, sizeof(pr));
             break;
         case 4:
-            oled_write_raw_P(a05, sizeof(a05));
+            oled_write_raw_P(dafenqi, sizeof(dafenqi));
             break;
         case 5:
-            oled_write_raw_P(a06, sizeof(a06));
+            oled_write_raw_P(au, sizeof(au));
             break;
         case 6:
-            oled_write_raw_P(a07, sizeof(a07));
+            oled_write_raw_P(solidwork, sizeof(solidwork));
             break;           
         case 7:
-            oled_write_raw_P(a08, sizeof(a08));
+            oled_write_raw_P(cad, sizeof(cad));
             break;          
         case 8:
-            oled_write_raw_P(a09, sizeof(a09));
+            oled_write_raw_P(cdr, sizeof(cdr));
             break;         
         case 9:
-            oled_write_raw_P(a10, sizeof(a10));
+            oled_write_raw_P(music, sizeof(music));
             break;           
         case 10:
-            oled_write_raw_P(a11, sizeof(a11));
+            oled_write_raw_P(office, sizeof(office));
             break;           
         case 11:
-            oled_write_raw_P(a12, sizeof(a12));
+            oled_write_raw_P(video, sizeof(video));
             break;         
         case 12:
-            oled_write_raw_P(a13, sizeof(a13));
+            oled_write_raw_P(win, sizeof(win));
             break;           
         case 13:
-            oled_write_raw_P(a14, sizeof(a14));
+            oled_write_raw_P(excel, sizeof(excel));
             break;           
         case 14:
-            oled_write_raw_P(a15, sizeof(a15));
+            oled_write_raw_P(word, sizeof(word));
             break;           
         case 15:
-            oled_write_raw_P(a16, sizeof(a16));
+            oled_write_raw_P(pronhub, sizeof(pronhub));
             break;             
  /*       case 5:
             render_anime();          
