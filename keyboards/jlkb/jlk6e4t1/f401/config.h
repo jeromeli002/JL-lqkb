@@ -31,8 +31,8 @@
 #define ENCODERS_PAD_A { A7, A15, B4, A5 }
 #define ENCODERS_PAD_B { B0, A10, B5, A4 }
 #define ENCODER_RESOLUTIONS  { 2, 2, 2, 2 }
-#define ENCODER_PAD_A_KEY_POS {0, 3}, {2, 3}, {0,4}, {2, 4}
-#define ENCODER_PAD_B_KEY_POS {1, 3}, {3, 3}, {1,4}, {3, 4}
+#define ENCODER_PAD_A_KEY_POS {3, 0}, {3, 1}, {0,4}, {2, 4}
+#define ENCODER_PAD_B_KEY_POS {4, 0}, {4, 1}, {1,4}, {3, 4}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3

@@ -31,7 +31,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { A4, A2, A0, }
 #define ENCODERS_PAD_B { A3, A1, C15, }
-#define ENCODER_RESOLUTIONS {2, 2, 2}
+#define ENCODER_RESOLUTIONS {4, 4, 4}
 #define ENCODER_PAD_A_KEY_POS {0, 16}, {2, 16}, {4, 16}
 #define ENCODER_PAD_B_KEY_POS {1, 16}, {3, 16}, {5, 16}
 /* 编码器01 */
