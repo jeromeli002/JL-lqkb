@@ -45,7 +45,7 @@
 #define LED_CAPS_LOCK_PIN B12
 #define LED_NUM_LOCK_PIN B13
 #define LED_SCROLL_LOCK_PIN B14
-#define LED_PIN_ON_STATE -1 /* 指示灯 LED“亮”时指示灯引脚的状态 -1高电平，0低电平*/
+#define LED_PIN_ON_STATE 1 /* 指示灯 LED“亮”时指示灯引脚的状态 1高电平，0低电平*/
 
 /* number of backlight levels */
 
