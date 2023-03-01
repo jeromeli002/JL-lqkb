@@ -26,7 +26,7 @@
 
 
 /* 层数 */
-#  define DYNAMIC_KEYMAP_LAYER_COUNT 8
+#  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
 #define MATRIX_ROWS 4
