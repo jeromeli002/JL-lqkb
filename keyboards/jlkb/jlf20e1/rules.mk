@@ -28,8 +28,3 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
 
-OLED_ENABLE = yes
-OLED_DRIVER = SSD1306    # Enable the OLED Driver
-
-CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
-SRC += matrix.c 
