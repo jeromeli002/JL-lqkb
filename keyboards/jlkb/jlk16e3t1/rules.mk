@@ -28,3 +28,5 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
 
+ CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
+ SRC += matrix.c 
