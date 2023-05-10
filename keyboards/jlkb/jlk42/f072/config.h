@@ -6,14 +6,14 @@
 #define PRODUCT_ID      0x6004
 #define DEVICE_VER      0x0002
 #define MANUFACTURER    JL\u7684
-#define PRODUCT         \u50bb\u5c4c\u952e\u76d8\u0034\u0032
+#define PRODUCT         42-\u50bb\u5c4c\u952e\u76d8
 
 /* 层数 */
-#define DYNAMIC_KEYMAP_LAYER_COUNT 16
+#define DYNAMIC_KEYMAP_LAYER_COUNT 8
 
 /* key matrix size */
-#define MATRIX_ROWS 8
-#define MATRIX_COLS 8
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 12
  
  /* 层指示灯 
 #define RGBLIGHT_LAYERS
@@ -21,19 +21,19 @@
 #define RGBLIGHT_LAYER_BLINK */
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {  B13,B15,A10,B4,B5,B8,A15,A13}
-#define MATRIX_COL_PINS {  B12,B14,A8,B3,A4,A1,A14,B11}
+#define MATRIX_ROW_PINS { C13,C14,C15,A1,A13 }
+#define MATRIX_COL_PINS { A2,A3,A4,A5,A6,A7,B0,B1,B10,B11,B9,B8}
 #define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A { A6, A3 , A0, C14, B10, B0 }
-#define ENCODERS_PAD_B { A5 , A2, C15, C13, B1, A7 }
-#define ENCODER_RESOLUTIONS {2, 2, 2, 2, 4, 4}
-#define ENCODER_PAD_A_KEY_POS {6, 0}, {6, 2}, {6, 4}, {1, 7}, {3, 7}, {5, 7}
-#define ENCODER_PAD_B_KEY_POS {6, 1}, {6, 3}, {6, 5}, {2, 7}, {4, 7}, {6, 7}
+#define ENCODERS_PAD_A { B4, A15 , A8, B14 }
+#define ENCODERS_PAD_B { B3 , A14, B18, B13 }
+#define ENCODER_RESOLUTIONS {2, 2, 2, 2 }
+#define ENCODER_PAD_A_KEY_POS {0, 4}, {2, 4}, {4, 4}, {6, 4}
+#define ENCODER_PAD_B_KEY_POS {1, 4}, {3, 4}, {5, 4}, {7, 4}
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
 
@@ -67,10 +67,10 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 
-#define RGB_DI_PIN B9
+#define RGB_DI_PIN B8
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 28
+#define RGBLED_NUM 42
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
