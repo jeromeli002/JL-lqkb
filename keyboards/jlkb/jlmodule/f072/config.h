@@ -28,7 +28,7 @@
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A  {B8,A13,B12}
+#define ENCODERS_PAD_A  {B8,A13,B14}
 #define ENCODERS_PAD_B  {B9,A15,B15}
 #define ENCODER_RESOLUTION 2
 #define ENCODER_PAD_A_KEY_POS {0, 0},{0, 2},{2, 1}/* 逆向 Col Row*/
