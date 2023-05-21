@@ -2,15 +2,10 @@
 #   change yes to no to disable
 #
 # MCU name
-MCU = STM32F103
-
-MCU_LDSCRIPT = f103
-BOARD = STM32_F103_STM32DUINO
+MCU = STM32F072
 
 # Bootloader selection
-BOOTLOADER = custom
-# BOOTLOADER = stm32duino
-# PROGRAM_CMD = echo 'CLI flashing not supported' >&2
+BOOTLOADER = stm32-dfu
 
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no
@@ -32,6 +27,5 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
 
-MIDI_ENABLE = yes
-OLED_ENABLE = yes
-OLED_DRIVER = SSD1306    # Enable the OLED Driver
+ CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
+ SRC += matrix.c 
