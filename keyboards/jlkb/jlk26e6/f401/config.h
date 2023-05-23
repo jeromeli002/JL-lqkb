@@ -6,7 +6,7 @@
 #define PRODUCT_ID      0x6004
 #define DEVICE_VER      0x0002
 #define MANUFACTURER    JL\u7684
-#define PRODUCT         \u50bb\u5c4c\u952e\u76d8
+#define PRODUCT         \u591a\u529f\u80fd\u952e\u76d8
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
