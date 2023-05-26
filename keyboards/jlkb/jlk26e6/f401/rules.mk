@@ -28,5 +28,11 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
 
+# OLED屏幕开关
 OLED_ENABLE = yes
-OLED_DRIVER = SSD1306    # Enable the OLED Driver
+OLED_DRIVER = SSD1306   
+
+# Enter lower-power sleep mode when on the ChibiOS idle thread
+OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
+# 可编程键
+PROGRAMMABLE_BUTTON_ENABLE = yes

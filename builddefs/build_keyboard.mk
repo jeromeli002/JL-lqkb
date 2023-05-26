@@ -276,7 +276,23 @@ else
     PLATFORM_KEY=avr
     FIRMWARE_FORMAT?=hex
 endif
-
+# 新增开始
+ifeq ($(MCU_FAMILY),NRF51)
+        $(info "PLATFORM NRF5")
+        PLATFORM=NRF_SDK
+        FIRMWARE_FORMAT=hex
+    endif
+    ifeq ($(MCU_FAMILY),NRF52)
+        $(info "PLATFORM NRF5")
+        PLATFORM=NRF_SDK
+        FIRMWARE_FORMAT?=hex
+    endif
+# 新增结束    
+# 新增开始
+ifeq ($(PLATFORM),NRF_SDK)
+    include $(TMK_PATH)/nrf.mk
+endif
+# 新增结束 
 # Find all of the config.h files and add them to our CONFIG_H define.
 CONFIG_H :=
 ifneq ("$(wildcard $(KEYBOARD_PATH_5)/config.h)","")
@@ -452,6 +468,12 @@ ifneq ($(strip $(PROTOCOL)),)
 else
     include $(TMK_PATH)/protocol/$(PLATFORM_KEY).mk
 endif
+
+# 新增开始
+ifeq ($(PLATFORM),NRF_SDK)
+    include $(TMK_PATH)/protocol/nrf.mk
+endif
+# 新增结束 
 
 # Setup definitions based on the selected MCU
 $(eval $(call add_qmk_prefix_defs,MCU_ORIG,MCU))
