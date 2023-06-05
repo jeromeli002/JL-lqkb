@@ -16,11 +16,10 @@
 
 #pragma once
 
-#include_next <mcuconf.h>
+#define HAL_USE_PWM    TRUE
 
+#define HAL_USE_I2C TRUE
 
-#undef STM32_PWM_USE_TIM3
-#define STM32_PWM_USE_TIM3 TRUE
+#define HAL_USE_ADC TRUE
 
-#undef STM32_I2C_USE_I2C1
-#define STM32_I2C_USE_I2C1 TRUE
+#include_next <halconf.h>

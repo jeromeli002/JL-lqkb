@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 
 #ifndef ADC_PIN
-#    define ADC_PIN F6
+#    define ADC_PIN A6
 #endif
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
