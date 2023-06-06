@@ -1,0 +1,28 @@
+{
+
+ "name": "JL-tourbox Rev.A",
+
+ "vendorId": "0xFEED",
+
+ "productId": "0x6004",
+
+ "lighting": "qmk_rgblight",
+
+ "matrix": { "rows": 5, "cols":5 },
+
+ "vial": {
+    },
+    
+ "layouts": {
+      "labels": [ ],
+   "keymap": [
+
+      ["0,2",{"x":0.25}, "2,1",{"x":0.25}, "2,2"],
+      ["0,1",{"x":0.25}, "1,1",{"x":0.25}, "1,0"],
+      ["0,0",{"x":0.25}, "2,0",{"x":0.25}, "1,2"]
+
+   ]
+
+ }
+
+}
