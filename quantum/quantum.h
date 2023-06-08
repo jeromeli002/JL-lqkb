@@ -279,8 +279,20 @@ extern layer_state_t layer_state;
 #endif
 #endif
 
+#ifdef JOYSTICK_TRIGGER_ENABLE
+#    include "joystick_trigger.h"
+#endif
+
 #ifdef SIGNALRGB_ENABLE
 #    include "signalrgb.h"
+#endif
+
+#ifdef DYNAMIC_TAP_DANCE_ENABLE
+#   include "dynamic_tap_dance.h"
+#endif
+
+#ifdef DYNAMIC_COMBOS_ENABLE
+#   include "dynamic_combos.h"
 #endif
 
 // For tri-layer

@@ -970,7 +970,7 @@ endif
 
 ifeq ($(strip $(JOYSTICK_TRIGGER_ENABLE)), yes)
     SRC += $(QUANTUM_DIR)/joystick_trigger.c
-	SRC += analog.c
+	QUANTUM_LIB_SRC += analog.c
     OPT_DEFS += -DJOYSTICK_TRIGGER_ENABLE
 endif
 

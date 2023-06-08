@@ -20,6 +20,8 @@
 #define USBCONCAT(a, b) a##b
 #define USBSTR(s) USBCONCAT(L, s)
 
+#define HID_VALUE_16(v) ((uint8_t)(v & 0xFF)), ((uint8_t)(v >> 8))
+
 /////////////////////
 // RAW Usage page and ID configuration
 
