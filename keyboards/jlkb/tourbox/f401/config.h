@@ -45,11 +45,11 @@
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
-#define MATRIX_ROWS 6
-#define MATRIX_COLS 5
+#define MATRIX_ROWS 9
+#define MATRIX_COLS 4
 
-#define MATRIX_ROW_PINS {  C13, C14, C15, A3, A4, B12  }
-#define MATRIX_COL_PINS {  B9, B8, B5, B4, B14 }
+#define MATRIX_ROW_PINS {  C13, C14, C15, A3, A4, B12, B14, B13, B12  }
+#define MATRIX_COL_PINS {  B9, B8, B5, B4 }
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
@@ -58,8 +58,8 @@
 #define ENCODERS_PAD_A  { A5, A7, B3, A8 }
 #define ENCODERS_PAD_B  { A6, B0, A15, B15 }
 #define ENCODER_RESOLUTION 2
-#define ENCODER_PAD_A_KEY_POS {4, 0}, {4, 2}, {2, 4}, {0, 5}
-#define ENCODER_PAD_B_KEY_POS {4, 1}, {4, 3}, {3, 4}, {1, 5}
+#define ENCODER_PAD_A_KEY_POS {0, 5}, {0, 6}, {0, 7}, {0, 8}
+#define ENCODER_PAD_B_KEY_POS {1, 5}, {1, 6}, {1, 7}, {1, 8}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
