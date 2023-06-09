@@ -15,7 +15,7 @@ AUDIO_SUPPORTED = no
 BACKLIGHT_SUPPORTED = no
 BOOTMAGIC_ENABLE = yes     # Enable Bootmagic Lite
 KEYBOARD_SHARED_EP = yes    # Free up some extra endpoints - needed if console+mouse+extra
-#MOUSEKEY_ENABLE = yes       # Mouse keys
+MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 CONSOLE_ENABLE = yes         # Console for debug
 COMMAND_ENABLE = yes         # Commands for debug and configuration
@@ -34,9 +34,9 @@ LEADER_ENABLE = yes
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = WS2812
 
-# POINTING_DEVICE_ENABLE = yes
-# POINTING_DEVICE_DRIVER = analog_joystick
-JOYSTICK_TRIGGER_ENABLE = yes
+# POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+# POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
