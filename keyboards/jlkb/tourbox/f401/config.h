@@ -24,22 +24,23 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
-/* #define ANALOG_JOYSTICK_X_AXIS_PIN A1
+#define ANALOG_JOYSTICK_X_AXIS_PIN A1
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A2
 #define ANALOG_JOYSTICK_CLICK_PIN B1
-*/
-#ifdef JOYSTICK_TRIGGER_ENABLE
+
+/* #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
 #define JOYSTICK_USE_LPF
 #define JOYSTICK_LPF_PROPORTION (0.2)
 #define JOYSTICK_AXES_X_PIN { A1 }
 #define JOYSTICK_AXES_Y_PIN { A2 }
-#define JOYSTICK_AXES_PX_KEY_POS {5, 2}
-#define JOYSTICK_AXES_NX_KEY_POS {5, 3}
-#define JOYSTICK_AXES_PY_KEY_POS {6, 2}
-#define JOYSTICK_AXES_NY_KEY_POS {6, 3}
+#define JOYSTICK_AXES_PX_KEY_POS {2, 5}
+#define JOYSTICK_AXES_NX_KEY_POS {3, 5}
+#define JOYSTICK_AXES_PY_KEY_POS {2, 6}
+#define JOYSTICK_AXES_NY_KEY_POS {3, 6}
 #endif
+*/
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
@@ -95,7 +96,7 @@
 /* prevent stuck modifiers */
 /* #define PREVENT_STUCK_MODIFIERS */
 
-/* 常规rgb灯
+/* 常规rgb灯*/
 #define RGB_DI_PIN B1
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
@@ -104,19 +105,21 @@
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
 #endif
-*/
 
+
+/* 矩阵灯
 #ifdef RGB_MATRIX_ENABLE
     #define DRIVER_LED_TOTAL 9
     #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200
     #define RGB_MATRIX_STARTUP_VAL RGB_MATRIX_MAXIMUM_BRIGHTNESS
     #define RGB_MATRIX_KEYPRESSES
     #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-
+ */
     /* RGB Matrix config */
-    #define RGB_DI_PIN B1
-
+    /* 
+    #define RGB_DI_PIN B1 */
     /* RGB Matrix effect */
+    /* 
     #define ENABLE_RGB_MATRIX_ALPHAS_MODS
     #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
     #define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
@@ -162,3 +165,4 @@
     #define ENABLE_RGB_MATRIX_SOLID_SPLASH
     #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif
+*/

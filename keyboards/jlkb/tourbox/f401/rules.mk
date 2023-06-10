@@ -26,19 +26,19 @@ NKRO_ENABLE = yes           # USB Nkey Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 ENCODER_ENABLE = yes        # Enable rotary encoder support
 AUDIO_ENABLE = no           # Audio output
-# RGBLIGHT_ENABLE ?= yes
+RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SEND_STRING_ENABLE = yes
 VELOCIKEY_ENABLE = yes
 LEADER_ENABLE = yes
-RGB_MATRIX_ENABLE = yes
-RGB_MATRIX_DRIVER = WS2812
+# RGB_MATRIX_ENABLE = yes
+# RGB_MATRIX_DRIVER = WS2812
 
-# POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
-# POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
-JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
+POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+# JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # 可编程键
-PROGRAMMABLE_BUTTON_ENABLE = yes
+# PROGRAMMABLE_BUTTON_ENABLE = yes
