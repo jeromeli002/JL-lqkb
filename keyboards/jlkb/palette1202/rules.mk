@@ -1,10 +1,9 @@
 # MCU name
-MCU = STM32F401
+# MCU 型号
+MCU = STM32F072
 
-# Bootloader selection
+# 引导程序 选择
 BOOTLOADER = stm32-dfu
-BOARD = BLACKPILL_STM32_F401
-
 # Build Options
 #   change yes to no to disable
 #
@@ -23,3 +22,6 @@ NKRO_ENABLE = yes           # USB Nkey Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 ENCODER_ENABLE = yes        # Enable rotary encoder support
 AUDIO_ENABLE = no           # Audio output
+
+#POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+#POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆

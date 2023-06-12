@@ -44,66 +44,66 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Mac
     // Clip Studio
     [MAC_CS_1] = LAYOUT(
-      KC_TAB,       LGUI(KC_A), KC_E,         KC_P,          LGUI(KC_0),
-      MO(MAC_CS_2), KC_M,       KC_BSPC,      KC_B,          KC_HYPR,
-                    KC_LSFT,    KC_LGUI,      LGUI(KC_Z),    KC_SPC
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,      MAC_PS_2,       MAC_PS_2,
+      MAC_PS_2,      MAC_PS_2,  MAC_PS_2,      KC_B,        MAC_PS_2,
+      MAC_PS_2,     MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     [MAC_CS_2] = LAYOUT(
-      MO(SETTING),  KC_ESC,     KC_G,         KC_R,          LGUI(KC_GRV),
-      _______,      LGUI(KC_D), KC_K,         KC_F,          LGUI(KC_S),
-                    KC_LALT,    KC_I,         SGUI(KC_Z),    KC_H
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+      MAC_PS_2,      MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     // Photoshop
     [MAC_PS_1] = LAYOUT(
-      KC_TAB,       LGUI(KC_A), KC_E,         KC_B,          LGUI(KC_1),
-      MO(MAC_PS_2), KC_L,       LGUI(KC_DEL), LGUI(KC_QUOT), KC_MEH,
-                    KC_LSFT,    KC_LGUI,      LGUI(KC_Z),    KC_SPC
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+       MAC_PS_2,     MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     [MAC_PS_2] = LAYOUT(
-      MO(SETTING),  KC_ESC,     KC_G,         KC_R,          KC_ESC,
-      _______,      LGUI(KC_D), KC_V,         LGUI(KC_T),    LGUI(KC_S),
-                    KC_LALT,    KC_I,         SGUI(KC_Z),    KC_H
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+       MAC_PS_2,     MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
 
     // Windows
     // Clip Studio
     [WIN_CS_1] = LAYOUT(
-      KC_TAB,       LCTL(KC_A), KC_E,         KC_P,          LCTL(KC_0),
-      MO(WIN_CS_2), KC_M,       KC_BSPC,      KC_B,          KC_HYPR,
-                    KC_LSFT,    KC_LCTRL,     LCTL(KC_Z),    KC_SPC
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+      MAC_PS_2,     MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     [WIN_CS_2] = LAYOUT(
-      MO(SETTING),  KC_ESC,     KC_G,         KC_R,          LCTL(KC_GRV),
-      _______,      LCTL(KC_D), KC_K,         KC_F,          LCTL(KC_S),
-                    KC_LALT,    KC_I,         C(S(KC_Z)),    KC_H
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+      MAC_PS_2,      MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     // Photoshop
     [WIN_PS_1] = LAYOUT(
-      KC_TAB,       LCTL(KC_A), KC_E,         KC_B,          LCTL(KC_1),
-      MO(WIN_PS_2), KC_L,       LCTL(KC_DEL), LCTL(KC_QUOT), KC_MEH,
-                    KC_LSFT,    KC_LCTRL,     LCTL(KC_Z),    KC_SPC
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+       MAC_PS_2,      MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     [WIN_PS_2] = LAYOUT(
-      MO(SETTING),  KC_ESC,     KC_G,         KC_R,          KC_ESC,
-      _______,      LCTL(KC_D), KC_V,         LCTL(KC_T),    LCTL(KC_S),
-                    KC_LALT,    KC_I,         C(S(KC_Z)),    KC_H
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+       MAC_PS_2,      MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     // iOS
     // Clip Studio
     [IOS_CS_1] = LAYOUT(
-      KC_TAB,       LGUI(KC_A), KC_E,         KC_P,          LGUI(KC_0),
-      MO(IOS_CS_2), KC_M,       KC_BSPC,      KC_B,          LGUI(KC_LALT),
-                    KC_LSFT,    KC_LGUI,      LGUI(KC_Z),    KC_SPC
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+      MAC_PS_2,     MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     [IOS_CS_2] = LAYOUT(
-      MO(SETTING),  KC_ESC,     KC_G,         KC_R,          LGUI(KC_EQL),
-      _______,      LGUI(KC_D), KC_K,         KC_F,          LGUI(KC_S),
-                    KC_LALT,    KC_I,         SGUI(KC_Z),    KC_H
+      MAC_PS_2,       MAC_PS_2, MAC_PS_2,         MAC_PS_2,          MAC_PS_2,
+      MAC_PS_2, MAC_PS_2,       MAC_PS_2,      KC_B,          MAC_PS_2,
+      MAC_PS_2,     MAC_PS_2,    MAC_PS_2,      MAC_PS_2,    MAC_PS_2
     ),
     [SETTING] = LAYOUT(
       _______, IOS_CS, Win_CS, Mac_CS, KC_NO,
       _______, KC_NO,  Win_PS, Mac_PS, KC_NO,
-               KC_NO,  KC_NO,  KC_NO,  KC_NO
+      _______, KC_NO,  KC_NO,  KC_NO,  KC_NO
     ),
 };
 

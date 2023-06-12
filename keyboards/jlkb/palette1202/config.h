@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config_common.h"
 
+#define ANALOG_JOYSTICK_X_AXIS_PIN A1
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A2
+#define ANALOG_JOYSTICK_CLICK_PIN B1
+
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
@@ -26,15 +30,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 3
 #define MATRIX_COLS 5
 
-#define MATRIX_ROW_PINS { B6, B0, B3 }
-#define MATRIX_COL_PINS { A8, B7, B1, B4, B5 }
+#define MATRIX_ROW_PINS { A0,B12,C14 }
+#define MATRIX_COL_PINS { B13,C13,A1, B4, B5 }
 
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION COL2ROW
 
 /* Encoders */
-#define ENCODERS_PAD_A { A4, A6 }
-#define ENCODERS_PAD_B { A5, A7 }
+#define ENCODERS_PAD_A { B8,A13 }
+#define ENCODERS_PAD_B { B9,A15 }
 #define ENCODER_RESOLUTION 2
 // if you want to reverse encoder direction
 // #define ENCODER_DIRECTION_FLIP

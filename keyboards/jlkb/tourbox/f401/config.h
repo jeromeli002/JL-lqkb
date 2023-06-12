@@ -24,8 +24,8 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
-#define ANALOG_JOYSTICK_X_AXIS_PIN A1
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A2
+#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
 #define ANALOG_JOYSTICK_CLICK_PIN B1
 
 /* #ifdef JOYSTICK_TRIGGER_ENABLE

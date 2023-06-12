@@ -25,7 +25,7 @@ ENCODER_ENABLE = yes        # 启用旋转编码器支持t
 AUDIO_ENABLE = no           # 音频输出
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
-SERIAL_DRIVER = usart
+# SERIAL_DRIVER = usart
 
 # OLED_ENABLE = yes
 # OLED_DRIVER = SSD1306    # 启用OLED屏幕
