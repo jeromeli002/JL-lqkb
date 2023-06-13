@@ -5,8 +5,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x6666
 #define DEVICE_VER      0x0002
-#define MANUFACTURER    JL_dial
-#define PRODUCT         dial
+#define MANUFACTURER    JL
+#define PRODUCT         \u8f6e\u76d8
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
@@ -21,18 +21,18 @@
 #define RGBLIGHT_LAYER_BLINK */
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS { A0,B12,A3,A4}
-#define MATRIX_COL_PINS { C13,B13,A5,A6}
+#define MATRIX_ROW_PINS {  A6,C14,C15,A2}
+#define MATRIX_COL_PINS {  A0,B1,A8,A1}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A  {B8,A13,B14}
-#define ENCODERS_PAD_B  {B9,A15,B15}
+#define ENCODERS_PAD_A  {B12}
+#define ENCODERS_PAD_B  {B10}
 #define ENCODER_RESOLUTION 2
-#define ENCODER_PAD_A_KEY_POS {2, 0},{2, 1},{0, 2}/* 逆向 Col Row*/
-#define ENCODER_PAD_B_KEY_POS {3, 0},{3, 1},{1, 2}/* 正向 Col Row*/
+#define ENCODER_PAD_A_KEY_POS {0, 2}/* 逆向 Col Row*/
+#define ENCODER_PAD_B_KEY_POS {2, 2}/* 正向 Col Row*/
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
 
@@ -70,10 +70,10 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 
-#define RGB_DI_PIN A1
+#define RGB_DI_PIN A13
 #ifdef RGB_DI_PIN 
-#define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 8
+#define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
