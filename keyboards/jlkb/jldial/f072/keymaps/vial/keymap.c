@@ -2,12 +2,23 @@
 #include "f072.h"
 //#include "oled.c"
 
+// 自定义键
+enum custom_keycodes {
+  jingdong = SAFE_RANGE,
+  taobao,
+  google,
+  bing,
+  baidu,
+  jlkb,
+  bilibili
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_A, KC_B, KC_C, KC_D, 
-		KC_E, KC_F, KC_G, KC_H, 
-		KC_I, KC_J, KC_K, KC_L, 
+		bing, google, jingdong, KC_TRNS, 
+		jlkb, RESET, taobao, KC_H, 
+		DIAL_R, DIAL_BUT, DIAL_L, KC_L, 
 		KC_M, KC_N, KC_O, KC_P),
 
 
@@ -94,6 +105,68 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
 		
 };
+ // 自定义键
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case jingdong:
+      if (record->event.pressed) {
+        // 一键输入京东
+        SEND_STRING("https://www.jd.com/" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 京东
+      }
+      break;
+    case taobao:
+      if (record->event.pressed) {
+        // 一键输入淘宝
+        SEND_STRING("https://www.taobao.com/" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 淘宝
+      }
+      break;
+    case google:
+      if (record->event.pressed) {
+        // 一键输入谷歌
+        SEND_STRING("https://www.google.com/ncr" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 谷歌
+      }
+      break;
+    case bing:
+      if (record->event.pressed) {
+        // 一键输入必应
+        SEND_STRING("https://www.bing.com/" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 必应
+      }
+      break;
+    case baidu:
+      if (record->event.pressed) {
+        // 一键输入百度
+        SEND_STRING("https://www.baidu.com/" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 百度
+      }
+      break;
+    case jlkb:
+      if (record->event.pressed) {
+        // 一键输入购物
+        SEND_STRING("https://jlkb.taobao.com/" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 购物
+      }
+      break;
+    case bilibili:
+      if (record->event.pressed) {
+        // 一键输入逼站
+        SEND_STRING("https://www.bilibili.com/" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+      } else {
+        // 逼站
+      }
+      break;
+  }
+  return true;
+}
 
 /* 编码器
 bool encoder_update_user(uint8_t index, bool clockwise) {
