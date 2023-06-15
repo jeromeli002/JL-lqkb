@@ -5,8 +5,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x6007
 #define DEVICE_VER      0x0002
-#define MANUFACTURER    \u722c\u4e0a\u5899\u5934\u62fd\u7ea2\u674f
-#define PRODUCT         \u5c0f\u73a9\u5177\u952e\u76d8
+#define MANUFACTURER    JL
+#define PRODUCT         \u6447\u6746\u65cb\u94ae\u5c0f\u73a9\u610f\u513f
 
 #define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
