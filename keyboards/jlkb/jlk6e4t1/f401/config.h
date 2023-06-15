@@ -8,6 +8,10 @@
 #define MANUFACTURER    \u722c\u4e0a\u5899\u5934\u62fd\u7ea2\u674f
 #define PRODUCT         \u5c0f\u73a9\u5177\u952e\u76d8
 
+#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
+
+
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
@@ -21,7 +25,7 @@
 #define RGBLIGHT_LAYER_BLINK
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {  A6,B15,A8,A1,A3}
+#define MATRIX_ROW_PINS {  A6,B15,A8,C15,A3}
 #define MATRIX_COL_PINS {  B10,B14,B8,B3,B9}
 
 /* COL2ROW or ROW2COL */
@@ -69,7 +73,7 @@
 
 #define RGB_DI_PIN B1
 #ifdef RGB_DI_PIN 
-#define RGBLED_NUM 7
+#define RGBLED_NUM 8
 #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8

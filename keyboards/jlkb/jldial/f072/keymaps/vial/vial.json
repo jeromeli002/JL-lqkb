@@ -2,20 +2,10 @@
 
  "name": "JL-Dial Rev.B",
 
- "vendorId": "0xFEED",
-
- "productId": "0x6004",
-
-"customKeycodes": [ ],
-
  "lighting": "qmk_rgblight",
 
  "matrix": { "rows": 4, "cols":4 },
 
- "vial": {
-        "midi": "advanced"        
-    },
-    
  "layouts": {
       "labels": [ ],
    "keymap": [
