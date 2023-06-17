@@ -5,8 +5,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x6666
 #define DEVICE_VER      0x0002
-#define MANUFACTURER    JL_dial
-#define PRODUCT         dial
+#define MANUFACTURER    JL
+#define PRODUCT         \u591a\u65cb\u94ae
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
@@ -70,10 +70,10 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 
-#define RGB_DI_PIN A1
+#define RGB_DI_PIN A8
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 8
+#define RGBLED_NUM 12
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
