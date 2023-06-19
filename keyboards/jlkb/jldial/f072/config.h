@@ -8,7 +8,7 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8f6e\u76d8
 
-#define DMA1_Channel4_IRQn_EN  1//DMA 电压采集中断
+// #define DMA1_Channel4_IRQn_EN  1//DMA 电压采集中断
 #define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
 #define ANALOG_JOYSTICK_CLICK_PIN B1
@@ -26,8 +26,8 @@
 #define RGBLIGHT_LAYER_BLINK */
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {  A6,C14,C15,A2}
-#define MATRIX_COL_PINS {  A0,B1,A8,A1}
+#define MATRIX_ROW_PINS {  A6,C14,C15,A3}
+#define MATRIX_COL_PINS {  A0,B1,A8,A4}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
