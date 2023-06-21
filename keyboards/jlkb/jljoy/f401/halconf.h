@@ -1,4 +1,4 @@
-/* Copyright 2019 niltea
+/* Copyright 2020 QMK
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,11 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "palette1202.h"
 
-// initialize OLED if OLED is enabled
-#ifdef OLED_ENABLE
-oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
-    return OLED_ROTATION_180;
-}
-#endif
+#pragma once
+
+#define HAL_USE_I2C TRUE
+
+#define HAL_USE_ADC TRUE
+
+#include_next <halconf.h>

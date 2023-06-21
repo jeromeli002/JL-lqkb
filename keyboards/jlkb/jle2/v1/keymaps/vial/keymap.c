@@ -1,5 +1,9 @@
 #include "v1.h"
 
+#ifndef ADC_PIN
+#    define ADC_PIN A6
+#endif
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
@@ -51,28 +55,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
 };
 
-/* 编码器 
-bool encoder_update_user(uint8_t index, bool clockwise) {
-if (index == 0) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 0));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 1));
-}
-}if (index == 1) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 2));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 3));
-}
-}if (index == 2) {
-if (clockwise) {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 0, 2));
-} else {
-tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 0, 3));
-}
-}
-         return true;
-}
-*/
+void matrix_scan_user() {
+    int16_t val = (((uint32_t)timer_read() % 5000 - 2500) * 255) / 5000;
 
+    if (val != joystick_status.axes[1]) {
+        joystick_status.axes[1] = val;
+        joystick_status.status |= JS_UPDATED;
+    }
+}
+
+// Joystick config
+joystick_config_t joystick_axes[JOYSTICK_AXES_COUNT] = {
+    [0] = JOYSTICK_AXIS_IN(ADC_PIN, 0, 512, 1023),
+    [1] = JOYSTICK_AXIS_VIRTUAL
+};

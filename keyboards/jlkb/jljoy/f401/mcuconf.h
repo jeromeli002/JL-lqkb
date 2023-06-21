@@ -1,4 +1,4 @@
-/* Copyright 2019 niltea
+/* Copyright 2020 QMK
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,25 +13,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
 
-#include "quantum.h"
+#include_next <mcuconf.h>
 
-/* This a shortcut to help you visually see your layout.
- *
- * The first section contains all of the arguments representing the physical
- * layout of the board and position of the keys.
- *
- * The second converts the arguments into a two-dimensional array which
- * represents the switch matrix.
- */
-#define LAYOUT( \
-    k00, k01, k02, k03, k04,       \
-    k10, k11, k12, k13, k14,       \
-         k21, k22, k23, k24        \
-)                                  \
-{                                  \
-    { k00,   k01, k02, k03, k04 }, \
-    { k10,   k11, k12, k13, k14 }, \
-    { KC_NO, k21, k22, k23, k24 }, \
-}
+#undef STM32_PWM_USE_TIM3
+#define STM32_PWM_USE_TIM3 TRUE
+
+#undef STM32_I2C_USE_I2C1
+#define STM32_I2C_USE_I2C1 TRUE
+
+#undef STM32_ADC_USE_ADC1
+#define STM32_ADC_USE_ADC1 TRUE

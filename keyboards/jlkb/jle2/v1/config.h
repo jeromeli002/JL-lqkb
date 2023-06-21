@@ -24,6 +24,9 @@
 #define MANUFACTURER    JL\u7684
 #define PRODUCT         \u952e\u76d8\u4f34\u4fa3
 
+#define JOYSTICK_BUTTON_COUNT 8
+#define JOYSTICK_AXES_COUNT 1
+#define JOYSTICK_AXES_RESOLUTION 16
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
