@@ -30,12 +30,10 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B6, B4 , A14, A10 }
 #define ENCODERS_PAD_B { B5, A15 , A13, A9 }
-#define ENCODER_RESOLUTION 4
-#ifdef ENCODER_TRIGGER_ENABLE
+#define ENCODER_RESOLUTIONS {4, 4, 2, 4}
 /* 映射矩阵未做 ROW ，COL*/
 #define ENCODER_PAD_A_KEY_POS {5, 2}, {5, 3}, {0, 5}, {2, 5}
 #define ENCODER_PAD_B_KEY_POS {6, 2}, {6, 3}, {1, 5}, {3, 5}
-#endif
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
