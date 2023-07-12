@@ -6,7 +6,7 @@
 #define PRODUCT_ID      0x5001
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    JL
-#define PRODUCT         \u81ea\u5b9a\u4e49\u952e\u76d8
+#define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
 #define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
@@ -31,7 +31,7 @@
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
-#define MATRIX_ROWS 5
+#define MATRIX_ROWS 6
 #define MATRIX_COLS 6
  
  /* 层指示灯
@@ -41,7 +41,7 @@
 */
  
 /* key matrix pins */
-#define MATRIX_ROW_PINS { A8,A15,B3,B4,B5 }
+#define MATRIX_ROW_PINS { A8,A15,B3,B4,B5,A4 }
 #define MATRIX_COL_PINS { B12,B13,B14,B15,A13,A14 }
 
 /* COL2ROW or ROW2COL */
@@ -51,7 +51,7 @@
 #define ENCODERS_PAD_A { B10, B0 , A6, C14 }
 #define ENCODERS_PAD_B { B1, A7 , A5, C13 }
 #define ENCODER_RESOLUTIONS { 2,2,2,2 }
-/* 映射矩阵未做 ROW ，COL*/
+/* 映射矩阵 C，R*/
 #define ENCODER_PAD_A_KEY_POS {4, 0}, {4, 1}, {4, 2}, {4, 3}
 #define ENCODER_PAD_B_KEY_POS {5, 0}, {5, 1}, {5, 2}, {5, 3}
 
