@@ -11,7 +11,7 @@
 // #define DMA1_Channel4_IRQn_EN  1//DMA 电压采集中断
 #define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
-#define ANALOG_JOYSTICK_CLICK_PIN B1
+//#define ANALOG_JOYSTICK_CLICK_PIN B1
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
