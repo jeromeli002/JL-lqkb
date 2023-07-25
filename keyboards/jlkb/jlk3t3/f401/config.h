@@ -8,11 +8,11 @@
 #define MANUFACTURER    JL
 #define PRODUCT         CV\u5de5\u7a0b\u5e08\u6307\u5b9a\u952e\u76d8
 
-//#define ANALOG_JOYSTICK_X_AXIS_PIN A5   /* 上拉 X轴右移 */
-//#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
+#define ANALOG_JOYSTICK_X_AXIS_PIN A5   /* 上拉 X轴右移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
 
-// 映射按键
+/* 映射按键
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
@@ -25,7 +25,7 @@
 #define JOYSTICK_AXES_PY_KEY_POS {4, 0}
 #define JOYSTICK_AXES_NY_KEY_POS {4, 2}
 #endif
-
+*/
 
 // OLED屏幕
 //#define OLED_DISPLAY_128X64
@@ -57,8 +57,8 @@
 #define ENCODERS_PAD_B { B0, A6 , B9, A3, C15 }
 #define ENCODER_RESOLUTIONS { 2, 2, 2, 2, 2 }
 /* 映射矩阵 C，R*/
-#define ENCODER_PAD_A_KEY_POS {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}
-#define ENCODER_PAD_B_KEY_POS {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}
+#define ENCODER_PAD_A_KEY_POS {4, 0}, {3, 1}, {4, 2}, {4, 3}, {4, 4}
+#define ENCODER_PAD_B_KEY_POS {3, 0}, {4, 1}, {3, 2}, {3, 3}, {3, 4}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
