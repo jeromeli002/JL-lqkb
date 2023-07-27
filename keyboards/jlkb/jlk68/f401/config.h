@@ -90,12 +90,13 @@
 #define RGB_DI_PIN B4
 #ifdef RGB_DI_PIN 
 #define RGBLED_NUM 4
-//#define RGBLIGHT_ANIMATIONS
+#define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_HUE_STEP 8    /* 增减色调步数 */
 #define RGBLIGHT_SAT_STEP 8    /* 增减饱和度步数 */
 #define RGBLIGHT_VAL_STEP 8    /* 增减亮度步数 */
 #define RGBLIGHT_LIMIT_VAL 255	/* 最大亮度 */
 // #define RGBLIGHT_LED_MAP { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }
+/* 
 #define RGBLIGHT_EFFECT_BREATHING
 #define RGBLIGHT_EFFECT_RAINBOW_MOOD
 #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
@@ -106,5 +107,5 @@
 #define RGBLIGHT_EFFECT_RGB_TEST
 #define RGBLIGHT_EFFECT_ALTERNATING
 #define RGBLIGHT_EFFECT_TWINKLE
-
+*/
 #endif
