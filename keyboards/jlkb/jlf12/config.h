@@ -29,8 +29,8 @@
 #define ENCODERS_PAD_A  { B8 }
 #define ENCODERS_PAD_B  { B7 }
 #define ENCODER_RESOLUTION 2
-#define ENCODER_PAD_A_KEY_POS {2, 2}
-#define ENCODER_PAD_B_KEY_POS {4, 2}
+#define ENCODER_PAD_A_KEY_POS {7, 4}
+#define ENCODER_PAD_B_KEY_POS {7, 5}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
