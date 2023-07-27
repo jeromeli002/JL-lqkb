@@ -42,3 +42,5 @@ POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # 可编程键
 # PROGRAMMABLE_BUTTON_ENABLE = yes
+# CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
+# SRC += matrix.c 
