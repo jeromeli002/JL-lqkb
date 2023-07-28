@@ -55,10 +55,10 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B0, A1 }
 #define ENCODERS_PAD_B { A7, A0 }
-#define ENCODER_RESOLUTIONS {2, 2}
+#define ENCODER_RESOLUTIONS {4, 4}
 /* 映射矩阵 C，R*/
-#define ENCODER_PAD_A_KEY_POS {6, 0}, {6, 2}
-#define ENCODER_PAD_B_KEY_POS {6, 1}, {6, 3}
+#define ENCODER_PAD_A_KEY_POS {7, 5}, {8, 0}
+#define ENCODER_PAD_B_KEY_POS {7, 4}, {8, 2}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
