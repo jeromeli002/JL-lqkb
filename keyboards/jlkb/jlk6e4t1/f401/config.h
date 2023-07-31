@@ -9,7 +9,7 @@
 #define PRODUCT         \u6447\u6746\u65cb\u94ae\u5c0f\u73a9\u610f\u513f
 
 #define ANALOG_JOYSTICK_X_AXIS_PIN A2   /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A0   /* 上拉 Y轴下移 */
 
 
 /* 层数 */
