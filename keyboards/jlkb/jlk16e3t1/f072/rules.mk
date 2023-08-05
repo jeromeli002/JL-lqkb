@@ -1,15 +1,12 @@
-# MCU name
-MCU = STM32F401
-
-# Bootloader selection
-BOOTLOADER = stm32-dfu
-BOARD = BLACKPILL_STM32_F401
-
-# BOOTLOADER = tinyuf2
-
 # Build Options
-#   comment out to disable the options.
+#   change yes to no to disable
 #
+# MCU 型号
+MCU = STM32F072
+
+# 引导程序 选择
+BOOTLOADER = stm32-dfu
+
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no
 BACKLIGHT_SUPPORTED = no
@@ -30,9 +27,11 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
 
-# POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
-# POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
-JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
+# CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
+# SRC += matrix.c 
+POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+# JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE

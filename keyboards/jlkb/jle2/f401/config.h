@@ -24,24 +24,24 @@
 #define MANUFACTURER    JL\u7684
 #define PRODUCT         \u952e\u76d8\u4f34\u4fa3
 
- #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
- #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
+//  #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
+// #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
 
-/* 映射按键
+/* 摇杆映射 */
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
 #define JOYSTICK_USE_LPF
 #define JOYSTICK_LPF_PROPORTION (0.2)
-#define JOYSTICK_AXES_X_PIN { A5 }
+#define JOYSTICK_AXES_X_PIN { A2 }
 #define JOYSTICK_AXES_Y_PIN { A1 }
-#define JOYSTICK_AXES_PX_KEY_POS {0, 2}
-#define JOYSTICK_AXES_NX_KEY_POS {1, 2}
-#define JOYSTICK_AXES_PY_KEY_POS {1, 1}
-#define JOYSTICK_AXES_NY_KEY_POS {0, 0}
+#define JOYSTICK_AXES_PX_KEY_POS {0, 0}
+#define JOYSTICK_AXES_NX_KEY_POS {1, 1}
+#define JOYSTICK_AXES_PY_KEY_POS {3, 0}
+#define JOYSTICK_AXES_NY_KEY_POS {2, 0}
 #endif
-*/
+
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
