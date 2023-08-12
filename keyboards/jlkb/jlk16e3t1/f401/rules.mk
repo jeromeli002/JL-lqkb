@@ -7,7 +7,7 @@ BOARD = BLACKPILL_STM32_F401
 
 # Bootloader selection
 BOOTLOADER = stm32-dfu
-FIRMWARE_FORMAT = uf2
+# FIRMWARE_FORMAT = uf2
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no
 BACKLIGHT_SUPPORTED = no
@@ -30,9 +30,9 @@ SERIAL_DRIVER = usart
 
 # CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
 # SRC += matrix.c 
-POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
-POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
-# JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
+# POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+# POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
