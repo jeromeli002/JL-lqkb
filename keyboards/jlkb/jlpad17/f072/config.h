@@ -46,7 +46,7 @@
     keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \
 )
 
-#define RGB_DI_PIN B8
+#define RGB_DI_PIN B9
 #define RGBLED_NUM 17
 //#define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_HUE_STEP 8    /* 增减色调步数 */

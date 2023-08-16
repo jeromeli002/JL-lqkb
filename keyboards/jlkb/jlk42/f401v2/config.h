@@ -8,9 +8,12 @@
 #define MANUFACTURER    JL\u7684
 #define PRODUCT         \u672a\u6210\u5e74\u952e\u76d8-42
 
-#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
-#define ANALOG_JOYSTICK_CLICK_PIN B1
+#define ANALOG_JOYSTICK_X_AXIS_PIN A2   /* 上拉 X轴右移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
+//#define ANALOG_JOYSTICK_CLICK_PIN B1
+#define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */
+
+
 
 /* 层数 */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 16
