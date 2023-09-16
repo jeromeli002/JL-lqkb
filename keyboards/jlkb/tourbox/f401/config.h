@@ -23,12 +23,12 @@
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
-
-#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
+/*
+#define ANALOG_JOYSTICK_X_AXIS_PIN A1  
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   
 #define ANALOG_JOYSTICK_CLICK_PIN B1
-
-/* #ifdef JOYSTICK_TRIGGER_ENABLE
+*/
+ #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
 #define JOYSTICK_USE_LPF
@@ -40,7 +40,7 @@
 #define JOYSTICK_AXES_PY_KEY_POS {2, 6}
 #define JOYSTICK_AXES_NY_KEY_POS {3, 6}
 #endif
-*/
+
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16

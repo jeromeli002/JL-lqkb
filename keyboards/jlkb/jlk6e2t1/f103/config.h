@@ -21,25 +21,25 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x5009
 #define DEVICE_VER      0x0001
-#define MANUFACTURER    JL\u7684
-#define PRODUCT         \u952e\u76d8\u4f34\u4fa3
+#define MANUFACTURER    JL
+#define PRODUCT         \u591a\u529f\u80fd\u952e\u76d8\u4f34\u4fa3
 
 // #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
 // #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
 
-/* 摇杆映射 */
+/* 摇杆映射*/ 
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
 #define JOYSTICK_USE_LPF
 #define JOYSTICK_LPF_PROPORTION (0.2)
-#define JOYSTICK_AXES_X_PIN { A2 }
-#define JOYSTICK_AXES_Y_PIN { A1 }
-#define JOYSTICK_AXES_PX_KEY_POS {1, 0}
-#define JOYSTICK_AXES_NX_KEY_POS {2, 0}
-#define JOYSTICK_AXES_PY_KEY_POS {2, 1}
-#define JOYSTICK_AXES_NY_KEY_POS {3, 1}
+#define JOYSTICK_AXES_X_PIN { A1 }
+#define JOYSTICK_AXES_Y_PIN { A2 }
+#define JOYSTICK_AXES_PX_KEY_POS {3, 0}
+#define JOYSTICK_AXES_NX_KEY_POS {3, 1}
+#define JOYSTICK_AXES_PY_KEY_POS {4, 0}
+#define JOYSTICK_AXES_NY_KEY_POS {4, 1}
 #endif
 
 
@@ -47,21 +47,21 @@
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
-#define MATRIX_ROWS 2
+#define MATRIX_ROWS 5
 #define MATRIX_COLS 4
 
-#define MATRIX_ROW_PINS {  B9, C14 }
-#define MATRIX_COL_PINS {  B8, C13, B13, B12}
+#define MATRIX_ROW_PINS {  C14, B8, B5, B0, B1 }
+#define MATRIX_COL_PINS {  C13, C15, B4, A5}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 
-#define ENCODERS_PAD_A  { C13, C15 }
-#define ENCODERS_PAD_B  { C14, A0 }
+#define ENCODERS_PAD_A  { B10, B14, B12 }
+#define ENCODERS_PAD_B  { B11, B15, B13 }
 #define ENCODER_RESOLUTION 2
-#define ENCODER_PAD_A_KEY_POS {1, 1}, {1, 3}
-#define ENCODER_PAD_B_KEY_POS {1, 2}, {2, 1}
+#define ENCODER_PAD_A_KEY_POS {3, 0}, {3, 2}, {0, 3}
+#define ENCODER_PAD_B_KEY_POS {3, 1}, {3, 3}, {1, 3}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
@@ -96,10 +96,10 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 
-#define RGB_DI_PIN A10
+#define RGB_DI_PIN B3
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 8
+#define RGBLED_NUM 6
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
