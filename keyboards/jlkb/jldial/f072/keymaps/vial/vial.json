@@ -4,6 +4,20 @@
 
  "lighting": "qmk_rgblight",
 
+"customKeycodes": [
+	{"name": "下一层",
+	 "title": "切换至下一层",
+	 "shortName": "LAYERS_DOWN"
+	},
+	{"name": "上一层",
+	 "title": "切换至上一层",
+	 "shortname": "LAYERS_UP"
+	},
+	{"name": "一键\n购物",
+	 "title": "一键打开淘宝站",
+	 "shortName": "jltb"
+	}
+],
  "matrix": { "rows": 4, "cols":4 },
 
  "layouts": {

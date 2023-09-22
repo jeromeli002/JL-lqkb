@@ -3,8 +3,9 @@
 //#include "oled.c"
 
 enum keycodes {
-  LAYERS_DOWN = SAFE_RANGE,
-  LAYERS_UP
+  LAYERS_DOWN = SAFE_RANGE,// 自定义键显示 替换SAFE_RANGE为USER00
+  LAYERS_UP,
+  jltb
 };
 
 // 1st layer on the cycle
@@ -15,8 +16,8 @@ enum keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		LAYERS_DOWN, KC_0, KC_0, KC_TRNS, 
-		LAYERS_UP, KC_0, KC_0, KC_H, 
+		jltb, KC_0, KC_0, KC_TRNS, 
+		jltb, KC_0, KC_0, KC_H, 
 		DIAL_R, DIAL_BUT, DIAL_L, KC_L, 
 		KC_M, KC_N, KC_O, KC_P),
 
@@ -160,7 +161,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
      return true;
      break;
     
+    case jltb:
+        if (record->event.pressed) {
+            SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
+        }
+        break;
   }
+   return true;
 }
 
 
