@@ -2,9 +2,9 @@
 #   change yes to no to disable
 #
 # MCU name
-MCU = STM32F072
+MCU = STM32F103
 # Bootloader selection
-BOOTLOADER = stm32-dfu
+BOOTLOADER = stm32duino
 
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no

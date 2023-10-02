@@ -37,4 +37,8 @@ SERIAL_DRIVER = usart
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # 可编程键
-# PROGRAMMABLE_BUTTON_ENABLE = yes
+PROGRAMMABLE_BUTTON_ENABLE = yes
+
+# OLED屏幕开关
+OLED_ENABLE = yes
+OLED_DRIVER = SSD1306   
