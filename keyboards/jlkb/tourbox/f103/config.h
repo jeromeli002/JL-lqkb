@@ -102,13 +102,14 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 /* 常规rgb灯*/
-#define RGB_DI_PIN C13
-#ifdef RGB_DI_PIN 
-#define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 9
-#define RGBLIGHT_HUE_STEP 8
-#define RGBLIGHT_SAT_STEP 8
-#define RGBLIGHT_VAL_STEP 8
+#define RGB_DI_PIN C13         /* rgb灯脚*/
+#ifdef RGB_DI_PIN              
+#define RGBLIGHT_ANIMATIONS    /* 启用全部灯效*/
+#define RGBLED_NUM 9           /* rgb灯数量*/
+#define RGBLIGHT_HUE_STEP 8    /* rgb灯循环色调步数*/
+#define RGBLIGHT_SAT_STEP 8    /* rgb灯增加饱和度步数*/
+#define RGBLIGHT_VAL_STEP 8    /* rgb灯增加亮度步数*/
+#define RGBLIGHT_LIMIT_VAL 128 /* rgb灯最高亮度*/
 #endif
 
 
