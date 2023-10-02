@@ -8,8 +8,14 @@
 #define MANUFACTURER    JL\u7684
 #define PRODUCT         \u672a\u6210\u5e74\u952e\u76d8-42
 
+ /* 层指示灯 */
+#define RGBLIGHT_LAYERS
+#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
+#define RGBLIGHT_LAYER_BLINK   
+#define RGBLIGHT_MAX_LAYERS 16
+
 /* 层数 */
-#define DYNAMIC_KEYMAP_LAYER_COUNT 8
+#define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
 #define MATRIX_ROWS 5

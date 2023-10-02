@@ -63,6 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC)
 		
 };
+
 // Add the behaviour of this new keycode
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // 下一层
@@ -118,96 +119,98 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
      default:
      return true;
      break;
-    
-    case jltb:
+     
+ case jltb:
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-        break;
+        
+ //OLED   
+      if (record->event.pressed) {
+#ifdef OLED_ENABLE
+        oled_timer = timer_read32();
+#endif
+    }
+    return true;
+    break;
   }
-   return true;
 }
-
-
-
 
 
 /*/// 按下 Capslock 的時候，第6颗RGB之后(也就第7颗) 的4颗灯会亮与第12個灯(也就是第12个) 之后的第4颗会亮紅色。
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 1, RGB_AZURE}       // Light 4 LEDs, starting with LED 6
 );
-
-// Layer 1 启用的時候，第 0颗后1颗灯会亮青色
+ */
+// Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
 const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_AZURE}
+    {0,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_AZURE}
+    {8,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, RGB_AZURE}
+    {7,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, RGB_AZURE}
+    {6,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {3,1, RGB_AZURE}
+    {5,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_BLUE}
+    {4,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, RGB_BLUE}
+    {3,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, RGB_BLUE}
+    {2,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {3,1, RGB_BLUE}
+    {1,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_GREEN}
+    {8,1, HSV_WHITE},{7,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, RGB_GREEN}
+    {8,1, HSV_WHITE},{6,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, RGB_GREEN}
+    {8,1, HSV_WHITE},{5,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {3,1, RGB_GREEN}
+    {8,1, HSV_WHITE},{4,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, RGB_WHITE}
+    {8,1, HSV_WHITE},{3,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, RGB_WHITE}
+    {8,1, HSV_WHITE},{2,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer15_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, RGB_WHITE}
+    {8,1, HSV_WHITE},{1,1, HSV_PURPLE}
 );
 // etc..
 
-
-
-// 接者將您的 rgblight_segment_t 放到 RGBLIGHT_LAYERS_LIST 內
+// 接着將您的 rgblight_segment_t 放到 RGBLIGHT_LAYERS_LIST 內
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
 //    my_capslock_layer,   // Overrides caps lock layer
     my_layer0_layer, // Overrides other layer 
     my_layer1_layer, // Overrides other layer 
     my_layer2_layer, 
     my_layer3_layer, 
-    my_layer4_layer , 
-    my_layer5_layer , 
-    my_layer6_layer , 
-    my_layer7_layer , 
+    my_layer4_layer, 
+    my_layer5_layer, 
+    my_layer6_layer, 
+    my_layer7_layer, 
     my_layer8_layer, 
-    my_layer9_layer , 
-    my_layer10_layer , 
-    my_layer11_layer , 
+    my_layer9_layer, 
+    my_layer10_layer, 
+    my_layer11_layer, 
     my_layer12_layer, 
     my_layer13_layer, 
-    my_layer14_layer , 
+    my_layer14_layer, 
     my_layer15_layer      
 );
 
@@ -236,7 +239,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
+/*
 bool led_update_user(led_t led_state) {
     rgblight_set_layer_state(0, led_state.caps_lock);
     return true;
 } */
+
