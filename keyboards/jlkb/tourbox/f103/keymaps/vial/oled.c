@@ -133,7 +133,9 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     }
     return rotation;
 }
+
 // {按键记录进程} ------------------------------------------------------//
+/*
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
@@ -142,7 +144,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-
+*/
 
 bool oled_task_user(void) {
      if (timer_elapsed32(oled_timer) > OLED_SHOW_STATE_TIMEOUT && timer_elapsed32(oled_timer) < 1200000) {

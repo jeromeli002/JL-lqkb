@@ -59,6 +59,7 @@
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
+#define DEBOUNCE 5   //去抖时间5毫秒
 
 
 #define ENCODERS_PAD_A  { B4, B9, B3, A8 }
@@ -102,17 +103,54 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 /* 常规rgb灯*/
-#define RGB_DI_PIN C13         /* rgb灯脚*/
-#ifdef RGB_DI_PIN              
-#define RGBLIGHT_ANIMATIONS    /* 启用全部灯效*/
-#define RGBLED_NUM 9           /* rgb灯数量*/
-#define RGBLIGHT_HUE_STEP 8    /* rgb灯循环色调步数*/
-#define RGBLIGHT_SAT_STEP 8    /* rgb灯增加饱和度步数*/
-#define RGBLIGHT_VAL_STEP 8    /* rgb灯增加亮度步数*/
-#define RGBLIGHT_LIMIT_VAL 128 /* rgb灯最高亮度*/
+//#define RGB_DI_PIN C13         /* rgb灯脚*/
+//#ifdef RGB_DI_PIN              
+//#define RGBLIGHT_ANIMATIONS    /* 启用全部灯效*/
+//#define RGBLED_NUM 9           /* rgb灯数量*/
+//#define RGBLIGHT_HUE_STEP 8    /* rgb灯循环色调步数*/
+//#define RGBLIGHT_SAT_STEP 8    /* rgb灯增加饱和度步数*/
+//#define RGBLIGHT_VAL_STEP 8    /* rgb灯增加亮度步数*/
+//#define RGBLIGHT_LIMIT_VAL 128 /* rgb灯最高亮度*/
+//#endif
+
+/* RGN Matrix */
+#ifdef RGB_MATRIX_ENABLE
+#    define RGB_DI_PIN C13
+#    define RGBLED_NUM 9
+#    define DRIVER_LED_TOTAL RGBLED_NUM
+
+#    define WS2812_PWM_DRIVER PWMD3               // default: PWMD2
+#    define WS2812_PWM_CHANNEL 2                  // default: 2
+#    define WS2812_PWM_PAL_MODE 2                 // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
+#    define WS2812_DMA_STREAM STM32_DMA1_STREAM3  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+#    define WS2812_DMA_CHANNEL 3                  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+
+#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200     // 最大亮度限制
+#    define RGB_DISABLE_WHEN_USB_SUSPENDED true
+#    define RGB_MATRIX_CENTER { 96, 32 }
+#    define RGB_MATRIX_KEYPRESSES
+#    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #endif
 
-
+/* OLED */
+/* 
+#ifdef OLED_DRIVER_ENABLE
+#    define OLED_DISPLAY_128X64
+#    define I2C_DRIVER I2CD1
+//#    define OLED_IC OLED_IC_SH1106  // 选用1.3寸SH1106主控OLED时打开, 0.96寸SSD1306主控OLED注释掉本行。
+//#    define OLED_COLUMN_OFFSET 2  // 调整OLED纵向偏移，0.96寸SSD1306主控OLED注释掉本行。
+#    define I2C1_TIMINGR_PRESC 0U
+#    define I2C1_TIMINGR_SCLDEL 7U
+#    define I2C1_TIMINGR_SDADEL 0U
+#    define I2C1_TIMINGR_SCLH 38U
+#    define I2C1_TIMINGR_SCLL 129U
+#    define OLED_TIMEOUT 60000  // 60秒无操作关闭OLED
+#    define OLED_FONT_HEIGHT 8          //字体高度
+#    define OLED_FONT_WIDTH 6           //字体宽度
+#    define OLED_FONT_H "neil_font.c"   //字体
+#endif
+ */
+ 
 /* 矩阵灯
 #ifdef RGB_MATRIX_ENABLE
     #define DRIVER_LED_TOTAL 9
