@@ -1,7 +1,15 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 #include "gpio.h"
+
+/**
+ * \file
+ *
+ * \defgroup joystick HID Joystick
+ * \{
+ */
 
 #ifndef JOYSTICK_BUTTON_COUNT
 #    define JOYSTICK_BUTTON_COUNT 8
@@ -65,7 +73,46 @@ typedef struct {
 
 extern joystick_t joystick_status;
 
+void joystick_task(void);
+
+/**
+ * \brief Send the joystick report to the host, if it has been marked as dirty.
+ */
 void joystick_flush(void);
 
+/**
+ * \brief Set the state of a button, and flush the report.
+ *
+ * \param button The index of the button to press, from 0 to 31.
+ */
 void register_joystick_button(uint8_t button);
+
+/**
+ * \brief Reset the state of a button, and flush the report.
+ *
+ * \param button The index of the button to release, from 0 to 31.
+ */
 void unregister_joystick_button(uint8_t button);
+
+/**
+ * \brief Sample and process the analog value of the given axis.
+ *
+ * \param axis The axis to read.
+ *
+ * \return A signed 16-bit integer, where 0 is the resting or mid point.
+ */
+int16_t joystick_read_axis(uint8_t axis);
+
+void joystick_read_axes(void);
+
+/**
+ * \brief Set the value of the given axis.
+ *
+ * \param axis The axis to set the value of.
+ * \param value The value to set.
+ */
+void joystick_set_axis(uint8_t axis, int16_t value);
+
+void host_joystick_send(joystick_t *joystick);
+
+/** \} */

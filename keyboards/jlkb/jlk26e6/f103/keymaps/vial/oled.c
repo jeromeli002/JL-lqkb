@@ -7,7 +7,7 @@
  #include "logo.c"      //层logo标志
 static uint32_t oled_timer          = 0;      // OLED 计时器
 bool            master_oled_cleared = false;  // OLED CLEAR 标记
-#define OLED_SHOW_STATE_TIMEOUT 30000         // 无操作10秒后激活OLED动画
+#define OLED_SHOW_STATE_TIMEOUT 30000         // 无操作30秒后激活OLED动画
 
 static const char PROGMEM jlkb[] = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -133,7 +133,8 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     }
     return rotation;
 }
-// {按键记录进程} ------------------------------------------------------//
+ /*
+ /// {按键记录进程} ------------------------------------------------------//
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
@@ -142,7 +143,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-
+ */
 
 bool oled_task_user(void) {
      if (timer_elapsed32(oled_timer) > OLED_SHOW_STATE_TIMEOUT && timer_elapsed32(oled_timer) < 1200000) {
