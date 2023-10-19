@@ -1,14 +1,13 @@
 
 #ifdef OLED_ENABLE
-#include "konglong.c"  // render_anime.c render_anime2.c render_anime3.c 分别为三种种大小不同OLED的待机动画，选择加载
+// #include "konglong.c"  // render_anime.c render_anime2.c render_anime3.c 分别为三种种大小不同OLED的待机动画，选择加载
 // #include <stdio.h>
 // [Init Variables] ----------------------------------------------------------//
 
  #include "logo.c"      //层logo标志
 static uint32_t oled_timer          = 0;      // OLED 计时器
 bool            master_oled_cleared = false;  // OLED CLEAR 标记
-#define OLED_SHOW_STATE_TIMEOUT 30000         // 无操作10秒后激活OLED动画
-
+//#define OLED_SHOW_STATE_TIMEOUT 30000         // 无操作10秒后激活OLED动画
 
 static void print_status_narrow(void) {
     // Print current mode
@@ -44,7 +43,7 @@ switch (get_highest_layer(layer_state)) {
             break;
         case 4:
             oled_write_raw_P(L4, sizeof(L4));
-            break;
+            break ;
         case 5:
             oled_write_raw_P(L5, sizeof(L5));
             break;
@@ -60,30 +59,30 @@ switch (get_highest_layer(layer_state)) {
         case 9:
             oled_write_raw_P(L9, sizeof(L9));
             break;           
-        case 10:
+        case 10:            
             oled_write_raw_P(L10, sizeof(L10));
-            break;           
+            break;
         case 11:
-            oled_write_raw_P(L11, sizeof(L11));
-            break;         
+            oled_write_P(PSTR("        LAYER      \n          11       \n\n        GAME           "), false);
+            break;
         case 12:
-            oled_write_raw_P(L12, sizeof(L12));
+            oled_write_P(PSTR("        LAYER      \n          12       \n\n        MUSIC          "), false);
             break;           
         case 13:
-            oled_write_raw_P(L13, sizeof(L13));
-            break;           
+            oled_write_P(PSTR("        LAYER      \n          13       \n\n       Office          "), false);
+            break;          
         case 14:
-            oled_write_raw_P(L14, sizeof(L14));
-            break;           
+            oled_write_P(PSTR("        LAYER      \n          14       \n\n       Windows         "), false);
+            break;         
         case 15:
-            oled_write_raw_P(L15, sizeof(L15));
-            break;             
+            oled_write_P(PSTR("        LAYER      \n          15       \n\n        APple          "), false);
+            break;
  /*       case 5:
             render_anime();          
             break;
             */
         default:
-            oled_write_ln_P(PSTR("Undef"), false);
+            oled_clear();
     }
     /*
     oled_write_ln_P(PSTR(" "), false);
@@ -99,19 +98,10 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     }
     return rotation;
 }
-
+// {按键记录进程} ------------------------------------------------------//
 
 bool oled_task_user(void) {
-     if (timer_elapsed32(oled_timer) > OLED_SHOW_STATE_TIMEOUT && timer_elapsed32(oled_timer) < 1200000) {
-        // 无操作10秒后，OLED_TIMEOUT(60秒默认)前播放动画
-        if (!master_oled_cleared) {
-            // Clear OLED一次确保动画正确渲染
-            oled_clear();
-            master_oled_cleared = true;
-        }
-        render_anime();
-        return false;
-    } else if (timer_elapsed32(oled_timer) > 1200000) {
+     if (timer_elapsed32(oled_timer) > 1200000) {
         // 无操作60秒后关闭OLED
         oled_off();
         return false;
