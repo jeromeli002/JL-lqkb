@@ -3,6 +3,12 @@
 #
 # MCU name
 MCU = STM32F103
+# MCU_LDSCRIPT = STM32F103xB_uf2
+# MCU_LDSCRIPT = STM32F103xB_stm32duino_bootloader
+MCU_LDSCRIPT = STM32F103xB
+FIRMWARE_FORMAT = uf2
+BOARD = STM32_F103_STM32DUINO
+
 # Bootloader selection
 BOOTLOADER = stm32duino
 
@@ -29,3 +35,6 @@ SERIAL_DRIVER = usart
 OLED_ENABLE = yes
 OLED_DRIVER = SSD1306    # Enable the OLED Driver
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
+
+OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
+SRC += uf2_boot.c
