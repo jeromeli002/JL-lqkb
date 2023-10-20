@@ -62,20 +62,20 @@ switch (get_highest_layer(layer_state)) {
         case 10:            
             oled_write_raw_P(L10, sizeof(L10));
             break;
-        case 11:
-            oled_write_P(PSTR("        LAYER      \n          11       \n\n        GAME           "), false);
-            break;
-        case 12:
-            oled_write_P(PSTR("        LAYER      \n          12       \n\n        MUSIC          "), false);
+        case 11:            
+            oled_write_raw_P(L11, sizeof(L11));
             break;           
-        case 13:
-            oled_write_P(PSTR("        LAYER      \n          13       \n\n       Office          "), false);
-            break;          
-        case 14:
-            oled_write_P(PSTR("        LAYER      \n          14       \n\n       Windows         "), false);
-            break;         
-        case 15:
-            oled_write_P(PSTR("        LAYER      \n          15       \n\n        APple          "), false);
+        case 12:            
+            oled_write_raw_P(L12, sizeof(L12));
+            break;           
+        case 13:            
+            oled_write_raw_P(L13, sizeof(L13));
+            break;           
+        case 14:            
+            oled_write_raw_P(L14, sizeof(L14));
+            break;           
+        case 15:            
+            oled_write_raw_P(L15, sizeof(L15));
             break;
  /*       case 5:
             render_anime();          
