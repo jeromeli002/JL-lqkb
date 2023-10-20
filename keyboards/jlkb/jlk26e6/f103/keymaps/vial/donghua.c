@@ -10,7 +10,7 @@ uint16_t anim_timer         = 0;
 uint8_t  current_anim_frame = 0;
 
 static void render_anime(void) {
-    static const char PROGMEM frame[ANIM_NUM_FRAMES][1024] = {
+    static const char PROGMEM frame[ANIM_NUM_FRAMES][512] = {
     {
 // '48', 128x32px
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0xf0, 0xf0, 0xf0, 0x70, 
@@ -1681,6 +1681,6 @@ static void render_anime(void) {
 if (timer_elapsed(anim_timer) > ANIM_FRAME_DURATION) {
     anim_timer         = timer_read();
     current_anim_frame = (current_anim_frame + 1) % ANIM_TOTAL_FRAMES;
-    oled_write_raw_P(frame[abs((ANIM_NUM_FRAMES - 1) - current_anim_frame)], 1024);
+    oled_write_raw_P(frame[abs((ANIM_NUM_FRAMES - 1) - current_anim_frame)], 512);
 }
 }

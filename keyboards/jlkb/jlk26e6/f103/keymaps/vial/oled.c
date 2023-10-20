@@ -1,35 +1,12 @@
 
 #ifdef OLED_ENABLE
-// #include "konglong.c"  // render_anime.c render_anime2.c render_anime3.c 分别为三种种大小不同OLED的待机动画，选择加载
-// #include <stdio.h>
-// [Init Variables] ----------------------------------------------------------//
-
  #include "logo.c"      //层logo标志
-static uint32_t oled_timer          = 0;      // OLED 计时器
-bool            master_oled_cleared = false;  // OLED CLEAR 标记
-//#define OLED_SHOW_STATE_TIMEOUT 30000         // 无操作10秒后激活OLED动画
-
-static void print_status_narrow(void) {
-    // Print current mode
-  /*  oled_write_ln_P(PSTR("LAYER\n"), false);
-
-    switch (get_highest_layer(layer_state)) {
-        case 0:
-            oled_write_ln_P(PSTR("00"), false);
-            break;
-        case 1:
-            oled_write_ln_P(PSTR("01"), false);
-            break;
-        default:
-            oled_write_ln_P(PSTR("02\n"), false);
-            break;
-    }
-    oled_write_ln_P(PSTR("\n\n"), false);
-    // Print current layer
-    oled_write_ln_P(PSTR("mode\n"), false);*/
+   oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+	return OLED_ROTATION_180; /*将屏幕旋转180度*/
+}
+ bool oled_task_user(void) {
 switch (get_highest_layer(layer_state)) {
         case 0:
- //         oled_set_cursor(1, 0);
             oled_write_raw_P(logo, sizeof(logo));
             break;
         case 1:
@@ -76,52 +53,16 @@ switch (get_highest_layer(layer_state)) {
             break;           
         case 15:            
             oled_write_raw_P(L15, sizeof(L15));
-            break;
- /*       case 5:
-            render_anime();          
-            break;
-            */
-        default:
-            oled_clear();
+            break;       
     }
-    /*
-    oled_write_ln_P(PSTR(" "), false);
-    oled_write_ln_P(PSTR("LED\n"), false);
-    oled_write_P(host_keyboard_led_state().caps_lock ? PSTR("--A--\n") : PSTR("--a--\n"), false);
-    oled_write_P(host_keyboard_led_state().num_lock ? PSTR("-Num-\n") : PSTR("-----\n"), false);
-    oled_write_P(host_keyboard_led_state().scroll_lock ? PSTR("--S--\n") : PSTR("-- --\n"), false); */
-}
+/*
+    led_t led_state = host_keyboard_led_state();
+    oled_write_P(led_state.num_lock ? PSTR("\nNUM ") : PSTR("\n    "), false);
+    oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
+    oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
+    */
+    return false;
 
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_master()) {
-        return OLED_ROTATION_180;
-    }
-    return rotation;
-}
-// {按键记录进程} ------------------------------------------------------//
-
-bool oled_task_user(void) {
-     if (timer_elapsed32(oled_timer) > 1200000) {
-        // 无操作60秒后关闭OLED
-        oled_off();
-        return false;
-    } else {
-        // 重置Clear OLED标记
-        if (master_oled_cleared) {
-            oled_on();
-            oled_clear();
-            master_oled_cleared = false;
-        }
-        print_status_narrow();
-
-  }return false;
- /*   if (is_keyboard_master()) {
-        print_status_narrow();
-    } else {
- //     render_logo();
-    render_anime();
-    }
-	return false;*/
 }
 
 #endif

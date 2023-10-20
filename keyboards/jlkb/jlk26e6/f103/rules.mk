@@ -6,8 +6,8 @@ MCU = STM32F103
 # MCU_LDSCRIPT = STM32F103xB_uf2
 # MCU_LDSCRIPT = STM32F103xB_stm32duino_bootloader
 MCU_LDSCRIPT = STM32F103xB
-FIRMWARE_FORMAT = uf2
-BOARD = STM32_F103_STM32DUINO
+# FIRMWARE_FORMAT = uf2  生成uf2格式固件
+# BOARD = STM32_F103_STM32DUINO
 
 # Bootloader selection
 BOOTLOADER = stm32duino
@@ -28,13 +28,17 @@ NKRO_ENABLE = yes           # USB Nkey Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 ENCODER_ENABLE = yes        # Enable rotary encoder support
 AUDIO_ENABLE = no           # Audio output
+#AUDIO_DRIVER = pwm_hardware
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
+# HAPTIC_ENABLE = yes //蜂鸣器/电磁阀
+# HAPTIC_DRIVER += SOLENOID
+
 
 OLED_ENABLE = yes
 OLED_DRIVER = SSD1306    # Enable the OLED Driver
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
 
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
-SRC += uf2_boot.c
+# SRC += uf2_boot.c  //UF2格式固件

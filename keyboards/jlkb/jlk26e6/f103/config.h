@@ -5,8 +5,8 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x6004
 #define DEVICE_VER      0x0002
-#define MANUFACTURER    JL\u7684
-#define PRODUCT         \u591a\u529f\u80fd\u952e\u76d8
+#define MANUFACTURER    JL
+#define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
@@ -81,3 +81,26 @@
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
 #endif
+
+//  OLED设置项
+//#define OLED_FONT_H "glcdfont.c"//自定义字体
+//#define OLED_FONT_WIDTH 6 //字体宽度
+//#define OLED_FONT_HEIGHT 8 //字体高度
+//#define OLED_FADE_OUT
+//#define OLED_FADE_OUT_INTERVAL 10
+#define OLED_SCROLL_TIMEOUT	 2000 //2000毫秒后开始滚动
+// #define OLED_SCROLL_TIMEOUT_RIGHT //向右滚动 不设置默认向左滚动
+#define OLED_TIMEOUT 600000   // 10分钟（毫秒）无操作后关闭屏幕
+
+/* // 蜂鸣器/电磁阀
+#define AUDIO_PIN A8
+#define AUDIO_PWM_DRIVER PWMD1
+#define AUDIO_PWM_CHANNEL 1
+#define AUDIO_CLICKY
+#define AUDIO_INIT_DELAY
+#define AUDIO_CLICKY_FREQ_DEFAULT 1500.0f
+#define AUDIO_CLICKY_FREQ_MIN 1000.0f
+#define AUDIO_CLICKY_FREQ_MAX 2500.0f
+
+#define SOLENOID_PIN B9
+*/
