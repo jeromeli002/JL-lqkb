@@ -6,11 +6,12 @@ MCU = STM32F103
 # MCU_LDSCRIPT = STM32F103xB_uf2
 # MCU_LDSCRIPT = STM32F103xB_stm32duino_bootloader
 MCU_LDSCRIPT = STM32F103xB
-# FIRMWARE_FORMAT = uf2  生成uf2格式固件
+# FIRMWARE_FORMAT = uf2  # 生成uf2格式固件
 # BOARD = STM32_F103_STM32DUINO
 
 # Bootloader selection
 BOOTLOADER = stm32duino
+# BOOTLOADER = custom
 
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no
@@ -41,4 +42,4 @@ OLED_DRIVER = SSD1306    # Enable the OLED Driver
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
 
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
-# SRC += uf2_boot.c  //UF2格式固件
+# SRC += uf2_boot.c  # UF2格式固件
