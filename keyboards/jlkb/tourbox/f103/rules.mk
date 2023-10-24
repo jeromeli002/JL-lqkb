@@ -29,10 +29,10 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
-RGB_MATRIX_ENABLE = yes
-RGB_MATRIX_DRIVER = WS2812
-WS2812_DRIVER = pwm
-WPM_ENABLE = yes		 # Show APM.
+# RGB_MATRIX_ENABLE = yes
+# RGB_MATRIX_DRIVER = WS2812
+# WS2812_DRIVER = pwm
+# WPM_ENABLE = yes		 # Show APM.
 
 # POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
 # POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
@@ -46,3 +46,4 @@ PROGRAMMABLE_BUTTON_ENABLE = yes
 # OLED屏幕开关
 OLED_ENABLE = yes
 OLED_DRIVER = SSD1306   
+EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
