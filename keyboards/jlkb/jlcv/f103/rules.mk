@@ -1,13 +1,15 @@
-# Build Options
-#   change yes to no to disable
-#
 # MCU name
-MCU = STM32F401
-BOARD = BLACKPILL_STM32_F401
+MCU = STM32F103
 
 # Bootloader selection
-BOOTLOADER = stm32-dfu
+BOOTLOADER = stm32duino
 
+
+# BOOTLOADER = tinyuf2
+
+# Build Options
+#   comment out to disable the options.
+#
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no
 BACKLIGHT_SUPPORTED = no
@@ -27,20 +29,21 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
+# RGB_MATRIX_ENABLE = yes
+# RGB_MATRIX_DRIVER = WS2812
+# WS2812_DRIVER = pwm
+# WPM_ENABLE = yes		 # Show APM.
 
-# CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
-# SRC += matrix.c 
-POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
-POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+ POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+ POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
 # JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
-
-# OLED屏幕开关
-# OLED_ENABLE = yes
-# OLED_DRIVER = SSD1306   
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # 可编程键
-# PROGRAMMABLE_BUTTON_ENABLE = yes
-# CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
-# SRC += matrix.c 
+PROGRAMMABLE_BUTTON_ENABLE = yes
+
+# OLED屏幕开关
+OLED_ENABLE = yes
+OLED_DRIVER = SSD1306   
+EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
