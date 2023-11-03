@@ -24,8 +24,8 @@
 #define MANUFACTURER    JL
 #define PRODUCT         CV\u5de5\u7a0b\u5e08\u4e13\u7528\u952e\u76d8
 
-#define ANALOG_JOYSTICK_X_AXIS_PIN A1  
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   
+#define ANALOG_JOYSTICK_X_AXIS_PIN A2  
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
 /*
  #ifdef JOYSTICK_TRIGGER_ENABLE
@@ -62,11 +62,11 @@
 #define DEBOUNCE 5   //去抖时间5毫秒
 
 
-#define ENCODERS_PAD_A  { B4, B9, B3, A8 }
-#define ENCODERS_PAD_B  { B5, B8, A15, B15 }
+#define ENCODERS_PAD_A  { A7, A15, A5, A3 }
+#define ENCODERS_PAD_B  { A6, B9, A4, C15 }
 #define ENCODER_RESOLUTION 4
 #define ENCODER_PAD_A_KEY_POS {1, 2}, {3, 0}, {3, 1}, {3, 2}
-#define ENCODER_PAD_B_KEY_POS {3, 2}, {4, 0}, {4, 1}, {4, 2}
+#define ENCODER_PAD_B_KEY_POS {4, 3}, {4, 0}, {4, 1}, {4, 2}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
