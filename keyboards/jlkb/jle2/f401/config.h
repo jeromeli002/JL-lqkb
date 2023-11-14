@@ -95,7 +95,7 @@
 /* prevent stuck modifiers */
 /* #define PREVENT_STUCK_MODIFIERS */
 
-
+/*
 #define RGB_DI_PIN A10
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
@@ -104,3 +104,4 @@
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
 #endif
+*/
