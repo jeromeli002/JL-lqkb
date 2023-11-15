@@ -55,15 +55,15 @@
 #define MATRIX_ROWS 2
 #define MATRIX_COLS 4
 
-#define MATRIX_ROW_PINS {  B9, C14 }
-#define MATRIX_COL_PINS {  B8, C13, B13, B12}
+#define MATRIX_ROW_PINS {  B3, C15 }
+#define MATRIX_COL_PINS {  B4, A0, B13, B12}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 
-#define ENCODERS_PAD_A  { C13, C15 }
-#define ENCODERS_PAD_B  { C14, A0 }
+#define ENCODERS_PAD_A  { A10, B10 }
+#define ENCODERS_PAD_B  { A8, A3 }
 #define ENCODER_RESOLUTION 2
 #define ENCODER_PAD_A_KEY_POS {1, 1}, {1, 3}
 #define ENCODER_PAD_B_KEY_POS {1, 2}, {2, 1}
@@ -101,7 +101,7 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 
-#define RGB_DI_PIN A10
+#define RGB_DI_PIN A4
 #ifdef RGB_DI_PIN 
 #define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 8

@@ -2,8 +2,7 @@
 
  "name": "JL-Dial Rev.B",
 
- "lighting": "qmk_rgblight",
-
+"lighting": "qmk_backlight_rgblight",
 "customKeycodes": [
 	{"name": "下一层",
 	 "title": "切换至下一层",
@@ -19,7 +18,9 @@
 	}
 ],
  "matrix": { "rows": 4, "cols":4 },
-
+ "vial": {
+        "midi": "advanced"        
+    },
  "layouts": {
       "labels": [ ],
    "keymap": [
