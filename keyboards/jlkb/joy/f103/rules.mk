@@ -4,7 +4,6 @@ MCU = STM32F103
 # Bootloader selection
 BOOTLOADER = stm32duino
 
-
 # BOOTLOADER = tinyuf2
 
 # Build Options
@@ -26,13 +25,16 @@ NKRO_ENABLE = yes           # USB Nkey Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 ENCODER_ENABLE = yes        # Enable rotary encoder support
 AUDIO_ENABLE = no           # Audio output
-RGBLIGHT_ENABLE ?= yes
+#RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
-SERIAL_DRIVER = usart
+# SERIAL_DRIVER = usart
 
- POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
- POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+# POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+# POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
 # JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
+# JOYSTICK_ENABLE = yes
+JOYSTICK_ENABLE = yes       # This is a joystick
+JOYSTICK_DRIVER = analog
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE

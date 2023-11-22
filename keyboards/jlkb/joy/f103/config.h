@@ -15,18 +15,13 @@
  */
 
 #pragma once
+#define ADC_PIN A1
+#define JOYSTICK_AXIS_COUNT 2
+#define JOYSTICK_BUTTON_COUNT 1
 
-#include "config_common.h"
-
-#define VENDOR_ID       0xFEED
-#define PRODUCT_ID      0x5009
-#define DEVICE_VER      0x0001
-#define MANUFACTURER    JL\u7684
-#define PRODUCT         \u952e\u76d8\u4f34\u4fa3
-
- #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
- #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
- #define ANALOG_JOYSTICK_CLICK_PIN B1
+// #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
+// #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
+// #define ANALOG_JOYSTICK_CLICK_PIN B1
 
 /* 摇杆映射
 #ifdef JOYSTICK_TRIGGER_ENABLE
@@ -42,11 +37,6 @@
 #define JOYSTICK_AXES_NY_KEY_POS {3, 1}
 #endif
 */ 
- /* 层指示灯 */
-#define RGBLIGHT_LAYERS
-#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
-#define RGBLIGHT_LAYER_BLINK   
-#define RGBLIGHT_MAX_LAYERS 16
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
@@ -55,21 +45,6 @@
 #define MATRIX_ROWS 2
 #define MATRIX_COLS 4
 
-#define MATRIX_ROW_PINS {  B3, C15 }
-#define MATRIX_COL_PINS {  B4, A0, B13, B12}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
-
-#define ENCODERS_PAD_A  { A10, B10 }
-#define ENCODERS_PAD_B  { A8, A3 }
-#define ENCODER_RESOLUTION 2
-#define ENCODER_PAD_A_KEY_POS {1, 1}, {1, 3}
-#define ENCODER_PAD_B_KEY_POS {1, 2}, {2, 1}
-
-/* 编码器01 */
-#define ENCODER_DEFAULT_POS 0x3
 
 /* 指示灯 */
 /* #define LED_CAPS_LOCK_PIN B10
@@ -100,12 +75,3 @@
 /* prevent stuck modifiers */
 /* #define PREVENT_STUCK_MODIFIERS */
 
-
-#define RGB_DI_PIN A4
-#ifdef RGB_DI_PIN 
-#define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 8
-#define RGBLIGHT_HUE_STEP 8
-#define RGBLIGHT_SAT_STEP 8
-#define RGBLIGHT_VAL_STEP 8
-#endif
