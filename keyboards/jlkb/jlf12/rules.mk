@@ -1,12 +1,9 @@
-# Build Options
-#   change yes to no to disable
-#
 # MCU name
-MCU = STM32F401
-BOARD = BLACKPILL_STM32_F401
+MCU = STM32F103
 
 # Bootloader selection
-BOOTLOADER = stm32-dfu
+BOOTLOADER = stm32duino
+
 
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no

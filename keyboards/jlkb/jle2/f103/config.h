@@ -26,7 +26,7 @@
 
  #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
  #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
- #define ANALOG_JOYSTICK_CLICK_PIN B1
+// #define ANALOG_JOYSTICK_CLICK_PIN B1
 
 /* 摇杆映射
 #ifdef JOYSTICK_TRIGGER_ENABLE

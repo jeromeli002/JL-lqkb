@@ -3,30 +3,29 @@
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID       0xFEED
-#define PRODUCT_ID      0x5001
-#define DEVICE_VER      0x0001
-#define MANUFACTURER    JL
-#define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
+#define PRODUCT_ID      0x6004
+#define DEVICE_VER      0x0002
+#define MANUFACTURER    JL\u7684
+#define PRODUCT         \u672a\u6210\u5e74\u952e\u76d8-42
 
-#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
-// #define ANALOG_JOYSTICK_CLICK_PIN B1
-
-/* 映射按键
+#define ANALOG_JOYSTICK_X_AXIS_PIN A2   /* 上拉 X轴右移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
+//#define ANALOG_JOYSTICK_CLICK_PIN B1
+#define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */
+/*
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
 #define JOYSTICK_USE_LPF
 #define JOYSTICK_LPF_PROPORTION (0.2)
-#define JOYSTICK_AXES_X_PIN { A1 }
-#define JOYSTICK_AXES_Y_PIN { A2 }
-#define JOYSTICK_AXES_PX_KEY_POS {5, 3}
-#define JOYSTICK_AXES_NX_KEY_POS {4, 3}
-#define JOYSTICK_AXES_PY_KEY_POS {5, 4}
-#define JOYSTICK_AXES_NY_KEY_POS {4, 4}
+#define JOYSTICK_AXES_X_PIN { A2 }
+#define JOYSTICK_AXES_Y_PIN { A1 }
+#define JOYSTICK_AXES_PX_KEY_POS {10, 4}
+#define JOYSTICK_AXES_NX_KEY_POS {11, 4}
+#define JOYSTICK_AXES_PY_KEY_POS {8, 4}
+#define JOYSTICK_AXES_NY_KEY_POS {9, 4}
 #endif
 */
-
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
@@ -34,33 +33,31 @@
 #define RGBLIGHT_MAX_LAYERS 16
 
 /* 层数 */
-#  define DYNAMIC_KEYMAP_LAYER_COUNT 16
+#define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
-#define MATRIX_ROWS 6
-#define MATRIX_COLS 6
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 12
  
- /* 层指示灯
+ /* 层指示灯 
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
-#define RGBLIGHT_LAYER_BLINK
-*/
- 
+#define RGBLIGHT_LAYER_BLINK */
+
 /* key matrix pins */
-#define MATRIX_ROW_PINS { A8,A15,B3,B4,B5,A4 }
-#define MATRIX_COL_PINS { B12,B13,B14,B15,A13,A14 }
+#define MATRIX_ROW_PINS { A8,A10,A15,B1,A0 }
+#define MATRIX_COL_PINS { B12,B13,B14,B15,B3,A3,A4,A5,B4,B5,B8,B9}
+#define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A { B10, B0 , A6, C14 }
-#define ENCODERS_PAD_B { B1, A7 , A5, C13 }
-#define ENCODER_RESOLUTIONS { 2,2,2,2 }
-/* 映射矩阵 C，R*/
-#define ENCODER_PAD_A_KEY_POS {4, 0}, {4, 1}, {4, 2}, {4, 3}
-#define ENCODER_PAD_B_KEY_POS {5, 0}, {5, 1}, {5, 2}, {5, 3}
-
+#define ENCODERS_PAD_A { C14, C15 , A7, A14 }
+#define ENCODERS_PAD_B { C13, A6, B0, A13 }
+#define ENCODER_RESOLUTIONS {2, 2, 2, 2 }
+#define ENCODER_PAD_A_KEY_POS {0, 4}, {2, 4}, {4, 4}, {6, 4}
+#define ENCODER_PAD_B_KEY_POS {1, 4}, {3, 4}, {5, 4}, {7, 4}
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
 
@@ -69,6 +66,12 @@
 #define LED_NUM_LOCK_PIN C13
 #define LED_SCROLL_LOCK_PIN B1
 #define LED_PIN_ON_STATE 0  指示灯 LED“亮”时指示灯引脚的状态 -1高电平，0低电平*/
+
+/* number of backlight levels */
+
+#ifdef BACKLIGHT_PIN
+#define BACKLIGHT_LEVELS 3
+#endif
 
 /* Set 0 if debouncing isn't needed */
 /* #define DEBOUNCING_DELAY 5 */
@@ -88,10 +91,10 @@
 /* #define PREVENT_STUCK_MODIFIERS */
 
 
-#define RGB_DI_PIN B8
+#define RGB_DI_PIN B10
 #ifdef RGB_DI_PIN 
-#define RGBLED_NUM 16
 #define RGBLIGHT_ANIMATIONS
+#define RGBLED_NUM 42
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
