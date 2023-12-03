@@ -977,6 +977,15 @@ __attribute__((weak)) bool oled_task_user(void) {
     return true;
 }
 
+/**
+ * @brief 在指定位置写入图片
+ * @param *data 图片数据
+ * @param weight 图片宽度（单位像素）
+ * @param height 图片高度（单位像素）
+ * @param col 写入位置左上角横坐标（单位字符）
+ * @param line 写入位置左上角纵坐标（单位字符）
+ * @return void
+*/
 void oled_write_raw_pic(const char *data, uint8_t weight, uint8_t height, uint8_t col, uint8_t line) {
     uint8_t page_height = (height + 7) / 8;
     for(uint8_t now_page = 0; now_page < page_height; now_page++) {
@@ -985,6 +994,16 @@ void oled_write_raw_pic(const char *data, uint8_t weight, uint8_t height, uint8_
     }
 }
 
+/**
+ * @brief 在指定位置写入字库中的大图像
+ * @param *data 图像数据
+ * @param weight 图片宽度（单位字符）
+ * @param height 图片高度（单位字符）
+ * @param col 写入位置左上角横坐标（单位字符）
+ * @param line 写入位置左上角纵坐标（单位字符）
+ * @param invert 是否反色
+ * @return void
+*/
 void oled_write_big_font(const char *data, uint8_t weight, uint8_t height, uint8_t col, uint8_t line, bool invert) {
     for(uint8_t now_page = 0; now_page < height; now_page++) {
         uint8_t page[weight + 1];
