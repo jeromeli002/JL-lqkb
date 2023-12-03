@@ -33,6 +33,7 @@ SERIAL_DRIVER = usart
 # RGB_MATRIX_DRIVER = WS2812
 # WS2812_DRIVER = pwm
 # WPM_ENABLE = yes		 # Show APM.
+DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
  POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
  POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
