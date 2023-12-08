@@ -24,6 +24,7 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
+DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
 OLED_ENABLE = yes
 OLED_DRIVER = SSD1306    # Enable the OLED Driver

@@ -26,6 +26,7 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
+DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
 # CUSTOM_MATRIX = lite        # Custom matrix for "Round-Robin Matrix" 
 # SRC += matrix.c 

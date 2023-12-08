@@ -29,6 +29,7 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 SERIAL_DRIVER = usart
+DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
  POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
  POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
