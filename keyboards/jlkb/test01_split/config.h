@@ -16,10 +16,10 @@
 #define MATRIX_COLS 3
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS { A6, A7, A8 }
-#define MATRIX_COL_PINS { A0, A1, A2 }
-#define MATRIX_ROW_PINS_RIGHT { A6, A7, A8 }
-#define MATRIX_COL_PINS_RIGHT { A3, A4, A5 }
+#define MATRIX_ROW_PINS { B9, B8, B7 }
+#define MATRIX_COL_PINS { A15, A14, A13 }
+#define MATRIX_ROW_PINS_RIGHT { B5, B4, B3 }
+#define MATRIX_COL_PINS_RIGHT { A10, A9, A8 }
 // #define UNUSED_PINS
 
 
