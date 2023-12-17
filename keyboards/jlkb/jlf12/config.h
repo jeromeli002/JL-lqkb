@@ -26,16 +26,16 @@
 #define RGBLIGHT_LAYERS
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS { B0, A1, C15, B1}
-#define MATRIX_COL_PINS {  B13, A10, B9, B5, B12}
+#define MATRIX_ROW_PINS { A6, A5, A4, A3}
+#define MATRIX_COL_PINS { B3, A15, B4, B5, B6}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A  { B8 }
-#define ENCODERS_PAD_B  { B7 }
-#define ENCODER_RESOLUTION 2
+#define ENCODERS_PAD_A  { B7 }
+#define ENCODERS_PAD_B  { A10 }
+#define ENCODER_RESOLUTION 4
 #define ENCODER_PAD_A_KEY_POS {7, 4}
 #define ENCODER_PAD_B_KEY_POS {7, 5}
 
@@ -71,7 +71,7 @@
 /* prevent stuck modifiers */
 /* #define PREVENT_STUCK_MODIFIERS */
 
-#define RGB_DI_PIN A0
+#define RGB_DI_PIN B9
 #ifdef RGB_DI_PIN
 #define RGBLED_NUM 12
 #define RGBLIGHT_ANIMATIONS

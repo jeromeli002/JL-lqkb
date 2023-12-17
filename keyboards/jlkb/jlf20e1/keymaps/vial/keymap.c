@@ -225,49 +225,49 @@ const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_AZURE}
+    {1,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {7,1, HSV_AZURE}
+    {2,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {6,1, HSV_AZURE}
+    {3,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {5,1, HSV_AZURE}
+    {4,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {4,1, HSV_PINK}
+    {5,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {3,1, HSV_PINK}
+    {6,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, HSV_PINK}
+    {7,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, HSV_PINK}
+    {8,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{7,1, HSV_PURPLE}
+    {9,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{6,1, HSV_PURPLE}
+    {10,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{5,1, HSV_PURPLE}
+    {11,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{4,1, HSV_PURPLE}
+    {12,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{3,1, HSV_PURPLE}
+    {13,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{2,1, HSV_PURPLE}
+    {14,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer15_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{1,1, HSV_PURPLE}
+    {15,1, HSV_WHITE}
 );
 // etc..
 
