@@ -22,7 +22,7 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 ENCODER_ENABLE = yes        # Enable rotary encoder support
 AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE ?= yes
-SPLIT_KEYBOARD = no
-SERIAL_DRIVER = usart
+# SPLIT_KEYBOARD = no
+# SERIAL_DRIVER = usart
 
 DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
