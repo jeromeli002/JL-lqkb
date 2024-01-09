@@ -40,8 +40,8 @@ SERIAL_DRIVER = usart
 # JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
 DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
-OLED_ENABLE = yes
-OLED_DRIVER = SSD1306    # Enable the OLED Driver
+# OLED_ENABLE = yes
+# OLED_DRIVER = SSD1306    # Enable the OLED Driver
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
 
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
