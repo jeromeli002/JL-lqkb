@@ -4,13 +4,14 @@
 # MCU name
 MCU = STM32F103
 # MCU_LDSCRIPT = STM32F103xB_uf2
-# MCU_LDSCRIPT = STM32F103xB_stm32duino_bootloader
+MCU_LDSCRIPT = STM32F103xB_stm32duino_bootloader
 # MCU_LDSCRIPT = STM32F103xB
+OPT_DEFS += -DBOOTLOADER_STM32DUINO
 # FIRMWARE_FORMAT = uf2  # 生成uf2格式固件
-# BOARD = STM32_F103_STM32DUINO
-
+BOARD = STM32_F103_STM32DUINO
+BOOTLOADER_TYPE = stm32duino
 # Bootloader selection
-BOOTLOADER = stm32duino
+# BOOTLOADER = stm32duino
 # BOOTLOADER = custom
 
 # Disable unsupported hardware
@@ -20,7 +21,7 @@ BOOTMAGIC_ENABLE = yes     # Enable Bootmagic Lite
 KEYBOARD_SHARED_EP = yes    # Free up some extra endpoints - needed if console+mouse+extra
 MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
-CONSOLE_ENABLE = no         # Console for debug
+CONSOLE_ENABLE = yes         # Console for debug
 COMMAND_ENABLE = yes         # Commands for debug and configuration
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
 SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
