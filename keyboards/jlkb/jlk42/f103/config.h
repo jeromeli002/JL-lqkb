@@ -8,11 +8,12 @@
 #define MANUFACTURER    JL\u7684
 #define PRODUCT         \u672a\u6210\u5e74\u952e\u76d8-42
 
-//#define ANALOG_JOYSTICK_X_AXIS_PIN A2   /* 上拉 X轴右移 */
-//#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
+#define ANALOG_JOYSTICK_X_AXIS_PIN A2   /* 上拉 X轴右移 */
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A1   /* 上拉 Y轴下移 */
 //#define ANALOG_JOYSTICK_CLICK_PIN B1
 //#define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */
 
+/*
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
@@ -25,7 +26,7 @@
 #define JOYSTICK_AXES_PY_KEY_POS {8, 4}
 #define JOYSTICK_AXES_NY_KEY_POS {9, 4}
 #endif
-
+*/
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF

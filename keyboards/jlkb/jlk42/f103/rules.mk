@@ -29,9 +29,9 @@ SERIAL_DRIVER = usart
 #OLED_ENABLE = yes
 #OLED_DRIVER = SSD1306    # Enable the OLED Driver
 
-# POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
-# POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
-JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
+POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
+POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
+# JOYSTICK_TRIGGER_ENABLE = yes   #摇杆映射按键
 DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
