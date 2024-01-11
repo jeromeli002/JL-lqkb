@@ -1,6 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "f103.h"
-#include "oled.c"
+// #include "oled.c"
 
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,// 自定义键显示 替换SAFE_RANGE为USER00
@@ -124,7 +124,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
- 
+        
     return true;
     break;
   }
@@ -238,4 +238,3 @@ bool led_update_user(led_t led_state) {
     rgblight_set_layer_state(0, led_state.caps_lock);
     return true;
 } */
-
