@@ -2,7 +2,8 @@
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,
   LAYERS_UP,
-  jltb
+  jltb,
+  jldu
 };
 
 // 1st layer on the cycle
@@ -202,14 +203,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-        
- //OLED   
-      if (record->event.pressed) {
-#ifdef OLED_ENABLE
-        oled_timer = timer_read32();
-#endif
-    }
+   
     return true;
+    break;
+    
+   case jldu:
+        if (record->event.pressed) {
+            tap_code(KC_L);
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
     break;
   }
 }
