@@ -24,10 +24,10 @@
 #define JOYSTICK_LPF_PROPORTION (0.2)
 #define JOYSTICK_AXES_X_PIN { A1 }
 #define JOYSTICK_AXES_Y_PIN { A2 }
-#define JOYSTICK_AXES_PX_KEY_POS {5, 3}
-#define JOYSTICK_AXES_NX_KEY_POS {4, 3}
-#define JOYSTICK_AXES_PY_KEY_POS {5, 4}
-#define JOYSTICK_AXES_NY_KEY_POS {4, 4}
+#define JOYSTICK_AXES_PX_KEY_POS {3, 4}
+#define JOYSTICK_AXES_NX_KEY_POS {4, 4}
+#define JOYSTICK_AXES_PY_KEY_POS {1, 4}
+#define JOYSTICK_AXES_NY_KEY_POS {2, 4}
 #endif
 
  /* 层指示灯 */
@@ -41,8 +41,16 @@
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
-#define MATRIX_ROWS 5
+#define MATRIX_ROWS 7
 #define MATRIX_COLS 7
+
+/* 编码器 */
+//#define ENCODERS_PAD_A { B10, B0 , A6, C14 }
+//#define ENCODERS_PAD_B { B1, A7 , A5, C13 }
+//#define ENCODER_RESOLUTIONS { 4,4,4,4,4 }
+/* 映射矩阵 C，R*/
+#define ENCODER_PAD_A_KEY_POS {0, 5}, {2, 5}, {4, 5}, {6, 5}, {0, 6}
+#define ENCODER_PAD_B_KEY_POS {1, 5}, {3, 5}, {5, 5}, {4, 4}, {1, 6}
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
