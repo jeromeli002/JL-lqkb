@@ -1,10 +1,15 @@
+#include QMK_KEYBOARD_H
 #include "f103.h"
+// #include "oled.c"
+
 enum keycodes {
-  LAYERS_DOWN = SAFE_RANGE,
+  LAYERS_DOWN = SAFE_RANGE,// 自定义键显示 替换SAFE_RANGE为USER00
   LAYERS_UP,
   jltb,
   jldu,
-  jldu1
+  jldu1,
+  jldu2,
+  jldu3
 };
 
 // 1st layer on the cycle
@@ -13,6 +18,15 @@ enum keycodes {
 #define LAYER_CYCLE_END   16
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+	LAYOUT(
+		jldu, jldu1, jldu2, jldu3, jldu, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC),
 
 	LAYOUT(
 		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
@@ -31,16 +45,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
 		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
 		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC)
+		
 };
-
-#if defined(ENCODER_MAP_ENABLE)
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [0] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN), ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
-    [1] =   { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),           ENCODER_CCW_CW(RGB_SAD, RGB_SAI),    ENCODER_CCW_CW(RGB_SAD, RGB_SAI)  },
-
-    //                  旋钮 1                                     旋钮 2                                      旋钮 3               
-};
-#endif
 
 // Add the behaviour of this new keycode
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -106,11 +112,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
     break;
     
- case jldu:
+case jldu:
         if (record->event.pressed) {
-            layer_on(1);
-            return true;
-            layer_off(1);
+           tap_code(KC_L);
         }else {
             tap_code(KC_K); 
       }
@@ -119,13 +123,138 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     
     case jldu1:
         if (record->event.pressed) {
-            tap_code(KC_L);
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L) );
         }else {
             tap_code(KC_K); 
       }
     return false;
     break;
     
+    case jldu2:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L)  SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu3:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L)  SS_TAP(X_L)  SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
   }
 }
 
+
+/*/// 按下 Capslock 的時候，第6颗RGB之后(也就第7颗) 的4颗灯会亮与第12個灯(也就是第12个) 之后的第4颗会亮紅色。
+const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 1, RGB_AZURE}       // Light 4 LEDs, starting with LED 6
+);
+ */
+// Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
+const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0,1, HSV_AZURE}
+);
+const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_AZURE}
+);
+const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {7,1, HSV_AZURE}
+);
+const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {6,1, HSV_AZURE}
+);
+const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {5,1, HSV_AZURE}
+);
+const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {4,1, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {3,1, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {2,1, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {1,1, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{7,1, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{6,1, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{5,1, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{4,1, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{3,1, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{2,1, HSV_PURPLE}
+);
+const rgblight_segment_t PROGMEM my_layer15_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {8,1, HSV_WHITE},{1,1, HSV_PURPLE}
+);
+// etc..
+
+// 接着將您的 rgblight_segment_t 放到 RGBLIGHT_LAYERS_LIST 內
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+//    my_capslock_layer,   // Overrides caps lock layer
+    my_layer0_layer, // Overrides other layer 
+    my_layer1_layer, // Overrides other layer 
+    my_layer2_layer, 
+    my_layer3_layer, 
+    my_layer4_layer, 
+    my_layer5_layer, 
+    my_layer6_layer, 
+    my_layer7_layer, 
+    my_layer8_layer, 
+    my_layer9_layer, 
+    my_layer10_layer, 
+    my_layer11_layer, 
+    my_layer12_layer, 
+    my_layer13_layer, 
+    my_layer14_layer, 
+    my_layer15_layer      
+);
+
+void keyboard_post_init_user(void) {
+    // 启用LED层指示
+    rgblight_layers = my_rgb_layers;
+}
+layer_state_t layer_state_set_user(layer_state_t state) {
+    // 如果两个 kb 层都处于活动状态，则两个层都会亮起
+    rgblight_set_layer_state(0, layer_state_cmp(state, 0));
+    rgblight_set_layer_state(1, layer_state_cmp(state, 1));
+    rgblight_set_layer_state(2, layer_state_cmp(state, 2));
+    rgblight_set_layer_state(3, layer_state_cmp(state, 3));
+    rgblight_set_layer_state(4, layer_state_cmp(state, 4));
+    rgblight_set_layer_state(5, layer_state_cmp(state, 5));
+    rgblight_set_layer_state(6, layer_state_cmp(state, 6));
+    rgblight_set_layer_state(7, layer_state_cmp(state, 7));
+    rgblight_set_layer_state(8, layer_state_cmp(state, 8));
+    rgblight_set_layer_state(9, layer_state_cmp(state, 9));
+    rgblight_set_layer_state(10, layer_state_cmp(state, 10));
+    rgblight_set_layer_state(11, layer_state_cmp(state, 11));
+    rgblight_set_layer_state(12, layer_state_cmp(state, 12));
+    rgblight_set_layer_state(13, layer_state_cmp(state, 13));
+    rgblight_set_layer_state(14, layer_state_cmp(state, 14));
+    rgblight_set_layer_state(15, layer_state_cmp(state, 15));
+    return state;
+}
+
+/*
+bool led_update_user(led_t led_state) {
+    rgblight_set_layer_state(0, led_state.caps_lock);
+    return true;
+} */

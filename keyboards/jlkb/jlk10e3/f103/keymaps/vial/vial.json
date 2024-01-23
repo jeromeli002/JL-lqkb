@@ -1,0 +1,58 @@
+{
+
+ "name": "JL-K6E2T1 Rev.A",
+
+ "vendorId": "0xFEED",
+
+ "productId": "0x5009",
+
+ "lighting": "qmk_rgblight",
+
+"customKeycodes": [
+	{"name": "LAYERS_DOWN",
+	 "title": "按下触发L，抬起触发K",
+	 "shortName": "jldu"
+	},
+	{"name": "LAYERS_UP",
+	 "title": "按下触发2此L，抬起触发K",
+	 "shortname": "jldu1"
+	},
+	{"name": "jltb",
+	 "title": "按下触发3次L，抬起触发K",
+	 "shortName": "jldu2"
+	},{"name": "jldu",
+	 "title": "按下触发L，抬起触发K",
+	 "shortName": "jldu"
+	},
+	{"name": "jldu1",
+	 "title": "按下触发2此L，抬起触发K",
+	 "shortname": "jldu1"
+	},
+	{"name": "jldu2",
+	 "title": "按下触发3次L，抬起触发K",
+	 "shortName": "jldu2"
+	},
+	{"name": "jldu3",
+	 "title": "按下触发4次L，抬起触发K",
+	 "shortName": "jldu3"
+	}
+],
+
+ "matrix": { "rows": 5, "cols":4 },
+
+ "layouts": {
+"labels": [
+      ],
+   "keymap": [
+["0,0",{"x":0.25},"0,1",{"x":0.25},"0,2",{"x":0.25},"0,3",{"x":0.75},"2,0\n\n\n\n\n\n\n\n\ne","2,3","2,1\n\n\n\n\n\n\n\n\ne"],
+[{"y":1},"2,0",{"x":0.75},"0,0\n\n\n\n\n\n\n\n\ne","2,2","0,1\n\n\n\n\n\n\n\n\ne",{"x":1},"1,3",{"x":0.25},"1,2"],
+[{"y":0.25},"2,1",{"x":0.25},"1,0\n\n\n\n\n\n\n\n\ne",{"x":2},"1,1\n\n\n\n\n\n\n\n\ne",{"x":0.5},"1,1",{"x":0.25},"1,0"]
+
+
+   ]
+ },
+  "vial": {
+    "midi": "advanced"
+  }
+
+}
