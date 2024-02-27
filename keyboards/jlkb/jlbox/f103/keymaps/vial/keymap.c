@@ -5,7 +5,15 @@
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,
   LAYERS_UP,
-  jltb
+  jltb,
+  jldu,
+  jldu1,
+  jldu2,
+  jldu3,
+  jlduj,
+  jlduj1,
+  jlduj2,
+  jlduj3
 };
 
 // 1st layer on the cycle
@@ -132,6 +140,78 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
 
     return true;
+    break;
+    
+    case jldu:
+        if (record->event.pressed) {
+           tap_code(KC_L);
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu1:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu2:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L)  SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu3:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L)  SS_TAP(X_L)  SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+     case jlduj:
+        if (record->event.pressed) {
+           tap_code(KC_J);
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jlduj1:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_J) SS_TAP(X_J) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jlduj2:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_J) SS_TAP(X_J)  SS_TAP(X_J) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jlduj3:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_J) SS_TAP(X_J)  SS_TAP(X_J)  SS_TAP(X_J) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
     break;
   }
 }
