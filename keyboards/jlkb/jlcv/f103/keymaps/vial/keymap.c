@@ -5,7 +5,12 @@
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,
   LAYERS_UP,
-  jltb
+  jltb,
+  jlk1,
+  jlk2,
+  jlk3,
+  jlk4,
+  jlk5,
 };
 
 // 1st layer on the cycle
@@ -21,7 +26,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_1, KC_2, KC_3, KC_4, KC_5,
 		KC_6, KC_7, KC_8, KC_9, KC_0,
 		KC_A, KC_B, KC_C, KC_D, KC_E,
-		KC_F, KC_G, KC_H, KC_I, KC_J, 
+		jlk1, jlk2, jlk3, jlk4, jlk5, 
 		KC_K, KC_L, KC_M, KC_N, KC_O)
 		};
 
@@ -87,8 +92,53 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-
     return true;
+    break;
+    
+    
+    case jlk1:
+        if (record->event.pressed) {
+           tap_code(KC_I);
+        }else {
+            tap_code(KC_Q); 
+      }
+    return false;
+    break;
+    
+    case jlk2:
+        if (record->event.pressed) {
+            tap_code(KC_H);
+        }else {
+            tap_code(KC_Q); 
+      }
+    return false;
+    break;
+    
+    case jlk3:
+        if (record->event.pressed) {
+            tap_code(KC_F);
+        }else {
+            tap_code(KC_Q); 
+      }
+    return false;
+    break;
+    
+    case jlk4:
+        if (record->event.pressed) {
+            tap_code(KC_G);
+        }else {
+            tap_code(KC_Q); 
+      }
+    return false;
+    break;
+    
+     case jlk5:
+        if (record->event.pressed) {
+           tap_code(KC_J);
+        }else {
+            tap_code(KC_Q); 
+      }
+    return false;
     break;
   }
 }
