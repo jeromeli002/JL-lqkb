@@ -98,45 +98,45 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     
     case jlk1:
         if (record->event.pressed) {
-           tap_code(KC_I);
+           tap_code(KC_UP);
         }else {
-            tap_code(KC_Q); 
+            tap_code(KC_EQL); 
       }
     return false;
     break;
     
     case jlk2:
         if (record->event.pressed) {
-            tap_code(KC_H);
+            tap_code(KC_DOWN);
         }else {
-            tap_code(KC_Q); 
+            tap_code(KC_EQL); 
       }
     return false;
     break;
     
     case jlk3:
         if (record->event.pressed) {
-            tap_code(KC_F);
+            tap_code(KC_LEFT);
         }else {
-            tap_code(KC_Q); 
+            tap_code(KC_EQL); 
       }
     return false;
     break;
     
     case jlk4:
         if (record->event.pressed) {
-            tap_code(KC_G);
+            tap_code(KC_RGHT);
         }else {
-            tap_code(KC_Q); 
+            tap_code(KC_EQL); 
       }
     return false;
     break;
     
      case jlk5:
         if (record->event.pressed) {
-           tap_code(KC_J);
+           tap_code(KC_5);
         }else {
-            tap_code(KC_Q); 
+            tap_code(KC_EQL); 
       }
     return false;
     break;
