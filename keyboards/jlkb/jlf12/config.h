@@ -27,13 +27,13 @@
 
 /* key matrix pins */
 #define MATRIX_ROW_PINS { A6, A5, A4, A3}
-#define MATRIX_COL_PINS { B3, A15, B4, B5, B6}
+#define MATRIX_COL_PINS { A14, A15, B4, B5, B6}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A  { B7 }
+#define ENCODERS_PAD_A  { A13 }
 #define ENCODERS_PAD_B  { A10 }
 #define ENCODER_RESOLUTION 4
 #define ENCODER_PAD_A_KEY_POS {2, 2}
