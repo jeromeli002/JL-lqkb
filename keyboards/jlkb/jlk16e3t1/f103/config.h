@@ -8,11 +8,11 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
-#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
+//#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
+//#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
 
-/* 映射按键
+/* 映射按键*/
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
@@ -25,7 +25,7 @@
 #define JOYSTICK_AXES_PY_KEY_POS {5, 4}
 #define JOYSTICK_AXES_NY_KEY_POS {4, 4}
 #endif
-*/
+
 
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
@@ -56,7 +56,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { B10, B0 , A6, C14 }
 #define ENCODERS_PAD_B { B1, A7 , A5, C13 }
-#define ENCODER_RESOLUTIONS { 4,4,2,2 }
+#define ENCODER_RESOLUTIONS { 4,4,4,4 }
 /* 映射矩阵 C，R*/
 #define ENCODER_PAD_A_KEY_POS {4, 0}, {4, 1}, {4, 2}, {4, 3}
 #define ENCODER_PAD_B_KEY_POS {5, 0}, {5, 1}, {5, 2}, {5, 3}
