@@ -88,9 +88,9 @@
 //#define OLED_FONT_HEIGHT 8 //字体高度
 //#define OLED_FADE_OUT
 //#define OLED_FADE_OUT_INTERVAL 10
-#define OLED_SCROLL_TIMEOUT	 2000 //2000毫秒后开始滚动
+#define OLED_SCROLL_TIMEOUT	 9000 //2000毫秒后开始滚动
 // #define OLED_SCROLL_TIMEOUT_RIGHT //向右滚动 不设置默认向左滚动
-#define OLED_TIMEOUT 600000   // 10分钟（毫秒）无操作后关闭屏幕
+// #define OLED_TIMEOUT 600000   // 10分钟（毫秒）无操作后关闭屏幕
 
 /* // 蜂鸣器/电磁阀
 #define AUDIO_PIN A8
