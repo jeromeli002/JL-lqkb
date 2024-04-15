@@ -24,9 +24,11 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
-//#define ANALOG_JOYSTICK_X_AXIS_PIN A1  
-//#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   
-/* #define ANALOG_JOYSTICK_CLICK_PIN B1 */
+#define ANALOG_JOYSTICK_X_AXIS_PIN A1  
+#define ANALOG_JOYSTICK_Y_AXIS_PIN A2  
+// #define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */ 
+#define POINTING_DEVICE_INVERT_X       /* 翻转X */ 
+/* #define ANALOG_JOYSTICK_CLICK_PIN B1
 
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
@@ -40,7 +42,7 @@
 #define JOYSTICK_AXES_PY_KEY_POS {2, 6}
 #define JOYSTICK_AXES_NY_KEY_POS {3, 6}
 #endif
-
+ */
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
@@ -64,7 +66,7 @@
 
 #define ENCODERS_PAD_A  { B4, B9, B3, A8 }
 #define ENCODERS_PAD_B  { B5, B8, A15, B15 }
-#define ENCODER_RESOLUTION 2
+#define ENCODER_RESOLUTION 4
 #define ENCODER_PAD_A_KEY_POS {0, 5}, {0, 6}, {0, 7}, {0, 8}
 #define ENCODER_PAD_B_KEY_POS {1, 5}, {1, 6}, {1, 7}, {1, 8}
 
@@ -106,11 +108,11 @@
 #define RGB_DI_PIN C13         /* rgb灯脚*/
 #ifdef RGB_DI_PIN              
 #define RGBLIGHT_ANIMATIONS    /* 启用全部灯效*/
-#define RGBLED_NUM 9           /* rgb灯数量*/
+#define RGBLED_NUM 2           /* rgb灯数量*/
 #define RGBLIGHT_HUE_STEP 8    /* rgb灯循环色调步数*/
 #define RGBLIGHT_SAT_STEP 8    /* rgb灯增加饱和度步数*/
 #define RGBLIGHT_VAL_STEP 8    /* rgb灯增加亮度步数*/
-#define RGBLIGHT_LIMIT_VAL 128 /* rgb灯最高亮度*/
+// #define RGBLIGHT_LIMIT_VAL 128 /* rgb灯最高亮度*/
 #endif
 
 /* RGN Matrix 

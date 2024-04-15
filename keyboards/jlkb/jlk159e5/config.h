@@ -30,7 +30,7 @@
 /* 编码器 */
 #define ENCODERS_PAD_A { A0, A7, A4, A2, B0}
 #define ENCODERS_PAD_B { C15, A6, A3, A1, C14}
-#define ENCODER_RESOLUTIONS {4, 4, 4, 2, 4}
+#define ENCODER_RESOLUTIONS {4, 4, 4, 4, 4}
 #define ENCODER_PAD_A_KEY_POS {14, 0}, {14, 2}, {14, 4}, {14, 6}, {14, 8}
 #define ENCODER_PAD_B_KEY_POS {14, 1}, {14, 3}, {14, 5}, {14, 7}, {14, 9}
 /* 编码器01 */
