@@ -1,9 +1,19 @@
-#include "jlf12.h"
+#include QMK_KEYBOARD_H
+#include "v2.h"
+#include "oled.c"
 
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,
   LAYERS_UP,
-  jltb
+  jltb,
+  jldu,
+  jldu1,
+  jldu2,
+  jldu3,
+  jlduj,
+  jlduj1,
+  jlduj2,
+  jlduj3
 };
 
 // 1st layer on the cycle
@@ -11,105 +21,23 @@ enum keycodes {
 // Last layer on the cycle
 #define LAYER_CYCLE_END   16
 
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
-		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
-		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
-		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC),
-
+		KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, 
+		KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC,
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC),
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
+		};
 
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
-
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
-
-};
 
 
 // Add the behaviour of this new keycode
@@ -172,14 +100,80 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-        
- //OLED   
-      if (record->event.pressed) {
-#ifdef OLED_ENABLE
-        oled_timer = timer_read32();
-#endif
-    }
+
     return true;
+    break;
+    
+    case jldu:
+        if (record->event.pressed) {
+           tap_code(KC_L);
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu1:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu2:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L)  SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jldu3:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_L) SS_TAP(X_L)  SS_TAP(X_L)  SS_TAP(X_L) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+     case jlduj:
+        if (record->event.pressed) {
+           tap_code(KC_J);
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jlduj1:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_J) SS_TAP(X_J) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jlduj2:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_J) SS_TAP(X_J)  SS_TAP(X_J) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
+    break;
+    
+    case jlduj3:
+        if (record->event.pressed) {
+            SEND_STRING(SS_TAP(X_J) SS_TAP(X_J)  SS_TAP(X_J)  SS_TAP(X_J) );
+        }else {
+            tap_code(KC_K); 
+      }
+    return false;
     break;
   }
 }
@@ -192,52 +186,52 @@ const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
  */
 // Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
 const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {11,1, HSV_AZURE}
+    {0,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {10,1, HSV_AZURE}
-);
-const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {9,1, HSV_AZURE}
-);
-const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {8,1, HSV_AZURE}
 );
-const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {7,1, HSV_AZURE}
 );
+const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {6,1, HSV_AZURE}
+);
+const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {5,1, HSV_AZURE}
+);
 const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {6,1, HSV_PINK}
-);
-const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {5,1, HSV_PINK}
-);
-const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {4,1, HSV_PINK}
 );
-const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {3,1, HSV_PINK}
 );
+const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {2,1, HSV_PINK}
+);
+const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {1,1, HSV_PINK}
+);
 const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, HSV_WHITE}
+    {8,1, HSV_WHITE},{7,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, HSV_WHITE}
+    {8,1, HSV_WHITE},{6,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, HSV_WHITE}
+    {8,1, HSV_WHITE},{5,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {11,1, HSV_WHITE},{10,1, HSV_PURPLE}
+    {8,1, HSV_WHITE},{4,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {11,1, HSV_WHITE},{9,1, HSV_PURPLE}
+    {8,1, HSV_WHITE},{3,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {11,1, HSV_WHITE},{8,1, HSV_PURPLE}
+    {8,1, HSV_WHITE},{2,1, HSV_PURPLE}
 );
 const rgblight_segment_t PROGMEM my_layer15_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {11,1, HSV_WHITE},{7,1, HSV_PURPLE}
+    {8,1, HSV_WHITE},{1,1, HSV_PURPLE}
 );
 // etc..
 
