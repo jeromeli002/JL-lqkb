@@ -27,7 +27,7 @@
 #define ANALOG_JOYSTICK_X_AXIS_PIN A1  
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A2  
 // #define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */ 
-#define POINTING_DEVICE_INVERT_X       /* 翻转X */ 
+// #define POINTING_DEVICE_INVERT_X       /* 翻转X */ 
 /* #define ANALOG_JOYSTICK_CLICK_PIN B1
 
 #ifdef JOYSTICK_TRIGGER_ENABLE
@@ -65,7 +65,7 @@
 
 
 #define ENCODERS_PAD_A  { B13, B3  }
-#define ENCODERS_PAD_B  { B18, B4  }
+#define ENCODERS_PAD_B  { B15, B4  }
 #define ENCODER_RESOLUTION 4
 #define ENCODER_PAD_A_KEY_POS {0, 3}, {2, 3}
 #define ENCODER_PAD_B_KEY_POS {1, 3}, {3, 3}
