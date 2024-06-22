@@ -8,6 +8,34 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
+// 游戏摇杆
+//#define ADC_PIN A1
+//#define JOYSTICK_AXIS_COUNT 2       // 最大6 最小0
+//#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
+
+
+/* 指点杆*/
+// #define ANALOG_JOYSTICK_X_AXIS_PIN A1  
+// #define ANALOG_JOYSTICK_Y_AXIS_PIN A2  
+// #define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */ 
+//#define POINTING_DEVICE_INVERT_X       /* 翻转X */ 
+/* #define ANALOG_JOYSTICK_CLICK_PIN B1  */
+
+/*映射按键*/
+#ifdef JOYSTICK_TRIGGER_ENABLE
+#define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
+#define JOYSTICK_ADC_RESOLUTION 10
+#define JOYSTICK_USE_LPF
+#define JOYSTICK_LPF_PROPORTION (0.2)
+#define JOYSTICK_AXES_X_PIN { A1 }
+#define JOYSTICK_AXES_Y_PIN { A2 }
+#define JOYSTICK_AXES_PX_KEY_POS {1, 6}
+#define JOYSTICK_AXES_NX_KEY_POS {0, 6}
+#define JOYSTICK_AXES_PY_KEY_POS {2, 6}
+#define JOYSTICK_AXES_NY_KEY_POS {3, 6}
+#endif
+
+
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
@@ -27,16 +55,15 @@
 #define RGBLIGHT_LAYER_BLINK */
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {  B13,B15,A10,B4,B5,B8,A15,A13}
-#define MATRIX_COL_PINS {  B12,B14,A8,B3,A4,A1,A14,B11}
-#define UNUSED_PINS
+#define MATRIX_ROW_PINS {  B13,B15,B6,B4,B5,B8,A15,C3}
+#define MATRIX_COL_PINS {  B12,B14,A8,B3,A5,A10,C1,C2}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A { A6, A3 , A0, C14, B10, B0 }
-#define ENCODERS_PAD_B { A5 , A2, C15, C13, B1, A7 }
+#define ENCODERS_PAD_A { A6, A4 , A0, C14, B11, B1 }
+#define ENCODERS_PAD_B { A7 , A3, C15, C13, B10, B0 }
 #define ENCODER_RESOLUTIONS {4, 4, 4, 2, 4, 4}
 #define ENCODER_PAD_A_KEY_POS {6, 0}, {6, 2}, {6, 4}, {1, 7}, {3, 7}, {5, 7}
 #define ENCODER_PAD_B_KEY_POS {6, 1}, {6, 3}, {6, 5}, {2, 7}, {4, 7}, {6, 7}

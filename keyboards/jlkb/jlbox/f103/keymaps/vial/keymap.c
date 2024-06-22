@@ -325,3 +325,13 @@ bool led_update_user(led_t led_state) {
     return true;
 } */
 
+void matrix_scan_user(void) {
+    int16_t val = (((uint32_t)timer_read() % 5000 - 2500) * 255) / 5000;
+    joystick_set_axis(1, val);
+}
+
+//joystick config
+joystick_config_t joystick_axes[JOYSTICK_AXIS_COUNT] = {
+    [0] = JOYSTICK_AXIS_IN(A2, 0, 512, 1023),
+    [1] = JOYSTICK_AXIS_IN(A1, 0, 512, 1023)
+};
