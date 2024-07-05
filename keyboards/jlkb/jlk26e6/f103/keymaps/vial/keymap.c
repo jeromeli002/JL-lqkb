@@ -1,6 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "f103.h"
-#include "oled.c"
+// #include "oled.c"
 
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,

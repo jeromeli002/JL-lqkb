@@ -5,14 +5,14 @@
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x5004
 #define DEVICE_VER      0x0001
-#define MANUFACTURER    JL-Pad
-#define PRODUCT         JL-Pad
+#define MANUFACTURER    JL-K12
+#define PRODUCT         JL-K12
 
- /* 层指示灯 */
+ /* 层指示灯
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
 #define RGBLIGHT_LAYER_BLINK   
-#define RGBLIGHT_MAX_LAYERS 16
+#define RGBLIGHT_MAX_LAYERS 16 */
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
@@ -27,16 +27,16 @@
 #define RGBLIGHT_LAYER_BLINK
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {  A15, B3, A10, B6, B7}
-#define MATRIX_COL_PINS {  B14, B15, A8, B8, B9}
+#define MATRIX_ROW_PINS {  B7, B6, B9, B8, B3}
+#define MATRIX_COL_PINS {  C15, A0, A1, A5, B1}
 #define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /* 编码器 */
-#define ENCODERS_PAD_A { B13 }
-#define ENCODERS_PAD_B { B12 }
+#define ENCODERS_PAD_A { A3 }
+#define ENCODERS_PAD_B { A2 }
 #define ENCODER_RESOLUTION 2
 #ifdef ENCODER_TRIGGER_ENABLE
 #define ENCODER_PAD_A_KEY_POS {4, 2}
@@ -72,10 +72,10 @@
 )
 
 
-#define RGB_DI_PIN B4
+#define RGB_DI_PIN C14
 #ifdef RGB_DI_PIN
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 21
+#define RGBLED_NUM 12
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8

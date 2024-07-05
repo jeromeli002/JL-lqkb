@@ -26,8 +26,8 @@
 
 // 游戏摇杆
 //#define ADC_PIN A1
-#define JOYSTICK_AXIS_COUNT 2       // 最大6 最小0
-#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
+//#define JOYSTICK_AXIS_COUNT 2       // 最大6 最小0
+//#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
 
 /* 指点杆*/
@@ -37,7 +37,7 @@
 //#define POINTING_DEVICE_INVERT_X       /* 翻转X */ 
 /* #define ANALOG_JOYSTICK_CLICK_PIN B1  */
 
-/*映射按键
+/*映射按键*/ 
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
@@ -50,7 +50,7 @@
 #define JOYSTICK_AXES_PY_KEY_POS {2, 6}
 #define JOYSTICK_AXES_NY_KEY_POS {3, 6}
 #endif
-*/
+
 
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
