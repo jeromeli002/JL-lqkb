@@ -8,13 +8,20 @@
 #define MANUFACTURER    JL
 #define PRODUCT         \u8bbe\u8ba1\u5e08\u952e\u76d8
 
+// 游戏摇杆
+//#define ADC_PIN A1
+//#define JOYSTICK_AXIS_COUNT 2       // 最大6 最小0
+//#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
-//#define ANALOG_JOYSTICK_X_AXIS_PIN A1   /* 上拉 X轴右移 */
-//#define ANALOG_JOYSTICK_Y_AXIS_PIN A2   /* 上拉 Y轴下移 */
-// #define ANALOG_JOYSTICK_CLICK_PIN B1
 
+/* 指点杆*/
+// #define ANALOG_JOYSTICK_X_AXIS_PIN A1  
+// #define ANALOG_JOYSTICK_Y_AXIS_PIN A2  
+// #define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */ 
+//#define POINTING_DEVICE_INVERT_X       /* 翻转X */ 
+/* #define ANALOG_JOYSTICK_CLICK_PIN B1  */
 
-/* 映射按键*/
+/*映射按键*/
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
@@ -36,21 +43,20 @@
 #define RGBLIGHT_MAX_LAYERS 16
 
 /* 层数 */
-#  define DYNAMIC_KEYMAP_LAYER_COUNT 16
+#define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
 /* key matrix size */
-#define MATRIX_ROWS 7
+#define MATRIX_ROWS 8
 #define MATRIX_COLS 8
  
- /* 层指示灯
+ /* 层指示灯 
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
-#define RGBLIGHT_LAYER_BLINK
-*/
- 
+#define RGBLIGHT_LAYER_BLINK */
+
 /* key matrix pins */
-#define MATRIX_ROW_PINS { B13,B15,A14,B4,B5,B8,A15}
-#define MATRIX_COL_PINS { B12,B14,A8,B3,A5,A10,A13,A13 }
+#define MATRIX_ROW_PINS { B13,B15,A14,B4,B5,B8,A15,C10}
+#define MATRIX_COL_PINS { B12,B14,A8,B3,A5,A10,C11,C12}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
@@ -59,18 +65,17 @@
 #define ENCODERS_PAD_A { A7, A4 , A0, C14, B11, B1 }
 #define ENCODERS_PAD_B { A6 , A3, C15, C13, B10, B0 }
 #define ENCODER_RESOLUTIONS {4, 4, 4, 2, 4, 4}
-/* 映射矩阵 C，R*/
-#define ENCODER_PAD_A_KEY_POS {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5}
-#define ENCODER_PAD_B_KEY_POS {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5}
-
+#define ENCODER_PAD_A_KEY_POS {6, 0}, {6, 2}, {6, 4}, {1, 7}, {3, 7}, {5, 7}
+#define ENCODER_PAD_B_KEY_POS {6, 1}, {6, 3}, {6, 5}, {2, 7}, {4, 7}, {6, 7}
 /* 编码器01 */
-#define ENCODER_DEFAULT_POS 0x3
+// #define ENCODER_DEFAULT_POS 0x3
 
 /* 指示灯 */
 /* #define LED_CAPS_LOCK_PIN B10
 #define LED_NUM_LOCK_PIN C13
 #define LED_SCROLL_LOCK_PIN B1
 #define LED_PIN_ON_STATE 0  指示灯 LED“亮”时指示灯引脚的状态 -1高电平，0低电平*/
+
 
 /* Set 0 if debouncing isn't needed */
 /* #define DEBOUNCING_DELAY 5 */
@@ -92,8 +97,8 @@
 
 #define RGB_DI_PIN B9
 #ifdef RGB_DI_PIN 
-#define RGBLED_NUM 28
 #define RGBLIGHT_ANIMATIONS
+#define RGBLED_NUM 28
 #define RGBLIGHT_HUE_STEP 8
 #define RGBLIGHT_SAT_STEP 8
 #define RGBLIGHT_VAL_STEP 8
@@ -108,3 +113,16 @@
 #define OLED_SCROLL_TIMEOUT	 5000 //2000毫秒后开始滚动
 // #define OLED_SCROLL_TIMEOUT_RIGHT //向右滚动 不设置默认向左滚动
 #define OLED_TIMEOUT 30000  // 10分钟（毫秒）无操作后关闭屏幕
+
+/* // 蜂鸣器/电磁阀
+#define AUDIO_PIN A8
+#define AUDIO_PWM_DRIVER PWMD1
+#define AUDIO_PWM_CHANNEL 1
+#define AUDIO_CLICKY
+#define AUDIO_INIT_DELAY
+#define AUDIO_CLICKY_FREQ_DEFAULT 1500.0f
+#define AUDIO_CLICKY_FREQ_MIN 1000.0f
+#define AUDIO_CLICKY_FREQ_MAX 2500.0f
+
+#define SOLENOID_PIN B9
+*/

@@ -1,34 +1,43 @@
-#include "f401.h"
+#include QMK_KEYBOARD_H
+#include "f103.h"
+#include "oled.c"
+
+void board_init(void) {
+   //禁用JTAG-DP调试，启用A13、A14脚    
+   AFIO->MAPR = (AFIO->MAPR & ~AFIO_MAPR_SWJ_CFG_Msk) | AFIO_MAPR_SWJ_CFG_DISABLE;
+}
+
 enum keycodes {
   LAYERS_DOWN = SAFE_RANGE,
   LAYERS_UP,
   jltb
 };
 
-// 1st layer on the cycle
-#define LAYER_CYCLE_START 0
-// Last layer on the cycle
-#define LAYER_CYCLE_END   16
-
+#define HIGHEST_LAYER 15 //最高层数 0开始算起默认15(16层)
+static uint8_t current_layer = 0;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U,
-		KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K,
-		KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M,
-		KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_I,
-		KC_P1, KC_P2, KC_P3, KC_P4, KC_COMM, KC_DOT, KC_O, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_P),
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, jltb, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC, 
+		KC_SPC, LAYERS_UP, LAYERS_DOWN, KC_SPC, KC_SPC, KC_SPC, KC_SPC, KC_SPC),
 
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS )
-
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
+		
 };
 
 // Add the behaviour of this new keycode
@@ -36,53 +45,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // 下一层
   switch (keycode) {
     case LAYERS_DOWN:
-      // Our logic will happen on presses, nothing is done on releases
-      if (!record->event.pressed) { 
-        // We've already handled the keycode (doing nothing), let QMK know so no further code is run unnecessarily
-        return false;
+      if(record->event.pressed) {
+      if (current_layer == HIGHEST_LAYER){
+        current_layer=0;
+      } else {
+        current_layer++;
       }
-
-      uint8_t current_layer = get_highest_layer(layer_state);
-
-      // Check if we are within the range, if not quit
-      if (current_layer > LAYER_CYCLE_END || current_layer < LAYER_CYCLE_START) {
-        return false;
-      }
-
-      uint8_t next_layer = current_layer + 1;
-      if (next_layer > LAYER_CYCLE_END) {
-          next_layer = LAYER_CYCLE_START;
-      }
-      layer_move(next_layer);
-      return false;
-
-    // Process other keycodes normally
-
-     return true;
-     break;
+      layer_clear();
+      layer_on(current_layer);
+    }
+    return false;
+    
    // 上一层  
       case LAYERS_UP:
-      // Our logic will happen on presses, nothing is done on releases
-      if (!record->event.pressed) { 
-        // We've already handled the keycode (doing nothing), let QMK know so no further code is run unnecessarily
-        return false;
+      if(record->event.pressed) {
+      if (current_layer == 0){
+        current_layer=HIGHEST_LAYER;
+      } else {
+        current_layer--;
       }
+      layer_clear();
+      layer_on(current_layer);
+    }
+    return false;
 
-      uint8_t current1_layer = get_highest_layer(layer_state);
-
-      // Check if we are within the range, if not quit
-      if (current1_layer > LAYER_CYCLE_END || current1_layer < LAYER_CYCLE_START) {
-        return false;
-      }
-
-      uint8_t previous_layer = current1_layer - 1;
-      if (previous_layer > LAYER_CYCLE_END) {
-          previous_layer = LAYER_CYCLE_START;
-      }
-      layer_move(previous_layer);
-      return false;
-
-    // Process other keycodes normally
+    // 处理其他键
      default:
      return true;
      break;
@@ -91,13 +78,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-        
- //OLED   
-      if (record->event.pressed) {
-#ifdef OLED_ENABLE
-        oled_timer = timer_read32();
-#endif
-    }
+
     return true;
     break;
   }
@@ -111,22 +92,22 @@ const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
  */
 // Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
 const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0,1, HSV_AZURE}
+    {27,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_AZURE}
+    {26,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {7,1, HSV_AZURE}
+    {25,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {6,1, HSV_AZURE}
+    {24,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {5,1, HSV_AZURE}
+    {23,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {4,1, HSV_PINK}
+    {22,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {3,1, HSV_PINK}
@@ -135,28 +116,28 @@ const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {2,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1,1, HSV_PINK}
+    {21,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{7,1, HSV_PURPLE}
+    {20,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{6,1, HSV_PURPLE}
+    {19,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{5,1, HSV_PURPLE}
+    {18,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{4,1, HSV_PURPLE}
+    {17,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{3,1, HSV_PURPLE}
+    {16,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{2,1, HSV_PURPLE}
+    {1,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer15_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_WHITE},{1,1, HSV_PURPLE}
+    {0,1, HSV_WHITE}
 );
 // etc..
 
