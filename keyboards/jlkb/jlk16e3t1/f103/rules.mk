@@ -3,6 +3,7 @@ MCU = STM32F103
 
 # Bootloader selection
 BOOTLOADER = stm32duino
+# BOOTLOADER = vibl
 
 # Disable unsupported hardware
 AUDIO_SUPPORTED = no

@@ -7,7 +7,9 @@
  "productId": "0x5001",
 
  "lighting": "qmk_rgblight",
-
+ "vial": {
+      "vibl": true
+    },
  "matrix": { "rows": 6, "cols":6 },
 
 "customKeycodes": [ ],
