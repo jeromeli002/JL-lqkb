@@ -987,3 +987,15 @@ ifeq ($(strip $(UART_DRIVER_REQUIRED)), yes)
         QUANTUM_LIB_SRC += uart.c
     endif
 endif
+
+# 新增功能
+ifeq ($(strip $(JOYSTICK_TRIGGER_ENABLE)), yes)
+    SRC += $(QUANTUM_DIR)/joystick_trigger.c
+	QUANTUM_LIB_SRC += analog.c
+    OPT_DEFS += -DJOYSTICK_TRIGGER_ENABLE
+endif
+
+ifeq ($(strip $(RADIAL_CONTROLLER_ENABLE)), yes)
+    SRC += $(QUANTUM_DIR)/radial_controller.c
+    OPT_DEFS += -DRADIAL_CONTROLLER_ENABLE
+endif

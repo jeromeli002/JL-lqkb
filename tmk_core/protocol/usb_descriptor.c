@@ -323,6 +323,37 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM SharedReport[] = {
     HID_RI_END_COLLECTION(0),
 #endif
 
+#ifdef RADIAL_CONTROLLER_ENABLE
+    HID_RI_USAGE_PAGE(8, 0x01),             // Generic Desktop
+    HID_RI_USAGE(8, 0x0E),                  // System Multi-Axis Controller
+    HID_RI_COLLECTION(8, 0x01),             // Application
+        HID_RI_REPORT_ID(8, REPORT_ID_RADIAL),
+        HID_RI_USAGE_PAGE(8, 0x0D), 
+        HID_RI_USAGE(8, 0x21),              // Puck
+        HID_RI_COLLECTION(8, 0x00),         // Physical
+            HID_RI_USAGE_PAGE(8, 0x09),     // Buttons
+            HID_RI_USAGE(8, 0x01),          // Button 1
+            HID_RI_LOGICAL_MINIMUM(8, 0x00),
+            HID_RI_LOGICAL_MAXIMUM(8, 0x01),
+            HID_RI_REPORT_COUNT(8, 1),
+            HID_RI_REPORT_SIZE(8, 1),
+            HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+
+            HID_RI_USAGE_PAGE(8, 0x01),     // Generic Desktop
+            HID_RI_USAGE(8, 0x37),          // Dial
+            HID_RI_UNIT_EXPONENT(8, 0x0F), 
+            HID_RI_UNIT(8, 0x14),
+            HID_RI_PHYSICAL_MINIMUM(16, 0xF1F0), 
+            HID_RI_PHYSICAL_MAXIMUM(16, 0x0E10),
+            HID_RI_LOGICAL_MINIMUM(16, 0xF1F0),
+            HID_RI_LOGICAL_MAXIMUM(16, 0x0E10),
+            HID_RI_REPORT_COUNT(8, 1),
+            HID_RI_REPORT_SIZE(8, 15),
+            HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_RELATIVE),
+        HID_RI_END_COLLECTION(0),
+    HID_RI_END_COLLECTION(0),
+#endif
+
 #ifdef PROGRAMMABLE_BUTTON_ENABLE
     HID_RI_USAGE_PAGE(8, 0x0C),            // Consumer
     HID_RI_USAGE(8, 0x01),                 // Consumer Control

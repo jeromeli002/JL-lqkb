@@ -575,6 +575,12 @@ static void send_extra(report_extra_t *report) {
 #endif
 }
 
+void send_radial(report_radial_t *report) {
+#ifdef RADIAL_CONTROLLER_ENABLE
+    send_report(SHARED_IN_EPNUM, report, sizeof(report_radial_t));
+#endif
+}
+
 void send_joystick(report_joystick_t *report) {
 #ifdef JOYSTICK_ENABLE
     send_report(JOYSTICK_IN_EPNUM, report, sizeof(report_joystick_t));

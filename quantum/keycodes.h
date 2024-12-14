@@ -809,6 +809,13 @@ enum qk_keycode_defines {
     QK_USER_29 = 0x7E5D,
     QK_USER_30 = 0x7E5E,
     QK_USER_31 = 0x7E5F,
+    
+    //dial
+    RADIAL_BUTTON = 0x7FB1,
+    RADIAL_LEFT = 0x7FB2,
+    RADIAL_RIGHT = 0x7FB3,
+    RADIAL_LEFT_CONTINUE = 0x7FB4,
+    RADIAL_RIGHT_CONINUE = 0x7FB5,
 
 // Alias
     XXXXXXX    = KC_NO,
@@ -1419,6 +1426,13 @@ enum qk_keycode_defines {
     TL_UPPR    = QK_TRI_LAYER_UPPER,
     QK_REP     = QK_REPEAT_KEY,
     QK_AREP    = QK_ALT_REPEAT_KEY,
+    
+    //dial
+    DIAL_BUT   = RADIAL_BUTTON,
+    DIAL_L     = RADIAL_LEFT,
+    DIAL_R     = RADIAL_RIGHT,
+    DIAL_LC    = RADIAL_LEFT_CONTINUE,
+    DIAL_RC    = RADIAL_RIGHT_CONINUE,
 };
 
 // Range Helpers

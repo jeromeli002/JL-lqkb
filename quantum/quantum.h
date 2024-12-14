@@ -240,6 +240,17 @@ extern layer_state_t layer_state;
 #    include "os_detection.h"
 #endif
 
+/* 新增开始*/
+#ifdef JOYSTICK_TRIGGER_ENABLE
+#    include "joystick_trigger.h"
+#endif
+
+#ifdef RADIAL_CONTROLLER_ENABLE
+#   include "radial_controller.h"
+#endif
+
+/* 新增完*/
+
 void set_single_persistent_default_layer(uint8_t default_layer);
 
 #define IS_LAYER_ON(layer) layer_state_is(layer)

@@ -147,6 +147,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    include "os_detection.h"
 #endif
 
+/* 新增开始*/
+#ifdef JOYSTICK_TRIGGER_ENABLE
+#    include "joystick_trigger.h"
+#endif
+
+#   include "magic_settings.h"
+#   include "auto_switch_layers.h"
+
+#ifdef DYNAMIC_TAP_DANCE_ENABLE
+#   include "dynamic_tap_dance.h"
+#endif
+
+#ifdef DYNAMIC_COMBOS_ENABLE
+#   include "dynamic_combos.h"
+#endif
+/* 新增完*/
+
 static uint32_t last_input_modification_time = 0;
 uint32_t        last_input_activity_time(void) {
     return last_input_modification_time;
@@ -760,4 +777,16 @@ void keyboard_task(void) {
 #ifdef OS_DETECTION_ENABLE
     os_detection_task();
 #endif
+
+/* 新增开始*/
+#ifdef JOYSTICK_TRIGGER_ENABLE
+    joystick_trigger_init();
+#endif
+#ifdef RADIAL_CONTROLLER_ENABLE
+    radial_controller_task();
+#endif
+#ifdef JOYSTICK_TRIGGER_ENABLE
+    joystick_trigger_task();
+#endif
+/* 新增完*/
 }
