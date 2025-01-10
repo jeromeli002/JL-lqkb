@@ -29,6 +29,8 @@
  */
 
 // 矩阵位置
+#define JOYSTICK_ACTUATION 256  // 触发点，即摇杆偏移多少开始触发按键 (0-511)
+#define JOYSTICK_HYSTERESIS 50  // 滞后量，防止抖动，调整此值以达到最佳效果
 #define JOYSTICK_KEY_X_PIN  A1 
 #define JOYSTICK_KEY_Y_PIN  A2 
 #define JOYSTICK_KEY_PX_POS {1, 3}
@@ -36,9 +38,9 @@
 #define JOYSTICK_KEY_PY_POS {0, 2}
 #define JOYSTICK_KEY_NY_POS {0, 1}
 
-// Max 32
+// 摇杆按键数 Max 32
 #define JOYSTICK_BUTTON_COUNT 0
-// Max 6: X, Y, Z, Rx, Ry, Rz
+// 每个摇杆轴数量 Max 6: X, Y, Z, Rx, Ry, Rz
 #define JOYSTICK_AXIS_COUNT 2 //轴数量X/Y轴
 
 
