@@ -22,14 +22,14 @@
 //#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
 /*指点杆*/
-#define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
+//#define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
+//#define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
-#define POINTING_DEVICE_ROTATION_270   /* 将 X 和 Y 数据旋转 180 度 */
+//#define POINTING_DEVICE_ROTATION_270   /* 将 X 和 Y 数据旋转 180 度 */
 //#define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
 //#define POINTING_DEVICE_INVERT_Y	（可选）反转 Y 轴报告。
 
-/* 摇杆映射
+/* 摇杆映射 
 #ifdef JOYSTICK_TRIGGER_ENABLE
 #define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
 #define JOYSTICK_ADC_RESOLUTION 10
@@ -42,7 +42,12 @@
 #define JOYSTICK_AXES_PY_KEY_POS {2, 1}
 #define JOYSTICK_AXES_NY_KEY_POS {3, 1}
 #endif
- */
+*/ 
+// Max 32
+#define JOYSTICK_BUTTON_COUNT 0
+// Max 6: X, Y, Z, Rx, Ry, Rz
+#define JOYSTICK_AXIS_COUNT 2
+
 
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 32

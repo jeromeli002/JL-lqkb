@@ -1,0 +1,27 @@
+{
+    "usb": {
+        "shared_endpoint": {
+            "keyboard": true
+        }
+    },
+    "matrix_pins": {
+        "cols": ["B5", "B4", "B3", "C12", "B1", "B10"],
+        "rows": ["A1", "A0", "C3", "C2", "C1"]
+    },
+    "diode_direction": "COL2ROW",
+    "development_board": "blackpill_f401",
+    "features": {
+        "bootmagic": true,
+        "mousekey": true,
+        "extrakey": true,
+        "nkro": true,
+        "rgblight": true
+    },
+
+    "qmk": {
+        "locking": {
+            "enabled": true,
+            "resync": true
+        }
+    }
+}

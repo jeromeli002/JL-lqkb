@@ -1,7 +1,5 @@
 //#include "f103.h"
 #include QMK_KEYBOARD_H
-#include "joystick.h"
-#include "analog.h"
 
 void board_init(void) {
    //禁用JTAG-DP调试，启用A13、A14脚    
@@ -13,9 +11,6 @@ enum custom_keycodes {
   jltb,
   jld6u7
 };
-
-static int actuation = 256; // actuation point for arrows (0-511)
-bool arrows[4];
 
 #define HIGHEST_LAYER 15 //最高层数 0开始算起默认15(16层)
 static uint8_t current_layer = 0; //默认0层开始
@@ -110,54 +105,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
    return true;
 }
 
-void matrix_scan_user(void) {
-	  // Up
-  	if (!arrows[0] && analogReadPin(A1) - 512 > actuation) {
-  			arrows[0] = true;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 1,0);
-  			register_code16(keycode);
-  	} else if (arrows[0] &&  analogReadPin(A1) - 512 < actuation) {
-  			arrows[0] = false;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 1,0);
-  			unregister_code16(keycode);
-  	}
-		// Down
-  	if (!arrows[1] && analogReadPin(A1) - 512 < -actuation) {
-  			arrows[1] = true;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 2,0);
-  			register_code16(keycode);
-  	}	else if (arrows[1] && analogReadPin(A1) - 512 > -actuation) {
-  			arrows[1] = false;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 2,0);
-  			unregister_code16(keycode);
-  	}
-    // Left
-  	if (!arrows[2] && analogReadPin(A2) - 512 > actuation) {
-  			arrows[2] = true;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 2,1);
-  			register_code16(keycode);
-  	} else if (arrows[2] &&  analogReadPin(A2) - 512 < actuation) {
-  			arrows[2] = false;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 2,1);
-  			unregister_code16(keycode);
-  	}
-    // Right
-  	if (!arrows[3] && analogReadPin(A2) - 512 < -actuation) {
-  			arrows[3] = true;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 3,1);
-  			register_code16(keycode);
-  	} else if (arrows[3] && analogReadPin(A2) - 512 > -actuation) {
-  			arrows[3] = false;
-  			uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), 3,1);
-  			unregister_code16(keycode);
-  	}
-}
-
-// Joystick config
-joystick_config_t joystick_axes[JOYSTICK_AXIS_COUNT] = {
-    [0] = JOYSTICK_AXIS_VIRTUAL,
-    [1] = JOYSTICK_AXIS_VIRTUAL
-};
 /*
 void matrix_scan_user(void) {
     int16_t val = (((uint32_t)timer_read() % 5000 - 2500) * 255) / 5000;

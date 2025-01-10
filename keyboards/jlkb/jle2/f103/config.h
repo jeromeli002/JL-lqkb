@@ -1,19 +1,3 @@
-/* Copyright 2021 ZhaQian
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #pragma once
 // 游戏摇杆
 //#define ADC_PIN A1
@@ -22,11 +6,11 @@
 //#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
 /*指点杆*/
-#define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
+//#define ANALOG_JOYSTICK_X_AXIS_PIN A1     /* 上拉 X轴右移 */
+//#define ANALOG_JOYSTICK_Y_AXIS_PIN A2     /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
-#define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */
-//#define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
+//#define POINTING_DEVICE_ROTATION_90   /* 将 X 和 Y 数据旋转 180 度 */
+// #define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
 //#define POINTING_DEVICE_INVERT_Y	（可选）反转 Y 轴报告。
 
 /* 摇杆映射
@@ -44,27 +28,22 @@
 #endif
  */
 
-// QMK宏数量，最多128个
-#define DYNAMIC_KEYMAP_MACRO_COUNT 32
+// 矩阵位置
+#define JOYSTICK_KEY_X_PIN  A1 
+#define JOYSTICK_KEY_Y_PIN  A2 
+#define JOYSTICK_KEY_PX_POS {1, 3}
+#define JOYSTICK_KEY_NX_POS {1, 2}
+#define JOYSTICK_KEY_PY_POS {0, 2}
+#define JOYSTICK_KEY_NY_POS {0, 1}
 
-//取消内存大小检测
-#define WEAR_LEVELING_LOGICAL_SIZE 2048
-#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
+// Max 32
+#define JOYSTICK_BUTTON_COUNT 0
+// Max 6: X, Y, Z, Rx, Ry, Rz
+#define JOYSTICK_AXIS_COUNT 2 //轴数量X/Y轴
 
- /* 层指示灯 */
-#define RGBLIGHT_LAYERS
-#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
-#define RGBLIGHT_LAYER_BLINK   
-#define RGBLIGHT_MAX_LAYERS 16
 
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
-
-
-/* key matrix size */
-//#define MATRIX_ROWS 6
-//#define MATRIX_COLS 6
-
 
 /* 指示灯 */
 /* #define LED_CAPS_LOCK_PIN B10

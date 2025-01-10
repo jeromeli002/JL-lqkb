@@ -21,7 +21,7 @@
 #define JOYSTICK_LPF_PROPORTION (0.2)
 #endif
 
-// Low Pass Filter Calculate
+// 低通滤波器计算
 #ifdef JOYSTICK_USE_LPF
 #define JOYSTICK_LPF_CAL(in, out)                    \
 do {                                                 \

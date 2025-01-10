@@ -25,7 +25,7 @@
 #define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
-#define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */
+#define POINTING_DEVICE_ROTATION_270   /* 将 X 和 Y 数据旋转 180 度 */
 //#define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
 //#define POINTING_DEVICE_INVERT_Y	（可选）反转 Y 轴报告。
 
@@ -46,10 +46,6 @@
 
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 32
-
-//取消内存大小检测
-#define WEAR_LEVELING_LOGICAL_SIZE 2048
-#define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
 
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
