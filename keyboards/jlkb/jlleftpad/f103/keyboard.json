@@ -1,5 +1,5 @@
 {
-    "keyboard_name": "分体测试",
+    "keyboard_name": "左手镜像Pad",
     "manufacturer": "JL",
     "url": "http://wpa.qq.com/msgrd?v=3&uin=532192607&site=qq&menu=yes",
     "maintainer": "qmk",
@@ -14,13 +14,7 @@
       { "pin_a": "A14", "pin_b": "A13", "resolution": 4 }
     ]
   }
-    "split": {
-        "transport": {
-            "sync": {
-                "matrix_state": true
-            }
-        }
-    }, 
+  
     "rgblight": {
         "saturation_steps": 8,/* 饱和度步数 */
         "brightness_steps": 8,/* 亮度步数 */

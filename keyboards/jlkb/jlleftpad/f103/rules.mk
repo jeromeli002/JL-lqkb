@@ -1,3 +1,4 @@
+MAKEFLAGS= -j 16
 # MCU name
 MCU = STM32F103
 MCU_LDSCRIPT = STM32F103xB
@@ -31,6 +32,3 @@ DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 # OLED_ENABLE = yes
 # OLED_DRIVER = SSD1306    # 启用OLED屏幕
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
-SERIAL_DRIVER = usart       #分体串口使用
-SPLIT_KEYBOARD = yes
-

@@ -25,8 +25,8 @@ SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 # if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 NKRO_ENABLE = yes           # USB Nkey Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
-ENCODER_ENABLE = yes        # Enable rotary encoder support
-ENCODER_MAP_ENABLE = yes    # 旋钮映射
+# ENCODER_ENABLE = yes        # Enable rotary encoder support
+# ENCODER_MAP_ENABLE = yes    # 旋钮映射
 AUDIO_ENABLE = no           # Audio output
 SPLIT_KEYBOARD = no
 # SERIAL_DRIVER = usart

@@ -1,5 +1,5 @@
 {
-    "keyboard_name": "未成年键盘42",
+    "keyboard_name": "未成年键盘45",
     "manufacturer": "JLKB",
     "url": "",
     "maintainer": "JL",
@@ -9,19 +9,12 @@
         "device_version": "0.0.1"
     },
      
-    "encoder": {
-    "rotary": [
-      { "pin_a": "A15", "pin_b": "A14", "resolution": 2 },
-      { "pin_a": "A8", "pin_b": "B15", "resolution": 2 }
-    ]
-  }
-  
     "rgblight": {
         "saturation_steps": 8,  // 饱和度步数
         "brightness_steps": 8,  // 亮度步数
-        "led_count": 42,        //灯数量
+        "led_count": 45,        //灯数量
         "hue_steps":8,          // 色调步数 
-        "max_brightness":128,   // 最大亮度 
+        "max_brightness":254,   // 最大亮度 
         "sleep": true,          // 睡眠时关闭灯 
         "animations": {
             "breathing": true,
@@ -37,13 +30,13 @@
         }
     },
     "ws2812": {
-        "pin": "B9"
+        "pin": "B15"
     },
     
     
     "matrix_pins": {
-      "rows": ["A5", "A6", "B1", "A0", "B11" ],
-       "cols": ["C14", "C13", "B5", "B4", "B3", "B0", "A7", "A4", "A3", "A13", "C15", "B10" ]
+       "rows": ["C13", "C14", "C15", "A1", "B12" ],
+       "cols": ["A2", "A3", "A4", "A5", "A6", "A7", "B0", "B1", "B10", "B11", "B9", "B8" ]
       "io_delay": 5    //延迟
     },
     

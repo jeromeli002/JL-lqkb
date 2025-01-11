@@ -1,7 +1,7 @@
 {
-    "keyboard_name": "分体测试",
+    "keyboard_name": "左手镜像Pad",
     "manufacturer": "JL",
-    "url": "http://wpa.qq.com/msgrd?v=3&uin=532192607&site=qq&menu=yes",
+    "url": " ",
     "maintainer": "qmk",
     "usb": {
         "vid": "0xF1ED",
@@ -10,17 +10,11 @@
     },
     "encoder": {
     "rotary": [
-      { "pin_a": "B9", "pin_b": "B8", "resolution": 4 },
-      { "pin_a": "A14", "pin_b": "A13", "resolution": 4 }
+      { "pin_a": "B9", "pin_b": "C10", "resolution": 4 },
+      { "pin_a": "B9", "pin_b": "C11", "resolution": 4 }
     ]
   }
-    "split": {
-        "transport": {
-            "sync": {
-                "matrix_state": true
-            }
-        }
-    }, 
+  
     "rgblight": {
         "saturation_steps": 8,/* 饱和度步数 */
         "brightness_steps": 8,/* 亮度步数 */
@@ -44,11 +38,11 @@
         }
     },
      "ws2812": {
-        "pin": "A7"
+        "pin": "A3"
     },
     "matrix_pins": {
-        "cols": ["B5", "B4", "B3", "A15", null],
-        "rows": ["A5", "A4", "A3", "A2", "A1"]
+        "cols": ["B5", "B4", "B3", "C12", null],
+        "rows": ["A1", "A0", "C3", "C2", "C1"]
     },
     "diode_direction": "COL2ROW",
 

@@ -1,11 +1,13 @@
+MAKEFLAGS= -j 16
+# Build Options
+#   change yes to no to disable
+#
 # MCU name
-MCU = STM32F103
-MCU_LDSCRIPT = STM32F103xB
+MCU = STM32F401
+BOARD = BLACKPILL_STM32_F401
+
 # Bootloader selection
-#BOOTLOADER = uf2boot   #生成uf2固件
-BOOTLOADER = vibl      #生成vfw固件
-# BOARD = STM32_F103_STM32DUINO
-# BOOTLOADER = tinyuf2
+BOOTLOADER = tinyuf2
 
 # 启用/禁用不支持的硬件
 AUDIO_SUPPORTED = no
@@ -31,6 +33,3 @@ DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 # OLED_ENABLE = yes
 # OLED_DRIVER = SSD1306    # 启用OLED屏幕
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
-SERIAL_DRIVER = usart       #分体串口使用
-SPLIT_KEYBOARD = yes
-
