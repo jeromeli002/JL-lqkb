@@ -3,63 +3,72 @@
 //摇杆映射按键相关
 static int actuation = 256;       // 触发点，即摇杆偏移多少开始触发按键 (0-511)
 static int hysteresis = 50;        // 滞后量，防止抖动，调整此值以达到最佳效果
-bool arrows[4];  // 4个反向上下左右
 
-static pin_t joystick_axes_x_pin = JOYSTICK_KEY_X_PIN;  //X轴引脚
-static pin_t joystick_axes_y_pin = JOYSTICK_KEY_Y_PIN;  //Y轴引脚
+static pin_t joystick_axes_x_pin[] = JOYSTICK_KEY_X_PIN;  //X轴引脚
+static pin_t joystick_axes_y_pin[] = JOYSTICK_KEY_Y_PIN;  //Y轴引脚
+#define NUMBER_OF_JOYSTICKS (sizeof(joystick_axes_x_pin) / sizeof(pin_t)) //计算摇杆数量
 
-// 定义一个结构体来表示按键在矩阵键盘中的位置
+// 定义引脚类型
 typedef struct {
     uint8_t row; // 行
     uint8_t col; // 列
-} 
+} matrix_pos_t;
 // 定义四个方向按键在矩阵键盘中的位置
-matrix_pos_t;
-matrix_pos_t joykey_xp = JOYSTICK_KEY_PX_POS;// 矩阵位置
-matrix_pos_t joykey_xn = JOYSTICK_KEY_NX_POS;
-matrix_pos_t joykey_yp = JOYSTICK_KEY_PY_POS; 
-matrix_pos_t joykey_yn = JOYSTICK_KEY_NY_POS;
+matrix_pos_t joykey_xp[] = JOYSTICK_KEY_PX_POS; // X轴正方向按键在矩阵中的位置
+matrix_pos_t joykey_xn[] = JOYSTICK_KEY_NX_POS; // X轴负方向按键在矩阵中的位置
+matrix_pos_t joykey_yp[] = JOYSTICK_KEY_PY_POS; // Y轴正方向按键在矩阵中的位置
+matrix_pos_t joykey_yn[] = JOYSTICK_KEY_NY_POS; // Y轴负方向按键在矩阵中的位置
 
+bool arrows[4 * NUMBER_OF_JOYSTICKS]= {false};   // 存储每个摇杆四个方向按键的状态，false表示未按下，true表示按下
 void matrix_scan_user(void) {
-  // 定义一个结构体，用于存放每个方向的引脚、行列信息、箭头状态以及符号
-  struct {
-    uint8_t pin;    // 模拟输入引脚
-    uint8_t row;    // 键盘矩阵的行
-    uint8_t col;    // 键盘矩阵的列
-    bool* arrow;  // 指向箭头状态的指针 (true: 按下, false: 松开)
-    int8_t sign;   // 符号，1 表示正向 (例如 X+ 或 Y+)，-1 表示负向 (例如 X- 或 Y-)
-  } directions[] = {
-    {joystick_axes_x_pin, joykey_xp.row, joykey_xp.col, &arrows[0], 1}, // 上 (X 轴正方向)
-    {joystick_axes_x_pin, joykey_xn.row, joykey_xn.col, &arrows[1], -1},// 下 (X 轴负方向)
-    {joystick_axes_y_pin, joykey_yp.row, joykey_yp.col, &arrows[2], 1}, // 左 (Y 轴正方向)
-    {joystick_axes_y_pin, joykey_yn.row, joykey_yn.col, &arrows[3], -1} // 右 (Y 轴负方向)
-  };
+    static int x_value[NUMBER_OF_JOYSTICKS]; // 存储每个摇杆X轴的原始模拟值
+    static int y_value[NUMBER_OF_JOYSTICKS]; // 存储每个摇杆Y轴的原始模拟值
 
-  // 循环遍历所有方向
-  for (int i = 0; i < 4; i++) {
-    // 读取模拟输入值并减去中点值 512，得到相对偏移量
-    int16_t reading = analogReadPin(directions[i].pin) - 512;
-    // 计算阈值上限。sign * (actuation + hysteresis) 实现正负方向阈值的统一计算
-    int16_t threshold_high = directions[i].sign * (actuation + hysteresis);
-    // 计算阈值下限。sign * (actuation - hysteresis) 实现正负方向阈值的统一计算
-    int16_t threshold_low = directions[i].sign * (actuation - hysteresis);
+    for (uint8_t i = 0; i < NUMBER_OF_JOYSTICKS; i++) { // 遍历每个摇杆
+        x_value[i] = analogReadPin(joystick_axes_x_pin[i]); // 读取X轴模拟值
+        y_value[i] = analogReadPin(joystick_axes_y_pin[i]); // 读取Y轴模拟值
+	  // 上 (X 轴正方向)
+        if (!arrows[i * 4 + 0] && x_value[i] - 512 > actuation + hysteresis) { // 如果当前状态为未按下，且摇杆值超过触发点加上滞后量
+            arrows[i * 4 + 0] = true; // 设置当前状态为按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_xp[i].row, joykey_xp[i].col); // 获取对应按键的键码
+            register_code16(keycode); // 注册按键按下
+        } else if (arrows[i * 4 + 0] && x_value[i] - 512 < actuation - hysteresis) { // 如果当前状态为按下，且摇杆值低于触发点减去滞后量
+            arrows[i * 4 + 0] = false; // 设置当前状态为未按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_xp[i].row, joykey_xp[i].col); // 获取对应按键的键码
+            unregister_code16(keycode); // 注销按键释放
+        }
 
-    // 如果当前方向未按下，且读取值超过阈值上限
-    if (!*directions[i].arrow && reading > threshold_high) {
-      // 设置当前方向为按下状态
-      *directions[i].arrow = true;
-      // 获取按键码
-      uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), directions[i].row, directions[i].col);
-      // 注册按键按下
-      register_code16(keycode);
-    // 如果当前方向已按下，且读取值低于阈值下限
-    } else if (*directions[i].arrow && reading < threshold_low) {
-      // 设置当前方向为松开状态
-      *directions[i].arrow = false;
-      // 获取按键码
-      uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), directions[i].row, directions[i].col);
-      // 注销按键松开
-      unregister_code16(keycode);
+        // 下 (X 轴负方向)
+        if (!arrows[i * 4 + 1] && x_value[i] - 512 < -actuation - hysteresis) { // 如果当前状态为未按下，且摇杆值小于负的触发点减去滞后量
+            arrows[i * 4 + 1] = true; // 设置当前状态为按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_xn[i].row, joykey_xn[i].col); // 获取对应按键的键码
+            register_code16(keycode); // 注册按键按下
+        } else if (arrows[i * 4 + 1] && x_value[i] - 512 > -actuation + hysteresis) { // 如果当前状态为按下，且摇杆值大于负的触发点加上滞后量
+            arrows[i * 4 + 1] = false; // 设置当前状态为未按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_xn[i].row, joykey_xn[i].col); // 获取对应按键的键码
+            unregister_code16(keycode); // 注销按键释放
+        }
+
+        // 左 (Y 轴正方向)
+        if (!arrows[i * 4 + 2] && y_value[i] - 512 > actuation + hysteresis) { // 如果当前状态为未按下，且摇杆值超过触发点加上滞后量
+            arrows[i * 4 + 2] = true; // 设置当前状态为按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_yp[i].row, joykey_yp[i].col); // 获取对应按键的键码
+            register_code16(keycode); // 注册按键按下
+        } else if (arrows[i * 4 + 2] && y_value[i] - 512 < actuation - hysteresis) { // 如果当前状态为按下，且摇杆值低于触发点减去滞后量
+            arrows[i * 4 + 2] = false; // 设置当前状态为未按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_yp[i].row, joykey_yp[i].col); // 获取对应按键的键码
+            unregister_code16(keycode); // 注销按键释放
+        }
+    // 右 (Y 轴负方向)
+        if (!arrows[i * 4 + 3] && y_value[i] - 512 < -actuation - hysteresis) { // 如果当前状态为未按下，且摇杆值小于负的触发点减去滞后量
+            arrows[i * 4 + 3] = true; // 设置当前状态为按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_yn[i].row, joykey_yn[i].col); // 获取对应按键的键码
+            register_code16(keycode); // 注册按键按下
+        } else if (arrows[i * 4 + 3] && y_value[i] - 512 > -actuation + hysteresis) { // 如果当前状态为按下，且摇杆值大于负的触发点加上滞后量
+            arrows[i * 4 + 3] = false; // 设置当前状态为未按下
+            uint16_t keycode = dynamic_keymap_get_keycode(biton32(layer_state), joykey_yn[i].row, joykey_yn[i].col); // 获取对应按键的键码
+            unregister_code16(keycode); // 注销按键释放
+        }
     }
-  }
 }
+
