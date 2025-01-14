@@ -6,12 +6,12 @@
 //#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
 /*指点杆*/
-#define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
+//#define ANALOG_JOYSTICK_X_AXIS_PIN A1     /* 上拉 X轴右移 */
+//#define ANALOG_JOYSTICK_Y_AXIS_PIN A2     /* 上拉 Y轴下移 */
 // #define ANALOG_JOYSTICK_CLICK_PIN B1
-#define POINTING_DEVICE_ROTATION_270   /* 将 X 和 Y 数据旋转 180 度 */
-//#define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
-#define POINTING_DEVICE_INVERT_Y	（可选）反转 Y 轴报告。
+//#define POINTING_DEVICE_ROTATION_90   /* 将 X 和 Y 数据旋转 180 度 */
+// #define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
+//#define POINTING_DEVICE_INVERT_Y	（可选）反转 Y 轴报告。
 
 /* 摇杆映射
 #ifdef JOYSTICK_TRIGGER_ENABLE
@@ -28,9 +28,6 @@
 #endif
  */
 
-// QMK宏数量，最多128个
-#define DYNAMIC_KEYMAP_MACRO_COUNT 32
-
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
@@ -40,7 +37,6 @@
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
-
 /* 指示灯 */
 /* #define LED_CAPS_LOCK_PIN B10
 #define LED_NUM_LOCK_PIN C13
@@ -48,6 +44,10 @@
 #define LED_PIN_ON_STATE 0  指示灯 LED“亮”时指示灯引脚的状态 -1高电平，0低电平*/
 
 /* number of backlight levels */
+
+#ifdef BACKLIGHT_PIN
+#define BACKLIGHT_LEVELS 3
+#endif
 
 /* Set 0 if debouncing isn't needed */
 /* #define DEBOUNCING_DELAY 5 */
@@ -59,3 +59,9 @@
 #define LOCKING_RESYNC_ENABLE
 
 /* key combination for command */
+#define IS_COMMAND() ( \
+    keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \
+)
+
+/* prevent stuck modifiers */
+/* #define PREVENT_STUCK_MODIFIERS */
