@@ -21,35 +21,13 @@
 //#define JOYSTICK_AXIS_COUNT 2       // 最大6 最小0
 //#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
-/*指点杆*/
-#define ANALOG_JOYSTICK_X_AXIS_PIN A2     /* 上拉 X轴右移 */
-#define ANALOG_JOYSTICK_Y_AXIS_PIN A1     /* 上拉 Y轴下移 */
-// #define ANALOG_JOYSTICK_CLICK_PIN B1
-#define POINTING_DEVICE_ROTATION_180   /* 将 X 和 Y 数据旋转 180 度 */
-//#define POINTING_DEVICE_INVERT_X	（可选）反转 X 轴报告。
-//#define POINTING_DEVICE_INVERT_Y	（可选）反转 Y 轴报告。
-
-/* 摇杆映射
-#ifdef JOYSTICK_TRIGGER_ENABLE
-#define ADC_RESOLUTION ADC_CFGR1_RES_10BIT
-#define JOYSTICK_ADC_RESOLUTION 10
-#define JOYSTICK_USE_LPF
-#define JOYSTICK_LPF_PROPORTION (0.2)
-#define JOYSTICK_AXES_X_PIN { A2 }
-#define JOYSTICK_AXES_Y_PIN { A1 }
-#define JOYSTICK_AXES_PX_KEY_POS {1, 0}
-#define JOYSTICK_AXES_NX_KEY_POS {2, 0}
-#define JOYSTICK_AXES_PY_KEY_POS {2, 1}
-#define JOYSTICK_AXES_NY_KEY_POS {3, 1}
-#endif
- */
-
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 32
 
-//取消内存大小检测
+/*取消内存大小检测
 #define WEAR_LEVELING_LOGICAL_SIZE 2048
 #define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
+*/
 
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
