@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-
+ 
 # define REPORT_BUFFER_QUEUE_SIZE 256 //f401 需要启用
  
 #ifdef BLUETOOTH_BHQ
