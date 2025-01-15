@@ -995,6 +995,14 @@ ifeq ($(strip $(JOYSTICK_TRIGGER_ENABLE)), yes)
     OPT_DEFS += -DJOYSTICK_TRIGGER_ENABLE
 endif
 
+ifeq ($(strip $(JOYSTICK_KEY_ENABLE)), yes)
+    JOYSTICK_ENABLE = yes
+    JOYSTICK_DRIVER = analog
+    VPATH += $(QUANTUM_DIR)
+    SRC += $(QUANTUM_DIR)/joystick_key.c
+    OPT_DEFS += -DJOYSTICK_KEY_ENABLE
+endif
+
 ifeq ($(strip $(RADIAL_CONTROLLER_ENABLE)), yes)
     SRC += $(QUANTUM_DIR)/radial_controller.c
     OPT_DEFS += -DRADIAL_CONTROLLER_ENABLE

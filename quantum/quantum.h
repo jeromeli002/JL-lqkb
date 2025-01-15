@@ -245,6 +245,10 @@ extern layer_state_t layer_state;
 #    include "joystick_trigger.h"
 #endif
 
+#ifdef JOYSTICK_KEY_ENABLE
+#    include "joystick_key.h"
+#endif
+
 #ifdef RADIAL_CONTROLLER_ENABLE
 #   include "radial_controller.h"
 #endif
