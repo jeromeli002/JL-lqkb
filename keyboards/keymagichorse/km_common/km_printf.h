@@ -29,4 +29,3 @@
 #else
 #    define km_printf_init()
 #endif
-

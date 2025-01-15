@@ -14,32 +14,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "battery.h"
-#include "gpio.h"
-#include "analog.h"
-#include "km_printf.h"
-#include "bhq.h"
+#pragma once
 
+#include_next <mcuconf.h>
 
-// TODO: The MCU is reserved for reading battery voltage interfaces
-uint32_t battery_timer_buffer = 0;
-void battery_init(void)
-{
-    battery_timer_buffer = 0;
-}
+#define HAL_USE_SERIAL  TRUE        // enabled SERIAL
 
+#    undef STM32_SERIAL_USE_USART2
+#    define STM32_SERIAL_USE_USART2 TRUE
 
-void battery_stop(void)
-{
-}
+#undef STM32_ADC_USE_ADC1
+#define STM32_ADC_USE_ADC1          TRUE
 
-uint16_t battery_adc_read(void)
-{
-    return 0;
-}
+#undef STM32_PLLM_VALUE
+#undef STM32_PLLN_VALUE
+#undef STM32_PLLP_VALUE
+#undef STM32_PLLQ_VALUE
 
-
-void battery_task(void)
-{
- 
-}
+#define STM32_PLLM_VALUE                    (STM32_HSECLK/1000000)
+#define STM32_PLLN_VALUE                    192
+#define STM32_PLLP_VALUE                    4
+#define STM32_PLLQ_VALUE                    4

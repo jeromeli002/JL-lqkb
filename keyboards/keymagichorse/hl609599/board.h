@@ -13,15 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
-#define PAL_USE_CALLBACKS   TRUE
-#define HAL_USE_PAL         TRUE           
-#define PAL_USE_WAIT        TRUE  
 
-#undef HAL_USE_ADC
-#define HAL_USE_ADC         TRUE
+#include_next <board.h>
 
-
-#include_next <halconf.h>
+#undef STM32_HSECLK
+#define STM32_HSECLK 16000000
+// #define STM32_HSECLK 25000000
 

@@ -24,12 +24,6 @@
 #include "report_buffer.h"
 #include "uart.h"
 
-#include "ws2812.h"
-
-#if defined(KB_CHECK_BATTERY_ENABLED)
-#   include "battery.h"
-#endif
-
 static uint32_t     lpm_timer_buffer = 0;
 static bool         lpm_time_up               = false;
 
@@ -45,9 +39,16 @@ void lpm_timer_reset(void) {
     lpm_timer_buffer = 0;
 }
 
+__attribute__((weak)) void lpm_device_power_open(void) ;
+__attribute__((weak)) void lpm_device_power_close(void) ;
 
 void lpm_init(void)
 {
+    // 禁用调试功能以降低功耗
+    DBGMCU->CR &= ~DBGMCU_CR_DBG_SLEEP;   // 禁用在Sleep模式下的调试
+    DBGMCU->CR &= ~DBGMCU_CR_DBG_STOP;    // 禁用在Stop模式下的调试
+    DBGMCU->CR &= ~DBGMCU_CR_DBG_STANDBY; // 禁用在Standby模式下的调试
+
     lpm_timer_reset();
 
     gpio_write_pin_high(QMK_RUN_OUTPUT_PIN);
@@ -56,69 +57,21 @@ void lpm_init(void)
     gpio_set_pin_input(USB_POWER_SENSE_PIN);
     palEnableLineEvent(USB_POWER_SENSE_PIN, PAL_EVENT_MODE_RISING_EDGE);
 
-    ws2812power_enabled();
+    lpm_device_power_open();
+}
+__attribute__((weak)) void lpm_device_power_open(void) 
+{
+   
+}
+__attribute__((weak)) void lpm_device_power_close(void) 
+{
+   
 }
 
-void ws2812power_enabled(void)
+// 将未使用的引脚设置为输入模拟
+__attribute__((weak)) void lpm_set_unused_pins_to_input_analog(void)
 {
-    ws2812_init();
-    rgblight_setrgb_at(255, 60, 50, 0);
-    gpio_set_pin_output(B8);        // ws2812 power
-    gpio_write_pin_low(B8);
-}
-void ws2812power_Disabled(void)
-{
-    rgblight_setrgb_at(0, 0, 0, 0);
-    gpio_set_pin_output(B8);        // ws2812 power
-    gpio_write_pin_high(B8);
 
-    gpio_set_pin_output(WS2812_DI_PIN);        // ws2812 DI Pin
-    gpio_write_pin_low(WS2812_DI_PIN);
-}
-
-void set_all_io_analog(void)
-{
-    // 禁用调试功能以降低功耗
-    DBGMCU->CR &= ~DBGMCU_CR_DBG_SLEEP;   // 禁用在Sleep模式下的调试
-    DBGMCU->CR &= ~DBGMCU_CR_DBG_STOP;    // 禁用在Stop模式下的调试
-    DBGMCU->CR &= ~DBGMCU_CR_DBG_STANDBY; // 禁用在Standby模式下的调试
-    // 在系统初始化代码中禁用SWD接口
-    palSetLineMode(A13, PAL_MODE_INPUT_ANALOG);
-    palSetLineMode(A14, PAL_MODE_INPUT_ANALOG);
-
-
-
-    palSetLineMode(A0, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A1, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A2, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A3, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A4, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A5, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A6, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A7, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A8, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A9, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A10, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A11, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A13, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A14, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(A15, PAL_MODE_INPUT_ANALOG); 
-
-    palSetLineMode(B0, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B1, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B2, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B3, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B4, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B5, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B6, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B7, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B8, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B9, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B10, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B11, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B13, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B14, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(B15, PAL_MODE_INPUT_ANALOG); 
 }
 
 __attribute__((weak)) bool usb_power_connected(void) {
@@ -140,8 +93,8 @@ void My_PWR_EnterSTOPMode(void)
     RCC->CR &= ~RCC_CR_HSEON;
     while ((RCC->CR & RCC_CR_HSERDY));
 
-    palSetLineMode(H1, PAL_MODE_INPUT_ANALOG); 
-    palSetLineMode(H0, PAL_MODE_INPUT_ANALOG); 
+    palSetLineMode(LPM_STM32_HSE_PIN_IN, PAL_MODE_INPUT_ANALOG); 
+    palSetLineMode(LPM_STM32_HSE_PIN_OUT, PAL_MODE_INPUT_ANALOG); 
 #endif
     /* Wake source: Reset pin, all I/Os, BOR, PVD, PVM, RTC, LCD, IWDG,
     COMPx, USARTx, LPUART1, I2Cx, LPTIMx, USB, SWPMI */
@@ -163,10 +116,32 @@ void enter_low_power_mode_prepare(void)
     {
        return;
     }
-    set_all_io_analog();
+    lpm_set_unused_pins_to_input_analog();    // 设置没有使用的引脚为模拟输入
     uint8_t i = 0;
 #if (DIODE_DIRECTION == COL2ROW)
-    // TODO: Wait implementation
+    // Set row(low valid), read cols
+    for (i = 0; i < matrix_cols(); i++)
+    { // set col pull-up input
+        if(wakeUpCol_pins[i] == NO_PIN)
+        {
+            continue;
+        } 
+        ATOMIC_BLOCK_FORCEON {
+            gpio_set_pin_input_high(wakeUpCol_pins[i]);
+            palEnableLineEvent(wakeUpCol_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
+        }
+    }
+    for (i = 0; i < matrix_rows(); i++)
+    { // set row output low level
+        if(wakeUpRow_pins[i] == NO_PIN)
+        {
+            continue;
+        } 
+        ATOMIC_BLOCK_FORCEON {
+            gpio_set_pin_output(wakeUpRow_pins[i]);
+            gpio_write_pin_low(wakeUpRow_pins[i]);
+        }
+    }
 #elif (DIODE_DIRECTION == ROW2COL)
 
     // Set col(low valid), read rows
@@ -183,7 +158,7 @@ void enter_low_power_mode_prepare(void)
     }
     for (i = 0; i < matrix_cols(); i++)
     { // set col output low level
-        if(wakeUpRow_pins[i] == NO_PIN)
+        if(wakeUpCol_pins[i] == NO_PIN)
         {
             continue;
         } 
@@ -202,9 +177,6 @@ void enter_low_power_mode_prepare(void)
 // usb 插入检测
     gpio_set_pin_input(USB_POWER_SENSE_PIN);
     palEnableLineEvent(USB_POWER_SENSE_PIN, PAL_EVENT_MODE_RISING_EDGE);
-#if defined(KB_CHECK_BATTERY_ENABLED)
-    battery_stop();
-#endif
 
     /* Usb unit is actived and running, stop and disconnect first */
     sdStop(&UART_DRIVER);
@@ -215,7 +187,7 @@ void enter_low_power_mode_prepare(void)
     usbDisconnectBus(&USBD1);
 
     bhq_Disable();
-    ws2812power_Disabled();
+    lpm_device_power_close();    // 外围设备 电源 关闭
     My_PWR_EnterSTOPMode();
 
     chSysLock();
@@ -245,7 +217,7 @@ void enter_low_power_mode_prepare(void)
     clear_keyboard();
     layer_clear();
 
-    ws2812power_enabled();
+    lpm_device_power_open();    // 外围设备 电源 关闭
   
     gpio_write_pin_high(QMK_RUN_OUTPUT_PIN);
 

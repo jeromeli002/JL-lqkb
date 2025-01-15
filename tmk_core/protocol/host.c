@@ -63,6 +63,13 @@ uint8_t host_keyboard_leds(void) {
 #ifdef SPLIT_KEYBOARD
     if (!is_keyboard_master()) return split_led_state;
 #endif
+
+#ifdef BLUETOOTH_ENABLE
+    if (where_to_send() == OUTPUT_BLUETOOTH) {
+        return bluetooth_get_keyboard_leds();
+    }
+#endif
+
     if (!driver) return 0;
     return (*driver->keyboard_leds)();
 }
@@ -96,7 +103,7 @@ void host_keyboard_send(report_keyboard_t *report) {
 }
 
 void host_nkro_send(report_nkro_t *report) {
-    if (!driver) return;
+
     report->report_id = REPORT_ID_NKRO;
     (*driver->send_nkro)(report);
 
@@ -126,10 +133,27 @@ void host_mouse_send(report_mouse_t *report) {
     report->boot_x = (report->x > 127) ? 127 : ((report->x < -127) ? -127 : report->x);
     report->boot_y = (report->y > 127) ? 127 : ((report->y < -127) ? -127 : report->y);
 #endif
+
+#ifdef BLUETOOTH_ENABLE
+    if (where_to_send() == OUTPUT_BLUETOOTH) {
+        bluetooth_send_mouse(report);
+        return;
+    }
+#endif
+
+    if (!driver) return;
     (*driver->send_mouse)(report);
 }
 
 void host_system_send(uint16_t usage) {
+
+#ifdef BLUETOOTH_ENABLE
+    if (where_to_send() == OUTPUT_BLUETOOTH) {
+        bluetooth_send_system(usage);
+        return;
+    }
+#endif
+
     if (usage == last_system_usage) return;
     last_system_usage = usage;
 
