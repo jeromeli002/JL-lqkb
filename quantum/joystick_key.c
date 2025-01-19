@@ -1,4 +1,3 @@
-#include "joystick_trigger.h"
 #include "analog.h"
 
 //摇杆映射按键相关

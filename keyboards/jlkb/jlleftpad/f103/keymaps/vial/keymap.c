@@ -67,15 +67,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return false;
 
     // 处理其他键
-     default:
-     return true;
-     break;
-
     case jltb:
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-        break; 
+        return false; 
     
       //按下6层抬起7层    
      case jld6u7:
@@ -85,7 +81,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
            tap_code16(keymap_key_to_keycode(7, record->event.key)); 
       }
     return false;
-    break;
     
    // 下一个自定义键
   }
