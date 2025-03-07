@@ -974,3 +974,22 @@ __attribute__((weak)) bool oled_task_kb(void) {
 __attribute__((weak)) bool oled_task_user(void) {
     return true;
 }
+
+//新增屏幕显示位置
+void oled_write_raw_pic(const char *data, uint8_t weight, uint8_t height, uint8_t col, uint8_t line) {
+    uint8_t page_height = (height + 7) / 8;
+    for(uint8_t now_page = 0; now_page < page_height; now_page++) {
+        oled_set_cursor(col, line + now_page);
+        oled_write_raw_P(data + now_page * weight, weight);
+    }
+}
+
+void oled_write_big_font(const char *data, uint8_t weight, uint8_t height, uint8_t col, uint8_t line, bool invert) {
+    for(uint8_t now_page = 0; now_page < height; now_page++) {
+        uint8_t page[weight + 1];
+        memcpy(page, data + now_page * weight, weight);
+        page[weight] = '\0';
+        oled_set_cursor(col, line + now_page);
+        oled_write_P((const char *)page, invert);
+    }
+}

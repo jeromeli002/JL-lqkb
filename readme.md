@@ -24,6 +24,7 @@ You can request changes by making a fork and opening a [pull request](https://gi
 * [Clueboard](/keyboards/clueboard/)
 * [Cluepad](/keyboards/clueboard/17/)
 * [Atreus](/keyboards/atreus/)
+* [jlkb](/keyboards/jlkb/)
 
 The project also includes community support for [lots of other keyboards](/keyboards/).
 

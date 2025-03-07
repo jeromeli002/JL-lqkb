@@ -489,3 +489,28 @@ uint8_t oled_max_chars(void);
 
 // Returns the maximum number of lines that will fit on the oled
 uint8_t oled_max_lines(void);
+
+//新增屏幕显示位置
+
+/**
+ * @brief 在指定位置写入图片
+ * @param *data 图片数据
+ * @param weight 图片宽度（单位像素）
+ * @param height 图片高度（单位像素）
+ * @param col 写入位置左上角横坐标（单位字符）
+ * @param line 写入位置左上角纵坐标（单位字符）
+ * @return void
+*/
+void oled_write_raw_pic(const char *data, uint8_t weight, uint8_t height, uint8_t col, uint8_t line);
+
+/**
+ * @brief 在指定位置写入字库中的大图像
+ * @param *data 图像数据
+ * @param weight 图片宽度（单位字符）
+ * @param height 图片高度（单位字符）
+ * @param col 写入位置左上角横坐标（单位字符）
+ * @param line 写入位置左上角纵坐标（单位字符）
+ * @param invert 是否反色
+ * @return void
+*/
+void oled_write_big_font(const char *data, uint8_t weight, uint8_t height, uint8_t col, uint8_t line, bool invert);

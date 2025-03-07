@@ -244,6 +244,12 @@ extern layer_state_t layer_state;
 #    include "layer_lock.h"
 #endif
 
+/* 新增开始*/
+#ifdef RADIAL_CONTROLLER_ENABLE
+#   include "radial_controller.h"
+#endif
+/* 新增完*/
+
 void set_single_default_layer(uint8_t default_layer);
 void set_single_persistent_default_layer(uint8_t default_layer);
 
