@@ -8,7 +8,7 @@
     "bootloader": "vibl",
     "usb": {
         "vid": "0xF006",
-        "pid": "0x5009",
+        "pid": "0x5001",
         "device_version": "0.0.1"
     },
      

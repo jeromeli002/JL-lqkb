@@ -9,10 +9,10 @@
 #define JOYSTICK_HYSTERESIS 50  // 滞后量，防止抖动，调整此值以达到最佳效果
 #define JOYSTICK_KEY_X_PIN  {A1}
 #define JOYSTICK_KEY_Y_PIN  {A2}
-#define JOYSTICK_KEY_PX_POS {{5, 2}}  //高电平
-#define JOYSTICK_KEY_NX_POS {{5, 3}}  //低电平
-#define JOYSTICK_KEY_PY_POS {{6, 2}}  //高电平
-#define JOYSTICK_KEY_NY_POS {{6, 3}}  //低电平
+#define JOYSTICK_KEY_PX_POS {{0, 1}}  //高电平
+#define JOYSTICK_KEY_NX_POS {{0, 2}}  //低电平
+#define JOYSTICK_KEY_PY_POS {{0, 3}}  //高电平
+#define JOYSTICK_KEY_NY_POS {{1, 4}}  //低电平
 
 // 摇杆按键数 Max 32
 #define JOYSTICK_BUTTON_COUNT 0
