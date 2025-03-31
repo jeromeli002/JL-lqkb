@@ -1,15 +1,11 @@
 {
-
  "name": "JL-JOYSTICK",
-
  "vendorId": "0xFEED",
-
  "productId": "0x6004",
- 
   "vial": {
+    "midi": "advanced",
     "vibl": true
   },
- 
 "customKeycodes": [ 
     {"name": "下\n一层",
 	 "title": "增加一层0→1",
@@ -29,7 +25,7 @@
 	}
  ],
 
- "lighting": "qmk_rgblight",
+ "lighting": "qmk_backlight_rgblight",
 
  "matrix": { "rows": 3, "cols":3},
     
@@ -42,7 +38,5 @@
 ["2,1","1,0","2,0"],
 [{"x":1},"1,2"]
     ]
-
  }
-
 }

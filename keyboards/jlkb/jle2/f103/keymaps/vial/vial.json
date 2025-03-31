@@ -1,12 +1,12 @@
 {
-
  "name": "JL-F12 Rev.A",
-
  "vendorId": "0xFEED",
-
  "productId": "0x5006",
-
-
+{ "vial": {
+        "midi": "advanced",
+        "vibl": true
+    }
+}
 "customKeycodes": [ 
     {"name": "下\n一层",
 	 "title": "增加一层0→1",
