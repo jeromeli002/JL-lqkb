@@ -1,7 +1,7 @@
 {
     "keyboard_name": "摇杆",
     "manufacturer": "JLKB",
-    "url": "http://wpa.qq.com/msgrd?v=3&uin=532192607&site=qq&menu=yes",
+    "url": "https://jlkb.jlkb.top",
     "maintainer": "JLKB",
     "processor": "STM32F103",
     "board": "STM32_F103_STM32DUINO",
