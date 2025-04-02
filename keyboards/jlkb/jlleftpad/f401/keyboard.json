@@ -1,7 +1,8 @@
 {
     "keyboard_name": "左手镜像Pad",
     "manufacturer": "JL",
-    "url": " ",
+    "url": "https://jlkb.jlkb.top",
+    "board": "BLACKPILL_STM32_F401",
     "maintainer": "qmk",
     "usb": {
         "vid": "0xF1ED",
