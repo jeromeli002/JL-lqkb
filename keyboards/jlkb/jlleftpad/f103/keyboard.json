@@ -7,7 +7,7 @@
     "board": "STM32_F103_STM32DUINO",
     "bootloader": "vibl",
     "usb": {
-        "vid": "0xF006",
+        "vid": "0xF005",
         "pid": "0x3001",
         "device_version": "0.0.1"
     },

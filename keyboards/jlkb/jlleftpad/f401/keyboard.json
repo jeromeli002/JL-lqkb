@@ -1,12 +1,14 @@
 {
     "keyboard_name": "左手镜像Pad",
-    "manufacturer": "JL",
-    "url": "https://jlkb.jlkb.top",
+    "manufacturer": "JLKB",
+    "url": "http://jlkb.jlkb.top",
+    "maintainer": "JLKB",
+    "processor": "STM32F401",
     "board": "BLACKPILL_STM32_F401",
-    "maintainer": "qmk",
+    "bootloader": "stm32-dfu",
     "usb": {
-        "vid": "0xF1ED",
-        "pid": "0x0B91",
+        "vid": "0xF005",
+        "pid": "0x3001",
         "device_version": "0.0.1"
     },
     "encoder": {
