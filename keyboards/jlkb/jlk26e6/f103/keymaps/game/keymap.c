@@ -1,12 +1,12 @@
 #include QMK_KEYBOARD_H
-#include "joystick_key.c"
+#include "oled.c"
 
 void board_init(void) {
    //禁用JTAG-DP调试，启用A13、A14脚    
    AFIO->MAPR = (AFIO->MAPR & ~AFIO_MAPR_SWJ_CFG_Msk) | AFIO_MAPR_SWJ_CFG_DISABLE;
 }
 
-enum keycodes {
+enum custom_keycodes {
   LAYERS_DOWN = QK_KB_0,
   LAYERS_UP,
   jltb,
@@ -19,28 +19,32 @@ static uint8_t current_layer = 0; //默认0层开始
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		KC_TRNS, KC_A, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_B, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_C, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_D, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_E, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_F, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_G, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_H, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
 };
 
 #if defined(ENCODER_MAP_ENABLE)
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
-    [1] =   { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),              ENCODER_CCW_CW(RGB_SAD, RGB_SAI) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [0] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
+    [1] =   { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),              ENCODER_CCW_CW(RGB_SAD, RGB_SAI) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
 
-    //                  旋钮 1                                     旋钮 2                                       旋钮 3                                旋钮 4                  
+    //                  旋钮 1                                     旋钮 2                                       旋钮 3                                旋钮 4                                        旋钮 5                                     旋钮 6               
 };
 #endif
 
@@ -73,13 +77,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return false;
 
-    // 打开淘宝店
+    // 处理其他键
+     default:
+     return true;
+     break;
+
     case jltb:
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_R) SS_UP(X_LGUI) SS_DELAY(100) "https://jlkb.taobao.com" SS_TAP(X_ENTER) SS_TAP(X_ENTER));
         }
-     return false;
-     
+        break; 
+    
       //按下6层抬起7层    
      case jld6u7:
         if (record->event.pressed) {
@@ -88,11 +96,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
            tap_code16(keymap_key_to_keycode(7, record->event.key)); 
       }
     return false;
-
+    break;
+    
    // 下一个自定义键
-    default:
-      return true;
+   
   }
+   return true;
 }
 
 
@@ -100,49 +109,49 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 1, RGB_AZURE}       // Light 4 LEDs, starting with LED 6
 );
- 
+ */
 // Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
 const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {15,1, HSV_AZURE}
+    {27,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {14,1, HSV_AZURE}
+    {26,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {13,1, HSV_AZURE}
+    {25,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {12,1, HSV_AZURE}
+    {24,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {11,1, HSV_AZURE}
+    {23,1, HSV_AZURE}
 );
 const rgblight_segment_t PROGMEM my_layer5_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {10,1, HSV_PINK}
+    {22,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer6_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {9,1, HSV_PINK}
+    {3,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer7_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {8,1, HSV_PINK}
+    {2,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer8_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {7,1, HSV_PINK}
+    {21,1, HSV_PINK}
 );
 const rgblight_segment_t PROGMEM my_layer9_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {6,1, HSV_WHITE}
+    {20,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer10_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {5,1, HSV_WHITE}
+    {19,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer11_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {4,1, HSV_WHITE}
+    {18,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer12_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {3,1, HSV_WHITE}
+    {17,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer13_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {2,1, HSV_WHITE}
+    {16,1, HSV_WHITE}
 );
 const rgblight_segment_t PROGMEM my_layer14_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {1,1, HSV_WHITE}
@@ -196,4 +205,17 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(14, layer_state_cmp(state, 14));
     rgblight_set_layer_state(15, layer_state_cmp(state, 15));
     return state;
-}*/
+}
+
+/*游戏摇杆*/
+void matrix_scan_user(void) {
+    int16_t val = (((uint32_t)timer_read() % 5000 - 2500) * 255) / 5000;
+    joystick_set_axis(1, val);
+}
+
+//joystick config
+joystick_config_t joystick_axes[JOYSTICK_AXIS_COUNT] = {
+    [0] = JOYSTICK_AXIS_IN(A1, 0, 512, 1023),
+    [1] = JOYSTICK_AXIS_IN(A2, 0, 512, 1023)
+
+};
