@@ -1,0 +1,78 @@
+{
+    "keyboard_name": "未成年键盘",
+    "manufacturer": "JLKB",
+    "url": "http://wpa.qq.com/msgrd?v=3&uin=532192607&site=qq&menu=yes",
+    "maintainer": "JLKB",
+    "processor": "STM32F072",
+    "bootloader": "stm32-dfu",
+    "usb": {
+        "vid": "0xFEED",
+        "pid": "0x5009",
+        "device_version": "0.0.1"
+    },
+     
+    "rgblight": {
+        "saturation_steps": 8,  // 饱和度步数
+        "brightness_steps": 8,  // 亮度步数
+        "led_count": 45,        //灯数量
+        "hue_steps":8,          // 色调步数 
+        "max_brightness":254,   // 最大亮度 
+        "sleep": true,          // 睡眠时关闭灯 
+        "animations": {
+            "breathing": true,
+            "rainbow_mood": true,
+            "rainbow_swirl": true,
+            "snake": true,
+            "knight": true,
+            "christmas": true,
+            "static_gradient": true,
+            "rgb_test": true,
+            "alternating": true,
+            "twinkle": true
+        }
+    },
+    "ws2812": {
+        "pin": "B15"
+    },
+    
+    
+    "matrix_pins": {
+        "direct": [
+            ["A7", "C4", "C5", "B0"],
+            ["B1", "B10", "B12", "B13"],
+            ["B14", "B15", "C6", "C7"],
+            ["C8", "A9", "A10", "C10"]
+        ]
+    },
+    
+    //"processor": "STM32F103",    //mcu型号
+    //"bootloader": "stm32duino",   //bootloader
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+            //{"label": "Esc", "matrix": [row, col], "x": 0, "y": 0}
+{"matrix":[0,0],"x":0,"y":0},
+{"matrix":[0,1],"x":1,"y":0},
+{"matrix":[0,2],"x":2,"y":0},
+{"matrix":[0,3],"x":3,"y":0},
+
+{"matrix":[1,0],"x":0,"y":1},
+{"matrix":[1,1],"x":1,"y":1},
+{"matrix":[1,2],"x":2,"y":1},
+{"matrix":[1,3],"x":3,"y":1},
+
+{"matrix":[2,0],"x":0,"y":2},
+{"matrix":[2,1],"x":1,"y":2},
+{"matrix":[2,2],"x":2,"y":2},
+{"matrix":[2,3],"x":3,"y":2},
+
+{"matrix":[3,0],"x":0,"y":3},
+{"matrix":[3,1],"x":1,"y":3},
+{"matrix":[3,2],"x":2,"y":3},
+{"matrix":[3,3],"x":3,"y":3}
+      
+                
+            ]
+        }
+    }
+}

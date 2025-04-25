@@ -2,7 +2,7 @@
     "manufacturer": "TG",
     "keyboard_name": "TG67",
     "maintainer": "TG",
-    "bootloader": "stm32-dfu",
+    "bootloader": "stm32duino",
     "diode_direction": "COL2ROW",
     "features": {
         "bootmagic": true,
@@ -15,7 +15,7 @@
         "cols": ["A7", "B0", "B1", "B2", "B10", "B11", "B12", "B14", "A9", "A10", "A8", "B6", "B7", "B5", "B4"],
         "rows": ["A1", "A2", "A3", "A4", "A5"]
     },
-    "processor": "STM32F072",
+    "processor": "STM32F103",
     "rgblight": {
         "animations": {
             "alternating": true,

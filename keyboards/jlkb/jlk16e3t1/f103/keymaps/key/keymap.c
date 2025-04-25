@@ -100,7 +100,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 1, RGB_AZURE}       // Light 4 LEDs, starting with LED 6
 );
- 
+ */
 // Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
 const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {15,1, HSV_AZURE}
@@ -196,4 +196,4 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(14, layer_state_cmp(state, 14));
     rgblight_set_layer_state(15, layer_state_cmp(state, 15));
     return state;
-}*/
+}
