@@ -1,15 +1,13 @@
 {
 
- "name": "JL-tourbox Rev.A",
+ "name": "测试",
 
  "vendorId": "0xFEED",
 
- "productId": "0x6004",
- 
+ "productId": "0x5004",
  "vial": {
     "vibl": true
   },
- 
 "customKeycodes": [ 
     {"name": "下\n一层",
 	 "title": "增加一层0→1",
@@ -28,19 +26,18 @@
 	 "shortName": "按6\n放7"
 	}
  ],
-
+ 
  "lighting": "qmk_rgblight",
 
  "matrix": { "rows": 5, "cols":5 },
 
-    
  "layouts": {
 
-   "keymap":[
-["0,0","0,1","1,0","1,1"]
+   "keymap": [
 
+["0,0","0,1","1,0","1,1"],
 
-    ]
+   ]
 
  }
 

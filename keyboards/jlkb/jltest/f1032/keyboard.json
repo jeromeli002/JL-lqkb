@@ -7,14 +7,12 @@
     "board": "STM32_F103_STM32DUINO",
     "bootloader": "vibl",
     "usb": {
-        "vid": "0xF001",
-        "pid": "0x3001",
+        "vid": "0xBB00",
+        "pid": "0xBB00",
         "device_version": "0.0.1"
     },
     "features": {
         "bootmagic": true,
-        "command": false,
-        "console": false,
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
@@ -66,29 +64,24 @@
             "solid_splash": true,
             "solid_multisplash": true
         },
-        "led_count": 3,        //灯数量
         "default": {
             "animation": "cycle_all"
         },
         "driver": "ws2812",
         "react_on_keyup": true
-    }, 
-    "ws2812": {
+    },
+     "ws2812": {
         "pin": "A0"
     },
-    
     "matrix_pins": {
-      "cols": ["C13", "C14", "C15", null, null ],
-      "rows": ["B9", "B8", null, null, null ]
-      "io_delay": 5    //延迟
+        "cols": ["C13", "C14", "C15", null, null],
+        "rows": ["B9", "B8", null, null, null]
     },
-    
     "diode_direction": "COL2ROW",
 
     "layouts": {
         "LAYOUT": {
             "layout": [
-            //{"label": "Esc", "matrix": [row, col], "x": 0, "y": 0}
             { "matrix": [0, 0],"x": 0,"y": 0}, 
             { "matrix": [0, 1],"x": 1,"y": 0},
             { "matrix": [0, 2],"x": 2,"y": 0}, 
@@ -118,8 +111,7 @@
             { "matrix": [4, 2],"x": 2,"y": 4}, 
             { "matrix": [4, 3],"x": 3,"y": 4}, 
             { "matrix": [4, 4],"x": 4,"y": 4}
-     
-            ]
+			]
         }
     }
 }

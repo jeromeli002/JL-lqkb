@@ -2,7 +2,7 @@
     "manufacturer": "YMDK",
     "keyboard_name": "YMD62 ISO QMK",
     "maintainer": "richdawe",
-    "bootloader": "uf2boot",
+    "bootloader": "stm32duino",
     "diode_direction": "ROW2COL",
     "features": {
         "bootmagic": true,
@@ -12,8 +12,8 @@
         "rgb_matrix": true
     },
     "matrix_pins": {
-        "cols": ["A7", "B0", "B1", "B2", "B10", "B11", "A5", "A15", "B3", "B12", "B13", "B14", "B15", "A8"],
-        "rows": ["A4", "A3", "A2", "A1", "A0"]
+        "cols": ["C13", "C14", "C15", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN", "NO_PIN"],
+        "rows": ["B9", "B8", "NO_PIN", "NO_PIN",  "NO_PIN"]
     },
     "processor": "STM32F103",
     "rgb_matrix": {
@@ -142,8 +142,7 @@
         "vid": "0x45D4"
     },
     "ws2812": {
-        "driver": "pwm",
-        "pin": "B9"
+        "pin": "A0"
     },
     "community_layouts": ["60_iso"],
     "layouts": {
