@@ -1,54 +1,94 @@
 {
-    "keyboard_name": "左手镜像Pad",
-    "manufacturer": "JL",
-    "url": " ",
-    "maintainer": "qmk",
+    "keyboard_name": "测试",
+    "manufacturer": "JLKB",
+    "url": "https://jlkb.jlkb.top",
+    "maintainer": "JLKB",
+    "processor": "STM32F401",
+    "board": "BLACKPILL_STM32_F401",
+    "bootloader": "stm32-dfu",
     "usb": {
-        "vid": "0xF1ED",
-        "pid": "0x0B91",
+        "vid": "0xF001",
+        "pid": "0x3001",
         "device_version": "0.0.1"
     },
-    "encoder": {
-    "rotary": [
-      { "pin_a": "B9", "pin_b": "C10", "resolution": 4 },
-      { "pin_a": "B9", "pin_b": "C11", "resolution": 4 }
-    ]
-  }
-  
-    "rgblight": {
-        "saturation_steps": 8,/* 饱和度步数 */
-        "brightness_steps": 8,/* 亮度步数 */
-        "led_count": 28, /* 灯数量 */
-        "hue_steps":8,/* 色调步数 */
-        "max_brightness":250,/* 最大亮度 */
-        "sleep": true,/* 睡眠时关闭灯 */
-        /* "led_map": [4, 3, 2, 1, 0], LE灯D顺序 */
-        "animations": {/* 灯效 */
-            "static_light": true,
+    "features": {
+        "bootmagic": true,
+        "command": false,
+        "console": false,
+        "extrakey": true,
+        "mousekey": true,
+        "nkro": true,
+        "rgb_matrix": true
+    },
+    "rgb_matrix": {
+        "animations": {
+            "alphas_mods": true,
+            "gradient_up_down": true,
+            "gradient_left_right": true,
             "breathing": true,
-            "rainbow_mood": true,
-            "rainbow_swirl": true,
-            "snake": true,
-            "knight": true,
-            "christmas": true,
-            "static_gradient": true,
-            "rgb_test": true,
-            "alternating": true,
-            "twinkle": true
-        }
+            "band_sat": true,
+            "band_val": true,
+            "band_pinwheel_sat": true,
+            "band_pinwheel_val": true,
+            "band_spiral_sat": true,
+            "band_spiral_val": true,
+            "cycle_all": true,
+            "cycle_left_right": true,
+            "cycle_up_down": true,
+            "rainbow_moving_chevron": true,
+            "cycle_out_in": true,
+            "cycle_out_in_dual": true,
+            "cycle_pinwheel": true,
+            "cycle_spiral": true,
+            "dual_beacon": true,
+            "rainbow_beacon": true,
+            "rainbow_pinwheels": true,
+            "raindrops": true,
+            "jellybean_raindrops": true,
+            "hue_breathing": true,
+            "hue_pendulum": true,
+            "hue_wave": true,
+            "pixel_rain": true,
+            "pixel_flow": true,
+            "pixel_fractal": true,
+            "typing_heatmap": true,
+            "digital_rain": true,
+            "solid_reactive_simple": true,
+            "solid_reactive": true,
+            "solid_reactive_wide": true,
+            "solid_reactive_multiwide": true,
+            "solid_reactive_cross": true,
+            "solid_reactive_multicross": true,
+            "solid_reactive_nexus": true,
+            "solid_reactive_multinexus": true,
+            "splash": true,
+            "multisplash": true,
+            "solid_splash": true,
+            "solid_multisplash": true
+        },
+        "led_count": 3,        //灯数量
+        "default": {
+            "animation": "cycle_all"
+        },
+        "driver": "ws2812",
+        "react_on_keyup": true
+    }, 
+    "ws2812": {
+        "pin": "C0"
     },
-     "ws2812": {
-        "pin": "A3"
-    },
+    
     "matrix_pins": {
-        "cols": ["B5", "B4", "B3", "C12", null],
-        "rows": ["A1", "A0", "C3", "C2", "C1"]
+      "cols": ["C13", "C14", "C15", null, null ],
+      "rows": ["B8", "B7", null, null, null ]
+      "io_delay": 5    //延迟
     },
+    
     "diode_direction": "COL2ROW",
 
     "layouts": {
         "LAYOUT": {
             "layout": [
+            //{"label": "Esc", "matrix": [row, col], "x": 0, "y": 0}
             { "matrix": [0, 0],"x": 0,"y": 0}, 
             { "matrix": [0, 1],"x": 1,"y": 0},
             { "matrix": [0, 2],"x": 2,"y": 0}, 
@@ -78,7 +118,8 @@
             { "matrix": [4, 2],"x": 2,"y": 4}, 
             { "matrix": [4, 3],"x": 3,"y": 4}, 
             { "matrix": [4, 4],"x": 4,"y": 4}
-			]
+     
+            ]
         }
     }
 }

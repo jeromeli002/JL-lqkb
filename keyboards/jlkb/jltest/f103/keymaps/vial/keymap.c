@@ -2,10 +2,6 @@
 #include QMK_KEYBOARD_H
 //#include "joystick_key.c"
 
-void board_init(void) {
-   //禁用JTAG-DP调试，启用A13、A14脚    
-   AFIO->MAPR = (AFIO->MAPR & ~AFIO_MAPR_SWJ_CFG_Msk) | AFIO_MAPR_SWJ_CFG_DISABLE;
-}
 enum custom_keycodes {
   LAYERS_DOWN = QK_KB_0,
   LAYERS_UP,

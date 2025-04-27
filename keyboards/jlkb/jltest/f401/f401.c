@@ -1,4 +1,4 @@
-/* Copyright 2020 QMK
+/* Copyright 2021 yushakobo
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "quantum.h"
 
-#include_next <mcuconf.h>
-
-#undef STM32_PWM_USE_TIM2
-#define STM32_PWM_USE_TIM2 TRUE
-
-#undef STM32_I2C_USE_I2C1
-#define STM32_I2C_USE_I2C1 TRUE
-
-#undef STM32_ADC_USE_ADC1
-#define STM32_ADC_USE_ADC1 TRUE
+#ifdef RGB_MATRIX_ENABLE
+led_config_t g_led_config = {
+    {
+        {0, 1, 2}
+    },
+    {
+     {134,0}, {179,0}, {224,0}
+    },
+    {
+        4, 4, 4
+    }
+};
+#endif
