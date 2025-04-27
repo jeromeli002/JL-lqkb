@@ -43,7 +43,7 @@ OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 PROGRAMMABLE_BUTTON_ENABLE = yes
 
 # OLED 屏幕开关 (OLED screen switch)
-# OLED_ENABLE = yes # 启用 OLED 屏幕
+OLED_ENABLE = yes # 启用 OLED 屏幕
 # OLED_DRIVER = ssd1306    # OLED 驱动
 
 EXTRAFLAGS+=-flto # 如果固件太大，在 rule.mk 中添加 EXTRAFLAGS+=-flto，启用链接时优化

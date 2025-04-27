@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-//#include "oled.c"
+#include "oled.c"
 #include "joystick_key.c"
 
 void board_init(void) {
