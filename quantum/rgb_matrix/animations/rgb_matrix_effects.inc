@@ -45,3 +45,4 @@
 #include "riverflow_anim.h"
 #include "vialrgb_direct_anim.h"
 #include "signalrgb_anim.h"
+#include "openrgb_direct_anim.h"

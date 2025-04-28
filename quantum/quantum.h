@@ -254,6 +254,11 @@ extern layer_state_t layer_state;
 #ifdef RADIAL_CONTROLLER_ENABLE
 #   include "radial_controller.h"
 #endif
+
+#ifdef OPENRGB_ENABLE
+ #    include "openrgb.h"
+ #endif
+ 
 /* 新增完*/
 
 #ifdef COMMUNITY_MODULES_ENABLE
