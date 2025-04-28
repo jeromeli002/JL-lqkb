@@ -6,7 +6,7 @@ enum custom_keycodes {
   jltb,
   jld6u7
 };
-#define HIGHEST_LAYER 15 //最高层数 0开始算起默认15(16层)
+#define HIGHEST_LAYER 5 //最高层数 0开始算起默认15(16层)
 static uint8_t current_layer = 0; //默认0层开始
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -94,9 +94,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       //按下6层抬起7层    
      case jld6u7:
         if (record->event.pressed) {
-           tap_code16(keymap_key_to_keycode(6, record->event.key));
+           tap_code16(keymap_key_to_keycode(4, record->event.key));
         }else {
-           tap_code16(keymap_key_to_keycode(7, record->event.key)); 
+           tap_code16(keymap_key_to_keycode(5, record->event.key)); 
       }
     return false;
 

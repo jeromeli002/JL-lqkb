@@ -43,9 +43,11 @@
 #define JOYSTICK_AXES_NY_KEY_POS {3, 1}
 #endif
  */
-
+#ifndef REPORT_BUFFER_QUEUE_SIZE
+#    define REPORT_BUFFER_QUEUE_SIZE 64
+#endif
 // QMK宏数量，最多128个
-#define DYNAMIC_KEYMAP_MACRO_COUNT 64
+#define DYNAMIC_KEYMAP_MACRO_COUNT 128
 
  /* 层指示灯 
 #define RGBLIGHT_LAYERS
@@ -55,7 +57,7 @@
 */
 
 /* 层数 */
-#  define DYNAMIC_KEYMAP_LAYER_COUNT 4
+#  define DYNAMIC_KEYMAP_LAYER_COUNT 6
 
 
 /* key matrix size */
