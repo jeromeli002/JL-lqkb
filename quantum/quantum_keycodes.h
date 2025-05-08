@@ -61,6 +61,8 @@
 #define HYPR(kc) (QK_LCTL | QK_LSFT | QK_LALT | QK_LGUI | (kc))
 #define MEH(kc) (QK_LCTL | QK_LSFT | QK_LALT | (kc))
 #define LCAG(kc) (QK_LCTL | QK_LALT | QK_LGUI | (kc))
+#define LSAG(kc) (QK_LSFT | QK_LALT | QK_LGUI | (kc))
+#define LSCG(kc) (QK_LSFT | QK_LCTL | QK_LGUI | (kc))
 #define LSG(kc) (QK_LSFT | QK_LGUI | (kc))
 #define SGUI(kc) LSG(kc)
 #define SCMD(kc) LSG(kc)

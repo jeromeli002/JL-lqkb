@@ -1,48 +1,49 @@
 // Add your new core rgb matrix effect here, order determines enum order
-#include "solid_color_anim.h"
-#include "alpha_mods_anim.h"
-#include "gradient_up_down_anim.h"
-#include "gradient_left_right_anim.h"
-#include "breathing_anim.h"
-#include "colorband_sat_anim.h"
-#include "colorband_val_anim.h"
-#include "colorband_pinwheel_sat_anim.h"
-#include "colorband_pinwheel_val_anim.h"
-#include "colorband_spiral_sat_anim.h"
-#include "colorband_spiral_val_anim.h"
-#include "cycle_all_anim.h"
-#include "cycle_left_right_anim.h"
-#include "cycle_up_down_anim.h"
-#include "rainbow_moving_chevron_anim.h"
-#include "cycle_out_in_anim.h"
-#include "cycle_out_in_dual_anim.h"
-#include "cycle_pinwheel_anim.h"
-#include "cycle_spiral_anim.h"
-#include "dual_beacon_anim.h"
-#include "rainbow_beacon_anim.h"
-#include "rainbow_pinwheels_anim.h"
-#include "flower_blooming_anim.h"
-#include "raindrops_anim.h"
-#include "jellybean_raindrops_anim.h"
-#include "hue_breathing_anim.h"
-#include "hue_pendulum_anim.h"
-#include "hue_wave_anim.h"
-#include "pixel_rain_anim.h"
-#include "pixel_flow_anim.h"
-#include "pixel_fractal_anim.h"
-#include "typing_heatmap_anim.h"
-#include "digital_rain_anim.h"
-#include "solid_reactive_simple_anim.h"
-#include "solid_reactive_anim.h"
-#include "solid_reactive_wide.h"
-#include "solid_reactive_cross.h"
-#include "solid_reactive_nexus.h"
-#include "splash_anim.h"
-#include "solid_splash_anim.h"
-#include "starlight_anim.h"
-#include "starlight_dual_sat_anim.h"
-#include "starlight_dual_hue_anim.h"
-#include "riverflow_anim.h"
-#include "vialrgb_direct_anim.h"
-#include "signalrgb_anim.h"
-#include "openrgb_direct_anim.h"
+// 在这里添加你的新的核心RGB矩阵效果，顺序决定了枚举的顺序
+#include "solid_color_anim.h"            // 纯色动画
+#include "alpha_mods_anim.h"             // Alpha调制动画
+#include "gradient_up_down_anim.h"       // 向上/向下渐变动画
+#include "gradient_left_right_anim.h"    // 向左/向右渐变动画
+#include "breathing_anim.h"              // 呼吸动画
+#include "colorband_sat_anim.h"          // 色带饱和度动画
+#include "colorband_val_anim.h"          // 色带明度动画
+#include "colorband_pinwheel_sat_anim.h" // 色带风车饱和度动画
+#include "colorband_pinwheel_val_anim.h" // 色带风车明度动画
+#include "colorband_spiral_sat_anim.h"   // 色带螺旋饱和度动画
+#include "colorband_spiral_val_anim.h"   // 色带螺旋明度动画
+#include "cycle_all_anim.h"              // 循环所有动画
+#include "cycle_left_right_anim.h"       // 左右循环动画
+#include "cycle_up_down_anim.h"          // 上下循环动画
+#include "rainbow_moving_chevron_anim.h" // 彩虹移动V形动画
+#include "cycle_out_in_anim.h"           // 由外向内循环动画
+#include "cycle_out_in_dual_anim.h"      // 双向由外向内循环动画
+#include "cycle_pinwheel_anim.h"         // 风车循环动画
+#include "cycle_spiral_anim.h"           // 螺旋循环动画
+#include "dual_beacon_anim.h"            // 双信标动画
+#include "rainbow_beacon_anim.h"         // 彩虹信标动画
+#include "rainbow_pinwheels_anim.h"      // 彩虹风车动画
+#include "flower_blooming_anim.h"        // 花朵绽放动画
+#include "raindrops_anim.h"              // 雨滴动画
+#include "jellybean_raindrops_anim.h"    // 糖豆雨滴动画
+#include "hue_breathing_anim.h"          // 色调呼吸动画
+#include "hue_pendulum_anim.h"           // 色调摆锤动画
+#include "hue_wave_anim.h"               // 色调波浪动画
+#include "pixel_rain_anim.h"             // 像素雨动画
+#include "pixel_flow_anim.h"             // 像素流动画
+#include "pixel_fractal_anim.h"          // 像素分形动画
+#include "typing_heatmap_anim.h"         // 打字热力图动画
+#include "digital_rain_anim.h"           // 数字雨动画
+#include "solid_reactive_simple_anim.h"  // 简单实体反应动画
+#include "solid_reactive_anim.h"         // 实体反应动画
+#include "solid_reactive_wide.h"         // 宽幅实体反应动画
+#include "solid_reactive_cross.h"        // 十字实体反应动画
+#include "solid_reactive_nexus.h"        // Nexus实体反应动画
+#include "splash_anim.h"                 // 飞溅动画
+#include "solid_splash_anim.h"           // 实体飞溅动画
+#include "starlight_anim.h"              // 星光动画
+#include "starlight_dual_sat_anim.h"     // 双星光饱和度动画
+#include "starlight_dual_hue_anim.h"     // 双星光色调动画
+#include "riverflow_anim.h"              // 河流动画
+#include "vialrgb_direct_anim.h"         // Vial RGB直接控制动画
+#include "signalrgb_anim.h"              // SignalRGB动画
+#include "openrgb_direct_anim.h"         // OpenRGB直接控制动画

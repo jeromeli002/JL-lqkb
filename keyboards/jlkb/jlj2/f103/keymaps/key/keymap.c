@@ -19,7 +19,7 @@ static uint8_t current_layer = 0; //默认0层开始
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS,
+		LSAG(KC_NO), KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS),
 

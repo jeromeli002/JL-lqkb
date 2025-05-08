@@ -34,7 +34,7 @@ void update_arrow_state(int joystick_index, int value, bool* state, matrix_pos_t
     }
 }
 
-void matrix_scan_user(void) {
+void matrix_scan_kb(void) {
     static int x_value[NUMBER_OF_JOYSTICKS]; // 存储每个摇杆X轴的原始模拟值
     static int y_value[NUMBER_OF_JOYSTICKS]; // 存储每个摇杆Y轴的原始模拟值
 
