@@ -19,3 +19,4 @@
 // 每个摇杆轴数量 Max 6: X, Y, Z, Rx, Ry, Rz
 #define JOYSTICK_AXIS_COUNT 2 //轴数量X/Y轴
 
+#define MIDI_ADVANCED
