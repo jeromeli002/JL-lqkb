@@ -7,8 +7,8 @@
 // 矩阵位置
 #define JOYSTICK_ACTUATION 256  // 触发点，即摇杆偏移多少开始触发按键 (0-511)
 #define JOYSTICK_HYSTERESIS 50  // 滞后量，防止抖动，调整此值以达到最佳效果
-#define JOYSTICK_KEY_X_PIN  {A1}
-#define JOYSTICK_KEY_Y_PIN  {A2}
+#define JOYSTICK_KEY_X_PIN  {A4}
+#define JOYSTICK_KEY_Y_PIN  {A5}
 #define JOYSTICK_KEY_PX_POS {{0, 1}}  //高电平
 #define JOYSTICK_KEY_NX_POS {{0, 2}}  //低电平
 #define JOYSTICK_KEY_PY_POS {{0, 3}}  //高电平

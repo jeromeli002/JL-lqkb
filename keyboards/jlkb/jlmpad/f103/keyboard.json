@@ -11,7 +11,9 @@
         "pid": "0x5001",
         "device_version": "0.0.1"
     },
-     
+     "features": {
+        "rgb_matrix": true
+    },
     "encoder": {
     "rotary": [
       { "pin_a": "A1", "pin_b": "A2", "resolution": 4 }
@@ -25,18 +27,30 @@
         "hue_steps":8,          // 色调步数 
         "max_brightness":215,   // 最大亮度 
         "sleep": true,          // 睡眠时关闭灯 
+    },
+    "rgb_matrix": {
         "animations": {
             "breathing": true,
-            "rainbow_mood": true,
-            "rainbow_swirl": true,
-            "snake": true,
-            "knight": true,
-            "christmas": true,
-            "static_gradient": true,
-            "rgb_test": true,
-            "alternating": true,
-            "twinkle": true
-        }
+            "cycle_all": true,
+            "cycle_left_right": true,
+            "cycle_out_in": true,
+            "cycle_out_in_dual": true,
+            "cycle_pinwheel": true,
+            "cycle_spiral": true,
+            "cycle_up_down": true,
+            "dual_beacon": true,
+            "multisplash": true,
+            "rainbow_beacon": true,
+            "rainbow_moving_chevron": true,
+            "raindrops": true,
+            "solid_reactive": true,
+            "solid_reactive_cross": true,
+            "solid_reactive_simple": true,
+            "typing_heatmap": true
+        },
+        "led_count": 19,        //灯数量
+        "driver": "ws2812",
+        "react_on_keyup": true
     },
     "ws2812": {
         "pin": "B9"
