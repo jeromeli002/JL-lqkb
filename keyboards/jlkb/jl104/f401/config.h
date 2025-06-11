@@ -18,9 +18,9 @@
 #define LED_SCROLL_LOCK_PIN C10
 #define LED_PIN_ON_STATE 0  // 指示灯 LED“亮”时指示灯引脚的状态 1高电平，0低电平
 
-/* number of backlight levels */
-
-
+// QMK宏数量，最多128个
+#define DYNAMIC_KEYMAP_MACRO_COUNT 64
+#define DYNAMIC_MACRO_SIZE	256
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
