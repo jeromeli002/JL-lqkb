@@ -120,7 +120,7 @@
         "react_on_keyup": true
     },
     "ws2812": {
-        "pin": "B9"
+        "pin": "C0"
     },
     
     "matrix_pins": {
