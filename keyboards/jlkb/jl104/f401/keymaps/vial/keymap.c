@@ -7,7 +7,7 @@ enum keycodes {
   jld6u7
 };
 
-#define HIGHEST_LAYER 4 //最高层数 0开始算起默认15(16层)
+#define HIGHEST_LAYER 3 //最高层数 0开始算起默认15(16层)
 static uint8_t current_layer = 0; //默认0层开始
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {

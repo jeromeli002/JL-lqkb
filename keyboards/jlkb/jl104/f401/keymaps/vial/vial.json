@@ -23,7 +23,7 @@
 	 "shortName": "按6\n放7"
 	}
  ],
- "lighting": "qmk_rgblight",
+ "lighting": "vialrgb",
  "matrix": { "rows": 10, "cols":11 },
  "layouts": {
       "labels": [
