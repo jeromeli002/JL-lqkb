@@ -24,9 +24,9 @@
   "rgblight": {
         "saturation_steps": 8,  // 饱和度步数
         "brightness_steps": 8,  // 亮度步数
-        "led_count": 19,        //灯数量
+        "led_count": 104, /* 灯数量 */
         "hue_steps":8,          // 色调步数 
-        "max_brightness":215,   // 最大亮度 
+        "max_brightness":150,   // 最大亮度 
         "sleep": true,          // 睡眠时关闭灯 
     },
     "rgb_matrix": {
@@ -39,12 +39,6 @@
             "band_pinwheel_val": true,            //色带风车亮度★
             "band_spiral_sat": true,              //色带螺旋饱和度★
             "band_spiral_val": true,              //色带螺旋亮度★
-            "colorband_pinwheel_sat": true,       // 彩带风车饱和度
-            "colorband_pinwheel_val": true,       // 彩带风车亮度
-            "colorband_sat": true,                // 彩带饱和度
-            "colorband_spiral_sat": true,         // 彩带螺旋饱和度
-            "colorband_spiral_val": true,         // 彩带螺旋亮度
-            "colorband_val": true,                // 彩带亮度
             "cycle_all": true,                    //循环所有
             "cycle_left_right": true,             //左右循环
             "cycle_up_down": true,                //上下循环
@@ -62,7 +56,6 @@
             "hue_wave": true,                     //色调波浪
             "jellybean_raindrops": true,          //糖豆雨滴
             "multisplash": true,                  //多重飞溅★
-            "openrgb_direct": true,               // OpenRGB 直连
             "pixel_rain": true,                   //像素雨
             "pixel_flow": true,                   //像素流
             "pixel_fractal": true,                //像素分形
@@ -85,7 +78,6 @@
             "starlight": true,                    // 星光
             "starlight_dual_hue": true,           // 星光双色调
             "starlight_dual_sat": true,           // 星光双饱和度
-            "signalrgb_anim": true,               // SignalRGB 动画
             "typing_heatmap": true,               //打字热力图
             "vialrgb_direct": true
         },
@@ -197,11 +189,11 @@
     ],
         "led_count": 104,        //灯数量
         "driver": "ws2812",
-        "center_point": [ 15, 25],
+        "center_point": [ 85, 22],
         "react_on_keyup": true
     },
      "ws2812": {
-        "pin": "C6"
+        "pin": "A1"
     },
     "matrix_pins": {
         "cols": ["A4", "A3", "A2", "A0", "C15", "C14", "C13", "B2", "B3", "B4", "B5"],
