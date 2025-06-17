@@ -1,11 +1,4 @@
-# MCU name
-MCU = STM32F103
-MCU_LDSCRIPT = STM32F103xB
-# Bootloader selection
-#BOOTLOADER = uf2boot   #生成uf2固件
-BOOTLOADER = vibl      #生成vfw固件
-# BOARD = STM32_F103_STM32DUINO
-# BOOTLOADER = tinyuf2
+MAKEFLAGS= -j 16
 
 # 启用/禁用不支持的硬件
 AUDIO_SUPPORTED = no
@@ -28,8 +21,6 @@ RGBLIGHT_ENABLE ?= yes
 SPLIT_KEYBOARD = no
 # SERIAL_DRIVER = usart
 DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
+# OLED_ENABLE = yes
+# OLED_DRIVER = SSD1306    # 启用OLED屏幕
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
-
-POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
-POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
-OLED_ENABLE = yes
