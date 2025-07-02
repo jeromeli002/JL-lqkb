@@ -4,19 +4,19 @@
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
 #define RGBLIGHT_LAYER_BLINK   
-#define RGBLIGHT_MAX_LAYERS 4
+#define RGBLIGHT_MAX_LAYERS 8
 
 /* 层数 */
-#  define DYNAMIC_KEYMAP_LAYER_COUNT 4
+#  define DYNAMIC_KEYMAP_LAYER_COUNT 8
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
 
 /* 指示灯 */
-#define LED_CAPS_LOCK_PIN C9
-#define LED_NUM_LOCK_PIN C8
-#define LED_SCROLL_LOCK_PIN C10
-#define LED_PIN_ON_STATE 0  // 指示灯 LED“亮”时指示灯引脚的状态 1高电平，0低电平
+//#define LED_CAPS_LOCK_PIN C9
+//#define LED_NUM_LOCK_PIN C8
+//#define LED_SCROLL_LOCK_PIN C10
+//#define LED_PIN_ON_STATE 0  // 指示灯 LED“亮”时指示灯引脚的状态 1高电平，0低电平
 
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 128
