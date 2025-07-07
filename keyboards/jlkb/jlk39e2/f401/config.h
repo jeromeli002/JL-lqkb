@@ -6,6 +6,8 @@
 #define RGBLIGHT_LAYER_BLINK   
 #define RGBLIGHT_MAX_LAYERS 8
 
+#define WS2812_POWER_PIN    A5
+
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 8
 

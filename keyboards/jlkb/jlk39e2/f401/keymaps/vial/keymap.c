@@ -88,6 +88,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
+// RGB电源开关 P管
+void keyboard_post_init_kb(void)
+{
+#if defined(RGBLIGHT_WS2812)
+    ws2812_init();
+    gpio_set_pin_output(WS2812_POWER_PIN);        // ws2812 power
+    gpio_write_pin_low(WS2812_POWER_PIN);
+#endif
+}
+
 /*/// 按下 Capslock 的時候，第6颗RGB之后(也就第7颗) 的4颗灯会亮与第12個灯(也就是第12个) 之后的第4颗会亮紅色。
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 1, RGB_AZURE}       // Light 4 LEDs, starting with LED 6
