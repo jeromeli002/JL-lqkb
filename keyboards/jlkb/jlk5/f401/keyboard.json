@@ -1,0 +1,112 @@
+{
+    "keyboard_name": "JLKB-5键",
+    "manufacturer": "JLKB",
+    "url": "http://jlkb.jlkb.top",
+    "maintainer": "JLKB",
+    "processor": "STM32F401",
+    "board": "BLACKPILL_STM32_F401",
+    "bootloader": "stm32-dfu",
+    "usb": {
+        "vid": "0xD005",
+        "pid": "0x3001",
+        "device_version": "0.0.1"
+    },
+    "features": {
+        "rgb_matrix": true
+    },
+
+  "rgblight": {
+        "saturation_steps": 8,  // 饱和度步数
+        "brightness_steps": 8,  // 亮度步数
+        "led_count": 5, /* 灯数量 */
+        "hue_steps":8,          // 色调步数 
+        "max_brightness":250,   // 最大亮度 
+        "sleep": true,          // 睡眠时关闭灯 
+    },
+    "rgb_matrix": {
+        "animations": {
+            "alphas_mods": true,                  //Alpha修正
+            "breathing": true,                    //呼吸模式
+            "band_sat": true,                     //色带饱和度★
+            "band_val": true,                     //色带亮度★
+            "band_pinwheel_sat": true,            //色带风车饱和度★
+            "band_pinwheel_val": true,            //色带风车亮度★
+            "band_spiral_sat": true,              //色带螺旋饱和度★
+            "band_spiral_val": true,              //色带螺旋亮度★
+            "cycle_all": true,                    //循环所有
+            "cycle_left_right": true,             //左右循环
+            "cycle_up_down": true,                //上下循环
+            "cycle_out_in": true,                 //由外向内循环
+            "cycle_out_in_dual": true,            //双向由外向内循环
+            "cycle_pinwheel": true,               //风车循环
+            "cycle_spiral": true,                 //风车循环
+            "digital_rain": true,                 //数字雨
+            "dual_beacon": true,                  //双信标
+            "flower_blooming": true,              // 花朵绽放  
+            "gradient_up_down": true,             //上下渐变
+            "gradient_left_right": true,          //左右渐变
+            "hue_breathing": true,                //色调呼吸
+            "hue_pendulum": true,                 //色调摆动
+            "hue_wave": true,                     //色调波浪
+            "jellybean_raindrops": true,          //糖豆雨滴
+            "multisplash": true,                  //多重飞溅★
+            "pixel_rain": true,                   //像素雨
+            "pixel_flow": true,                   //像素流
+            "pixel_fractal": true,                //像素分形
+            "rainbow_beacon": true,               //双信标
+            "rainbow_pinwheels": true,            //彩虹风车
+            "raindrops": true,                    //雨滴
+            "rainbow_moving_chevron": true,       //彩虹移动V形
+            "riverflow": true,                    // 河流
+            "solid_reactive_simple": true,        //简单纯色反应
+            "solid_reactive": true,               //纯色反应
+            "solid_reactive_wide": true,          //宽纯色反应
+            "solid_reactive_multiwide": true,     //多宽纯色反应
+            "solid_reactive_cross": true,         //交叉纯色反应
+            "solid_reactive_multicross": true,    //多交叉纯色反应
+            "solid_reactive_nexus": true,         //枢纽纯色反应
+            "solid_reactive_multinexus": true,    //多枢纽纯色反应
+            "solid_splash": true,                 //纯色飞溅
+            "solid_multisplash": true,            //纯色多重飞溅
+            "splash": true,                       //飞溅
+            "starlight": true,                    // 星光
+            "starlight_dual_hue": true,           // 星光双色调
+            "starlight_dual_sat": true,           // 星光双饱和度
+            "typing_heatmap": true,               //打字热力图
+            "vialrgb_direct": true
+        },
+    "layout": [ 
+    {"matrix":[0,0],"x":152,"y":0,"flags":4},
+    {"matrix":[0,2],"x":224,"y":43,"flags":4},
+    {"matrix":[1,0],"x":155,"y":53,"flags":4},
+    {"matrix":[1,1],"x":0,"y":64,"flags":4},
+    {"matrix":[0,1],"x":90,"y":64,"flags":4}
+    ],
+        "led_count": 5,        //灯数量
+        "driver": "ws2812",
+        "center_point": [ 112, 32],
+        "react_on_keyup": true
+    },
+     "ws2812": {
+        "pin": "A8"
+    },
+    "matrix_pins": {
+        "cols": ["B4", "C14", "B5" ],
+        "rows": ["B8", "C13" ]
+    },
+    "diode_direction": "COL2ROW",
+
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+{"matrix":[0,0],"x":0,"y":0},
+{"matrix":[0,1],"x":1,"y":0},
+{"matrix":[0,2],"x":2,"y":0},
+
+{"matrix":[1,0],"x":0,"y":1},
+{"matrix":[1,1],"x":1,"y":1},
+{"matrix":[1,2],"x":2,"y":1}
+			]
+        }
+    }
+}
