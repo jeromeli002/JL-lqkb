@@ -4,3 +4,6 @@
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 0 }
 #define VIAL_UNLOCK_COMBO_COLS { 0, 2 }
 
+
+//#define RAW_USAGE_PAGE 0xB001
+//#define RAW_USAGE_ID   0x51

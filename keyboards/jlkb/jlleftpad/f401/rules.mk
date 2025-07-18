@@ -7,7 +7,7 @@ BOOTMAGIC_ENABLE = yes     # 启用 Bootmagic Lite
 KEYBOARD_SHARED_EP = yes    # Free up some extra endpoints - needed if console+mouse+extra
 MOUSEKEY_ENABLE = yes       # 鼠标键
 EXTRAKEY_ENABLE = yes       # 音频控制和系统控制
-CONSOLE_ENABLE = no         # 调试控制台
+CONSOLE_ENABLE = yes         # 调试控制台
 COMMAND_ENABLE = no         # 调试和配置命令
 # 不要启用 SLEEP_LED_ENABLE。它使用与 BACKLIGHT_ENABLE 相同的计时器
 SLEEP_LED_ENABLE = no       # USB 挂起期间呼吸睡眠 LED
