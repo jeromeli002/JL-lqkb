@@ -449,6 +449,12 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONNECTION_ENABLE
             process_connection(keycode, record) &&
 #endif
+
+/* 新增开始*/
+#ifdef RADIAL_CONTROLLER_ENABLE
+            process_radial_controller(keycode, record) &&
+#endif
+/* 新增完*/
             true)) {
         return false;
     }

@@ -156,6 +156,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    include "connection.h"
 #endif
 
+/* 新增开始*/
+#ifdef RADIAL_CONTROLLER_ENABLE
+#   include "radial_controller.h"
+#endif
+/* 新增结束*/
+
 static uint32_t last_input_modification_time = 0;
 uint32_t        last_input_activity_time(void) {
     return last_input_modification_time;
@@ -824,4 +830,10 @@ void keyboard_task(void) {
 #ifdef OS_DETECTION_ENABLE
     os_detection_task();
 #endif
+
+/* 新增开始*/
+#ifdef RADIAL_CONTROLLER_ENABLE
+    radial_controller_task();
+#endif
+/* 新增完*/
 }

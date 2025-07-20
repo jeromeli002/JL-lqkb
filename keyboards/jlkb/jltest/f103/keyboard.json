@@ -1,0 +1,120 @@
+{
+    "keyboard_name": "测试",
+    "manufacturer": "JLKB",
+    "url": "https://jlkb.jlkb.top",
+    "maintainer": "JLKB",
+    "processor": "STM32F103",
+    "board": "STM32_F103_STM32DUINO",
+    "bootloader": "vibl",
+    "usb": {
+        "vid": "0xF001",
+        "pid": "0x3001",
+        "device_version": "0.0.1"
+    },
+    "features": {
+        "bootmagic": true,
+        "command": false,
+        "console": false,
+        "extrakey": true,
+        "mousekey": true,
+        "nkro": true,
+        "rgb_matrix": true
+    },
+    "rgblight": {
+        "saturation_steps": 8,
+        "brightness_steps": 8,
+        "led_count": 47,
+        "max_brightness": 130,
+        "sleep": true,
+        "animations": {
+            "breathing": true,
+            "rainbow_mood": true,
+            "rainbow_swirl": true,
+            "snake": true,
+            "knight": true,
+            "christmas": true,
+            "static_gradient": true,
+            "alternating": true
+        }
+    },
+    "rgb_matrix": {
+        "animations": {
+            "cycle_left_right": true,
+            "cycle_up_down": true,
+            "cycle_out_in": true,
+            "cycle_out_in_dual": true,
+            "cycle_pinwheel": true,
+            "cycle_spiral": true,
+            "dual_beacon": true,
+            "rainbow_beacon": true,
+            "rainbow_pinwheels": true,
+            "raindrops": true,
+            "jellybean_raindrops": true,
+            "hue_breathing": true,
+            "hue_pendulum": true,
+            "hue_wave": true,
+            "pixel_rain": true,
+            "pixel_flow": true,
+            "pixel_fractal": true,
+            "typing_heatmap": true,
+            "digital_rain": true,
+            "splash": true,
+            "multisplash": true,
+            "solid_splash": true,
+            "solid_multisplash": true,
+            "signalrgb": true
+        },
+        "led_count": 3,        //灯数量
+        "driver": "ws2812",
+        "react_on_keyup": true
+    }, 
+    "ws2812": {
+        "pin": "A0"
+    },
+    
+    "matrix_pins": {
+      "cols": ["C13", "C14", "C15", null, null ],
+      "rows": ["B9", "B8", null, null, null ]
+      "io_delay": 5    //延迟
+    },
+    
+    "diode_direction": "COL2ROW",
+
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+            //{"label": "Esc", "matrix": [row, col], "x": 0, "y": 0}
+            { "matrix": [0, 0],"x": 0,"y": 0}, 
+            { "matrix": [0, 1],"x": 1,"y": 0},
+            { "matrix": [0, 2],"x": 2,"y": 0}, 
+            { "matrix": [0, 3],"x": 3,"y": 0}, 
+            { "matrix": [0, 4],"x": 4,"y": 0},
+             
+            { "matrix": [1, 0],"x": 0,"y": 1}, 
+            { "matrix": [1, 1],"x": 1,"y": 1}, 
+            { "matrix": [1, 2],"x": 2,"y": 1}, 
+            { "matrix": [1, 3],"x": 3,"y": 1}, 
+            { "matrix": [1, 4],"x": 4,"y": 1}, 
+            
+            { "matrix": [2, 0],"x": 0,"y": 2}, 
+            { "matrix": [2, 1],"x": 1,"y": 2}, 
+            { "matrix": [2, 2],"x": 2,"y": 2}, 
+            { "matrix": [2, 3],"x": 3,"y": 2}, 
+            { "matrix": [2, 4],"x": 4,"y": 2}, 
+            
+            { "matrix": [3, 0],"x": 0,"y": 3}, 
+            { "matrix": [3, 1],"x": 1,"y": 3}, 
+            { "matrix": [3, 2],"x": 2,"y": 3}, 
+            { "matrix": [3, 3],"x": 3,"y": 3}, 
+            { "matrix": [3, 4],"x": 4,"y": 3},
+             
+            { "matrix": [4, 0],"x": 0,"y": 4}, 
+            { "matrix": [4, 1],"x": 1,"y": 4}, 
+            { "matrix": [4, 2],"x": 2,"y": 4}, 
+            { "matrix": [4, 3],"x": 3,"y": 4}, 
+            { "matrix": [4, 4],"x": 4,"y": 4}
+     
+            ]
+        }
+    }
+}
