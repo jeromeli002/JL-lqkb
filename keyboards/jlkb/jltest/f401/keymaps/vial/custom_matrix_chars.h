@@ -2,7 +2,7 @@
 #define CUSTOM_MATRIX_CHARS_H
 
 #include <stdint.h> // 确保包含 uint8_t
-
+// !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 // 这是所有可见ASCII字符 (0x20 到 0x7E, 共95个) 的8x8点阵数据。
 // 每个字符由8个字节组成，每个字节代表一行。
 // 注意：以下点阵数据是假设位0为最左侧像素，位7为最右侧像素。
