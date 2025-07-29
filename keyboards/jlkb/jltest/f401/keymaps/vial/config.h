@@ -22,7 +22,7 @@
 
 // --- 新增镜像配置选项 ---
 // 如果你的字符是左右反的，设置为 1。否则为 0。
-#define MATRIX_LIGHT_FLIP_HORIZONTAL 1 // 默认为0，不进行左右镜像
+#define MATRIX_LIGHT_FLIP_HORIZONTAL 0 // 默认为0，不进行左右镜像
 
 // 如果你的字符是上下反的，设置为 1。否则为 0。
 #define MATRIX_LIGHT_FLIP_VERTICAL   0 // 默认为0，不进行上下镜像
@@ -31,4 +31,10 @@
 #define ENABLE_MATRIX_LIGHT_RAIN_EFFECT 1
 
 // 无操作多久后显示下雨动画 (毫秒)
-#define MATRIX_LIGHT_RAIN_TIMEOUT_MS    10000 // 例如，10秒无操作后开启
+#define MATRIX_LIGHT_RAIN_TIMEOUT_MS    3000 // 例如，10秒无操作后开启
+
+// 配置矩阵旋转角度
+// #define MATRIX_LIGHT_ROTATION MATRIX_LIGHT_ROTATION_90   // 顺时针旋转90度
+// #define MATRIX_LIGHT_ROTATION MATRIX_LIGHT_ROTATION_180  // 顺时针旋转180度
+// #define MATRIX_LIGHT_ROTATION MATRIX_LIGHT_ROTATION_270  // 顺时针旋转270度
+// 如果不定义 MATRIX_LIGHT_ROTATION，则默认不旋转 (MATRIX_LIGHT_ROTATION_NONE)

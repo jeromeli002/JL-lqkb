@@ -2,22 +2,21 @@
 #include "custom_matrix_light.h" // 包含你的驱动头文件
 
 enum custom_keycodes {
-    QK_LED_ON = SAFE_RANGE, // 定义自定义键码，用于测试点亮灯
+    QK_LED_ON = SAFE_RANGE,  // 定义自定义键码，用于测试点亮灯
     QK_LED_OFF,
-    ML_OFF              // 定义自定义键码，用于测试熄灭灯
+    ML_OFF                   // 定义自定义键码，用于测试熄灭所有灯
 };
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-	LAYOUT(
-		KC_A, KC_B, QK_BOOT,
-		QK_LED_ON, QK_LED_OFF, ML_OFF),
+    LAYOUT(
+        KC_A, KC_B, QK_BOOT,
+        QK_LED_ON, QK_LED_OFF, ML_OFF),
 
-	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS)
+    LAYOUT(
+        KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS)
 
 };
-
 
 // 键盘初始化函数
 void keyboard_post_init(void) {
@@ -31,42 +30,40 @@ void matrix_scan_user(void) {
 
 // 按键事件处理函数
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // 在这里声明 char_to_display 变量，确保它在使用前已被声明
     char char_to_display = 0xFF; // 默认值设置为 0xFF，以便在未匹配时显示笑脸
 
-    // 获取当前 Shift 键的状态
-    // is_keyboard_master() 确保只在主 MCU 上检查修饰键状态，避免重复
-    // get_mods() 返回当前活动的修饰键掩码
-    // MOD_MASK_SHIFT 是 Shift 键的掩码 (LSFT | RSFT)
     bool is_shift_active = (get_mods() & MOD_MASK_SHIFT);
 
     if (record->event.pressed) {
-        // 当按键按下时，停止下雨效果
-       #if ENABLE_MATRIX_LIGHT_RAIN_EFFECT
-       custom_matrix_light_stop_rain();
-       #endif
+        #if ENABLE_MATRIX_LIGHT_RAIN_EFFECT
+        custom_matrix_light_stop_rain(); // 当按键按下时，停止下雨效果
+        #endif
         
         // 检查自定义键码
         switch (keycode) {
             case QK_LED_ON:
-                // 示例：点亮 (1,2) 处的灯
-                static const matrix_pixel_t points_to_light[] = {{1, 2},{3, 4} };
+                // 示例：点亮 (1,2) 和 (3,4) 处的灯
+                // 现在 custom_matrix_light_set_pixels 不再自动清空矩阵
+                // 如果你希望每次点亮时都只显示这些灯，需要先清空自定义像素层
+                custom_matrix_light_clear_all(); // 清空所有显示，确保只显示这些灯
+                static const matrix_pixel_t points_to_light[] = {{1, 2}, {3, 4}};
                 custom_matrix_light_set_pixels(points_to_light, ARRAY_SIZE(points_to_light), true);
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
             
             case QK_LED_OFF:
                 // 示例：熄灭 (1,2) 处的灯
+                // 现在这个操作只会熄灭指定像素，不会影响其他层或未指定的像素
                 static const matrix_pixel_t points_to_extinguish[] = {{1, 2}};
                 custom_matrix_light_set_pixels(points_to_extinguish, ARRAY_SIZE(points_to_extinguish), false);
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
             
             case ML_OFF:
-                custom_matrix_light_clear_all(); // 调用新函数关闭所有灯
+                custom_matrix_light_clear_all(); // 调用函数关闭所有灯（包括字符、像素和雨滴）
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
-        
+            
         }
 
-        // 根据按下的键码和 Shift 状态来确定要显示的字符
+        // 对于常规按键，更新字符显示层
         switch (keycode) {
             // --- 字母键 (区分大小写) ---
             case KC_A: char_to_display = is_shift_active ? 'A' : 'a'; break;
@@ -152,7 +149,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
 
         // 调用驱动函数来设置要显示的字符/图案
-        custom_matrix_light_set_char(char_to_display);
+        custom_matrix_light_set_char(char_to_display); // 这将更新字符显示层
     } else {
         // 当按键释放时，可以根据需要恢复下雨效果或显示其他默认图案
         // custom_matrix_light_start_rain(); // 如果希望按键释放后自动恢复

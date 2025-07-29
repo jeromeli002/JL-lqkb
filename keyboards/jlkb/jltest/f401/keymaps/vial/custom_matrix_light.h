@@ -5,18 +5,21 @@
 
 // --------------------------- 用户可配置项 ---------------------------
 // 在config.h中定义这些宏，方便用户配置
-// #define MATRIX_LIGHT_ROWS    8
-// #define MATRIX_LIGHT_COLS    8
-// #define MATRIX_LIGHT_ROW_PINS { GP0, GP1, GP2, GP3, GP4, GP5, GP6, GP7 } // 实际引脚
-// #define MATRIX_LIGHT_COL_PINS { GP8, GP9, GP10, GP11, GP12, GP13, GP14, GP15 } // 实际引脚
+// #define MATRIX_LIGHT_ROWS     8  // LED矩阵的行数
+// #define MATRIX_LIGHT_COLS     8  // LED矩阵的列数
+// #define MATRIX_LIGHT_ROW_PINS { GP0, GP1, GP2, GP3, GP4, GP5, GP6, GP7 } // 实际行引脚
+// #define MATRIX_LIGHT_COL_PINS { GP8, GP9, GP10, GP11, GP12, GP13, GP14, GP15 } // 实际列引脚
 // --------------------------------------------------------------------
 
+// 新增：如果未在config.h中定义，则使用默认值 8x8
 #ifndef MATRIX_LIGHT_ROWS
-#error "MATRIX_LIGHT_ROWS must be defined in config.h"
+#define MATRIX_LIGHT_ROWS     8
 #endif
 #ifndef MATRIX_LIGHT_COLS
-#error "MATRIX_LIGHT_COLS must be defined in config.h"
+#define MATRIX_LIGHT_COLS     8
 #endif
+
+// 强制检查引脚定义
 #ifndef MATRIX_LIGHT_ROW_PINS
 #error "MATRIX_LIGHT_ROW_PINS must be defined in config.h"
 #endif
@@ -35,16 +38,29 @@
 #endif
 #endif
 
+// --- 矩阵旋转配置 ---
+typedef enum {
+    MATRIX_LIGHT_ROTATION_NONE = 0,   // 不旋转 (默认)
+    MATRIX_LIGHT_ROTATION_90   = 90,  // 顺时针旋转90度
+    MATRIX_LIGHT_ROTATION_180  = 180, // 顺时针旋转180度
+    MATRIX_LIGHT_ROTATION_270  = 270  // 顺时针旋转270度
+} matrix_light_rotation_t;
+
+#ifndef MATRIX_LIGHT_ROTATION
+#define MATRIX_LIGHT_ROTATION MATRIX_LIGHT_ROTATION_NONE // 默认不旋转
+#endif
+// --------------------------
+
 // 初始化矩阵灯驱动
 void custom_matrix_light_init(void);
 
-// 设置要显示的字符（8x8点阵数据）
+// 设置要显示的字符（8x8点阵数据，会显示在矩阵的左上角）
 void custom_matrix_light_set_char(char c);
 
-// 设置自定义的8x8点阵数据
-void custom_matrix_light_set_pattern(const uint8_t pattern[8]);
+// 设置自定义的8x8点阵数据（会显示在矩阵的左上角）
+void custom_matrix_light_set_pattern(const uint8_t pattern[8]); // 这里的 pattern 仍然是 8字节
 
-// 开启下雨动态效果
+// 开启下雨动态效果 (会填充整个矩阵，无论大小)
 void custom_matrix_light_start_rain(void);
 
 // 停止下雨动态效果
@@ -65,7 +81,7 @@ typedef struct {
 // state: true表示点亮，false表示熄灭
 void custom_matrix_light_set_pixels(const matrix_pixel_t* points, size_t num_points, bool state);
 
-// 新增函数：关闭所有点阵灯
+// 关闭所有点阵灯
 void custom_matrix_light_clear_all(void);
 
 #endif // CUSTOM_MATRIX_LIGHT_H
