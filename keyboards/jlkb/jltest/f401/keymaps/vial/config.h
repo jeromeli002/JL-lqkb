@@ -5,7 +5,6 @@
 #define VIAL_UNLOCK_COMBO_COLS { 0, 2 }
 
 #define WS2812_POWER_PIN    A14
-#define WS2812_BYTE_ORDER   WS2812_BYTE_ORDER_GRB
 
 // 启用自定义矩阵灯驱动
 #define CUSTOM_MATRIX_LIGHT_ENABLE
