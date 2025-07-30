@@ -2,7 +2,7 @@
 #include "custom_matrix_light.h" // 包含你的驱动头文件
 
 enum custom_keycodes {
-    QK_LED_ON = SAFE_RANGE,  // 定义自定义键码，用于测试点亮灯
+    QK_LED_ON = QK_KB_0,  // 定义自定义键码，用于测试点亮灯
     QK_LED_OFF,
     ML_OFF                   // 定义自定义键码，用于测试熄灭所有灯
 };
