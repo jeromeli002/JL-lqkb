@@ -33,9 +33,9 @@
             "knight": true,
             "christmas": true,
             "static_gradient": true,
-            "rgb_test": true,
+            "rgb_test": false,
             "alternating": true,
-            "twinkle": true
+            "twinkle": false
         }
     },
     "ws2812": {
