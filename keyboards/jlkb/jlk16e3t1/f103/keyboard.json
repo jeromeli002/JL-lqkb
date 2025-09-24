@@ -38,7 +38,7 @@
             "static_gradient": true,
             "rgb_test": true,
             "alternating": true,
-            "twinkle": true
+            "twinkle": false
         }
     },
     "ws2812": {

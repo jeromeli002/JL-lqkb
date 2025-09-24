@@ -43,9 +43,9 @@
 #define JOYSTICK_AXES_NY_KEY_POS {3, 1}
 #endif
  */
-#ifndef REPORT_BUFFER_QUEUE_SIZE
-#    define REPORT_BUFFER_QUEUE_SIZE 64
-#endif
+// #ifndef REPORT_BUFFER_QUEUE_SIZE
+// #define REPORT_BUFFER_QUEUE_SIZE 64
+// #endif
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 128
 
@@ -57,7 +57,7 @@
 */
 
 /* 层数 */
-#  define DYNAMIC_KEYMAP_LAYER_COUNT 6
+#define DYNAMIC_KEYMAP_LAYER_COUNT 4
 
 
 /* key matrix size */
@@ -72,10 +72,6 @@
 #define LED_PIN_ON_STATE 0  指示灯 LED“亮”时指示灯引脚的状态 -1高电平，0低电平*/
 
 /* number of backlight levels */
-
-#ifdef BACKLIGHT_PIN
-#define BACKLIGHT_LEVELS 3
-#endif
 
 /* Set 0 if debouncing isn't needed */
 /* #define DEBOUNCING_DELAY 5 */
