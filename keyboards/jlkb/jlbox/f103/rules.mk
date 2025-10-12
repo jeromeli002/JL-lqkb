@@ -23,7 +23,7 @@ AUDIO_ENABLE = no      # 禁用音频输出
 SPLIT_KEYBOARD = no    # 禁用分体键盘支持
 
 # SERIAL_DRIVER = usart # 串口驱动
-RGBLIGHT_ENABLE ?= yes # RGB 灯带支持
+RGBLIGHT_ENABLE ?= no # RGB 灯带支持
 # RGB_MATRIX_ENABLE = yes # RGB 矩阵支持
 # RGB_MATRIX_DRIVER = WS2812 # RGB 矩阵驱动
 # WS2812_DRIVER = pwm # WS2812 驱动方式

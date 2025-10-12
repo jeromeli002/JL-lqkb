@@ -20,11 +20,11 @@
       { "pin_a": "A8", "pin_b": "B15", "resolution": 4 }
     ]
   }
-  
+
     "rgblight": {
         "saturation_steps": 8,  // 饱和度步数
         "brightness_steps": 8,  // 亮度步数
-        "led_count": 28,        //灯数量
+        "led_count": 2,        //灯数量
         "hue_steps":8,          // 色调步数 
         "max_brightness":128,   // 最大亮度 
         "sleep": true,          // 睡眠时关闭灯 
@@ -44,17 +44,10 @@
     "ws2812": {
         "pin": "C13"
     },
-    
-    "indicators": {
-      "caps_lock": "B8",      //大写指示灯
-      "scroll_lock": "B7",    //大写指示灯
-      "num_lock": "A14"       //num指示灯
-      "on_state": 0         //1开启 = 高 0开启 = 低
-    },
-    
+
     "matrix_pins": {
       "cols": ["B0", "A6", "A4", "C15" ],
-        "rows": ["B1", "A7", "A5", "A3", "C14", "B10", "B11", "B12", "B13" ]
+      "rows": ["B1", "A7", "A5", "A3", "C14", "B10", "B11", "B12", "B13" ]
       "io_delay": 5    //延迟
     },
     
