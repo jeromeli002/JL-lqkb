@@ -1,4 +1,4 @@
-/* Copyright 2019 Drew Mills
+/* Copyright 2024 keymagichorse
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +16,16 @@
 
 #pragma once
 
-#include <stdint.h>
-#include "gpio.h"
 
-#ifdef __cplusplus
-extern "C" {
+#ifdef KM_DEBUG
+#    include "SEGGER_RTT.h"
+#    define km_printf(format, ...) SEGGER_RTT_printf(0, format, ##__VA_ARGS__)
+#else
+#    define km_printf(format, ...)
 #endif
 
-typedef struct {
-    uint16_t input;
-    uint8_t  adc;
-} adc_mux;
-#define TO_MUX(i, a) \
-    (adc_mux) {      \
-        i, a         \
-    }
-
-void analogAdcStop(pin_t pin);
-int16_t analogReadPin(pin_t pin);
-int16_t analogReadPinAdc(pin_t pin, uint8_t adc);
-adc_mux pinToMux(pin_t pin);
-
-int16_t adc_read(adc_mux mux);
-
-#ifdef __cplusplus
-}
+#ifdef KM_DEBUG
+#    define km_printf_init() SEGGER_RTT_Init()
+#else
+#    define km_printf_init()
 #endif

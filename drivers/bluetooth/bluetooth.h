@@ -30,6 +30,23 @@ void bluetooth_init(void);
  */
 void bluetooth_task(void);
 
+
+/**
+ * \brief Enable Bluetooth data transmission
+ */
+void bluetooth_enable(void);
+
+/**
+ * \brief Disable Bluetooth data transmission
+ */
+void bluetooth_disable(void);
+
+/**
+ * \brief Check if Bluetooth transmission is enabled
+ * \return true if enabled, false if disabled
+ */
+bool bluetooth_is_enabled(void);
+
 /**
  * \brief Detects if Bluetooth is connected.
  *

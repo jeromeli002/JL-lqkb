@@ -1,4 +1,4 @@
-/* Copyright 2019 Drew Mills
+/* Copyright 2025 keymagichorse
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,31 +14,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Very few codes are borrowed from https://www.keychron.com
+#include "quantum.h"
+#include "bhq.h"
+#include "transport.h"
+#include "km_printf.h"
+#include "outputselect.h"
+static kb_transport_t transport = KB_TRANSPORT_USB; // 默认上电就是usb
 
-#include <stdint.h>
-#include "gpio.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct {
-    uint16_t input;
-    uint8_t  adc;
-} adc_mux;
-#define TO_MUX(i, a) \
-    (adc_mux) {      \
-        i, a         \
+void transport_set(kb_transport_t new_transport)
+{
+    transport = new_transport;
+    if (IS_WIRELESS_TRANSPORT(transport)) 
+    {
+        set_output(OUTPUT_BLUETOOTH);
     }
-
-void analogAdcStop(pin_t pin);
-int16_t analogReadPin(pin_t pin);
-int16_t analogReadPinAdc(pin_t pin, uint8_t adc);
-adc_mux pinToMux(pin_t pin);
-
-int16_t adc_read(adc_mux mux);
-
-#ifdef __cplusplus
+    else if(transport == KB_TRANSPORT_USB)
+    {
+        set_output(OUTPUT_USB);
+    }
+    else
+    {
+        set_output(OUTPUT_NONE);
+    }
 }
-#endif
+kb_transport_t transport_get(void)
+{
+    return transport;
+}
+

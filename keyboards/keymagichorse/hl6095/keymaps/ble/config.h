@@ -1,4 +1,4 @@
-/* Copyright 2019 Drew Mills
+/* Copyright 2024 keymagichorse
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,32 +13,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
-#include <stdint.h>
-#include "gpio.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct {
-    uint16_t input;
-    uint8_t  adc;
-} adc_mux;
-#define TO_MUX(i, a) \
-    (adc_mux) {      \
-        i, a         \
-    }
-
-void analogAdcStop(pin_t pin);
-int16_t analogReadPin(pin_t pin);
-int16_t analogReadPinAdc(pin_t pin, uint8_t adc);
-adc_mux pinToMux(pin_t pin);
-
-int16_t adc_read(adc_mux mux);
-
-#ifdef __cplusplus
-}
-#endif
+#define VIAL_KEYBOARD_UID {0x02, 0xF2, 0x22, 0x33, 0x49, 0x2A, 0x02, 0x08}
+#define VIAL_UNLOCK_COMBO_ROWS {0,0}
+#define VIAL_UNLOCK_COMBO_COLS {0,1}

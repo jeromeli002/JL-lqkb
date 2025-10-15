@@ -1,4 +1,4 @@
-/* Copyright 2019 Drew Mills
+/* Copyright 2024 keymagichorse
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,32 +13,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "quantum.h"
 
-#pragma once
-
-#include <stdint.h>
-#include "gpio.h"
-
-#ifdef __cplusplus
-extern "C" {
+#if defined(BLUETOOTH_BHQ)
+#   include "bhq.h"
+#   include "bhq_common.h"
 #endif
 
-typedef struct {
-    uint16_t input;
-    uint8_t  adc;
-} adc_mux;
-#define TO_MUX(i, a) \
-    (adc_mux) {      \
-        i, a         \
-    }
+#if defined(KB_LPM_ENABLED)
+#   include "lpm.h"
+#endif
 
-void analogAdcStop(pin_t pin);
-int16_t analogReadPin(pin_t pin);
-int16_t analogReadPinAdc(pin_t pin, uint8_t adc);
-adc_mux pinToMux(pin_t pin);
+#if defined(KM_DEBUG)
+#   include "km_printf.h"
+#endif
+#include "battery.h"
 
-int16_t adc_read(adc_mux mux);
 
-#ifdef __cplusplus
+
+void board_init(void) 
+{
+#if defined(BLUETOOTH_BHQ)
+    bhq_common_init();
+#   if defined(KB_LPM_ENABLED)
+    lpm_init();
+#   endif
+#endif
+
+#   if defined(KM_DEBUG)
+    km_printf_init();
+    km_printf("hello rtt log1111111\r\n");
+#   endif
 }
+void housekeeping_task_kb(void) {
+#if defined(BLUETOOTH_BHQ)
+    bhq_wireless_task();
+    #   if defined(KB_LPM_ENABLED)
+        lpm_task();
+    #   endif
 #endif
+}

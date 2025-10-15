@@ -396,6 +396,19 @@ static inline void manageAdcInitializationDriver(uint8_t adc, ADCDriver* adcDriv
     }
 }
 
+void analogAdcStop(pin_t pin) 
+{
+    adc_mux mux = pinToMux(pin);
+    ADCDriver* targetDriver = intToADCDriver(mux.adc);
+    if (!targetDriver) {
+        return;
+    }
+    if (adcInitialized[mux.adc]) {
+        adcStop(targetDriver);
+        adcInitialized[mux.adc] = false;
+    }
+}
+
 int16_t analogReadPin(pin_t pin) {
     palSetLineMode(pin, PAL_MODE_INPUT_ANALOG);
 
