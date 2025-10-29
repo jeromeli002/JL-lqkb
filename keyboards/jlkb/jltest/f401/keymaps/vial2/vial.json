@@ -10,14 +10,6 @@
 	 "title": "增加一层0→1",
 	 "shortName": "点灯"
 	},
-	{"name": "下\n一层",
-	 "title": "增加一层0→1",
-	 "shortName": "点灯1"
-	},
-	{"name": "下\n一层",
-	 "title": "增加一层0→1",
-	 "shortName": "灭点灯"
-	},
 	{"name": "上\n一层",
 	 "title": "减少一层1→0",
 	 "shortName": "灭一"

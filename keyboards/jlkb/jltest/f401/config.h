@@ -9,7 +9,6 @@
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
-
 /* 指示灯 */
 /* #define LED_CAPS_LOCK_PIN B10
 #define LED_NUM_LOCK_PIN C13
@@ -30,4 +29,5 @@
 #define IS_COMMAND() ( \
     keyboard_report->mods == (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) \
 )
+
 
