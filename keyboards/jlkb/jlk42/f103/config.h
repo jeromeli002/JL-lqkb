@@ -21,6 +21,9 @@
 //#define JOYSTICK_AXIS_COUNT 2       // 最大6 最小0
 //#define JOYSTICK_BUTTON_COUNT 32    // 按钮数最大32 最小0
 
+#define RAW_USAGE_PAGE   0xFF69
+#define RAW_USAGE_ID     0x66
+
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 32
 

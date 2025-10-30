@@ -44,6 +44,9 @@
 #endif
 */ 
 
+#define RAW_USAGE_PAGE   0xFF69
+#define RAW_USAGE_ID     0x66
+
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 64
 

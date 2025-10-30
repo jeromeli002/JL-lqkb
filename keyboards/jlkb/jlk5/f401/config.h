@@ -7,6 +7,9 @@
 #define RGBLIGHT_MAX_LAYERS 4
  */
  
+#define RAW_USAGE_PAGE   0xFF69
+#define RAW_USAGE_ID     0x66
+
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 8
 

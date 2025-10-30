@@ -14,6 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define RAW_USAGE_PAGE   0xFF69
+#define RAW_USAGE_ID     0x66
+
 #pragma once
 // 游戏摇杆
 //#define ADC_PIN A1
