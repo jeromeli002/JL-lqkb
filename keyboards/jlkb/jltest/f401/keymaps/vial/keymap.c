@@ -53,7 +53,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 				break;
 				case 0x03:
                     custom_matrix_light_clear_all(); // 调用函数关闭所有灯（包括字符、像素和雨滴）
-                    static const matrix_pixel_t points_to_light2[] = {{2, 3}, {3, 4}, {4, 5}};
+                    static const matrix_pixel_t points_to_light2[] = {{5, 3}, {6, 4}, {7, 5}};
 					custom_matrix_light_set_pixels(points_to_light2, ARRAY_SIZE(points_to_light2), true);
                     break;
                 default:
