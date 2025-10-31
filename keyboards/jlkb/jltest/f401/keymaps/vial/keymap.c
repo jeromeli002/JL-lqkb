@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "custom_matrix_light.h" // 包含你的驱动头文件
+#include "custom_matrix_led.c"   // 处理接收到的原始数据
 
 void keyboard_post_init_user(void) {
     custom_matrix_light_init();
@@ -29,40 +30,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS, KC_TRNS, KC_TRNS)
 
 };
-
-// 发送一个32字节数据X为0xXX则拉高A8
-void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
-    if (length == 32) {
-        custom_matrix_light_start_effect(MATRIX_EFFECT_NONE);
-        // 只有当data[3], data[4], data[5]都为0x00时，才根据data[6]进行高电平设置
-        if (data[0] == 0x00) {
-            switch (data[1]) {
-                case 0x00:
-                    custom_matrix_light_start_effect(MATRIX_EFFECT_SCAN_INIT);
-				break;
-				case 0x01:
-                    custom_matrix_light_start_effect(MATRIX_EFFECT_FLASH_INIT);
-				break;
-				case 0x02:
-                    static const matrix_pixel_t points_to_light0[] = {{1, 3}, {1, 5}};
-					custom_matrix_light_set_pixels(points_to_light0, ARRAY_SIZE(points_to_light0), true);
-                break;         
-                case 0x04:
-                    static const matrix_pixel_t points_to_light1[] = {{5, 3}, {5, 4}, {5, 5}, {5, 6}};
-					custom_matrix_light_set_pixels(points_to_light1, ARRAY_SIZE(points_to_light1), true);
-				break;
-				case 0x03:
-                    custom_matrix_light_clear_all(); // 调用函数关闭所有灯（包括字符、像素和雨滴）
-                    static const matrix_pixel_t points_to_light2[] = {{5, 3}, {6, 4}, {7, 5}};
-					custom_matrix_light_set_pixels(points_to_light2, ARRAY_SIZE(points_to_light2), true);
-                    break;
-                default:
-                    custom_matrix_light_clear_all(); // 其他data[1]值或不满足条件时，调用函数关闭所有灯
-                    break;
-            }
-        } 
-    }
-}
 
 // 键盘初始化函数
 void keyboard_post_init(void) {
