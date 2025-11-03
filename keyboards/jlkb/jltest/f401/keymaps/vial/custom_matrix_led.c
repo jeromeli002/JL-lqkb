@@ -13,7 +13,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         
         // 2. 检查命令/标志位 data[1]
         // 0xA1: 静态点阵数据
-        if (data[1] == 0xA1) {
+        if (data[0] == 0xAB && data[1] == 0xA1) {
             
             custom_matrix_light_start_effect(MATRIX_EFFECT_NONE);
             custom_matrix_light_clear_all(); 
@@ -59,22 +59,22 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
                  custom_matrix_light_set_pixels(points_to_light, current_pixel_count, true);
             }
 
-        } else if (data[1] == 0xA0) {
+        } else if (data[0] == 0xAB && data[1] == 0xA0) {
             // 清空所有灯光
             custom_matrix_light_start_effect(MATRIX_EFFECT_NONE);
             custom_matrix_light_clear_all();
             return;
-        } else if (data[1] == 0xA2) {
+        } else if (data[0] == 0xAB && data[1] == 0xA2) {
             // 重启进入BL模式
             bootloader_jump();
             return;
-        } else if (data[1] == 0xA3) {
+        } else if (data[0] == 0xAB && data[1] == 0xA3) {
             // 清空eeprom设置
             eeconfig_init();
             wait_ms(500);
             soft_reset_keyboard();
             return;
-        } else if (data[1] == 0xA4) {
+        } else if (data[0] == 0xAB && data[1] == 0xA4) {
             // 正常重启不进入BL模式
             soft_reset_keyboard();
             return;

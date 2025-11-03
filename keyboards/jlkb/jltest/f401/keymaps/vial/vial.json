@@ -12,23 +12,23 @@
 	},
 	{"name": "下\n一层",
 	 "title": "增加一层0→1",
-	 "shortName": "点灯1"
+	 "shortName": "数据1"
 	},
 	{"name": "下\n一层",
 	 "title": "增加一层0→1",
-	 "shortName": "灭点灯"
+	 "shortName": "数据2"
 	},
 	{"name": "上\n一层",
 	 "title": "减少一层1→0",
-	 "shortName": "灭一"
+	 "shortName": "数据3"
 	},
 	{"name": "一键购物",
 	 "title": "淘宝购物",
-	 "shortName": "全灭"
+	 "shortName": "灭-亮"
 	},
 	{"name": "按6\n放7",
 	 "title": "按下6层抬起7层",
-	 "shortName": "按6\n放7"
+	 "shortName": "全灭"
 	}
  ],
  "lighting": "qmk_rgblight",

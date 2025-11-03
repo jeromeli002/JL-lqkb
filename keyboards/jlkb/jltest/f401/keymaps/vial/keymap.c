@@ -14,16 +14,17 @@ void keyboard_post_init_user(void) {
 
 enum custom_keycodes {
     QK_LED_ON = QK_KB_0,  // 定义自定义键码，用于测试点亮灯
-    QK_LED_ON1,
+    QK_OUT1,
+    QK_OUT2,
+    QK_OUT3,
     QK_LED_ON2,
-    QK_LED_OFF,
     ML_OFF                   // 定义自定义键码，用于测试熄灭所有灯
 };
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     LAYOUT(
-        QK_LED_ON1, QK_LED_ON2, QK_BOOT,
-        QK_LED_ON, QK_LED_OFF, ML_OFF),
+        QK_OUT1, QK_OUT2, QK_BOOT,
+        QK_OUT1, QK_OUT3, ML_OFF),
 
     LAYOUT(
         KC_TRNS, KC_TRNS, KC_TRNS,
@@ -39,6 +40,26 @@ void keyboard_post_init(void) {
 void matrix_scan_user(void) {
     custom_matrix_light_task(); // 调用驱动的任务函数来刷新显示和处理动画
 }
+
+uint8_t data_out1[32] = {
+    0x00, 0x11, 0x33, 0x44, 0x55, 0x00, 0x00, 0x00, 
+    0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+uint8_t data_out2[32] = {
+    0x00, 0x22, 0x33, 0x44, 0x55, 0x00, 0x00, 0x00, 
+    0x00, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+uint8_t data_out3[32] = {
+    0x00, 0x33, 0x33, 0x44, 0x55, 0x00, 0x00, 0x00, 
+    0x00, 0x33, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x33, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
 // 按键事件处理函数
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
@@ -53,12 +74,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 custom_matrix_light_set_pixels(points_to_light, ARRAY_SIZE(points_to_light), true);
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
             
-            case QK_LED_ON1:
-                // 示例：点亮 (1,2) 和 (3,4) 处的灯
-                // 现在 custom_matrix_light_set_pixels 不再自动清空矩阵
-                // 如果你希望每次点亮时都只显示这些灯，需要先清空自定义像素层
-                static const matrix_pixel_t points_to_light1[] = {{3, 3}, {3, 4}, {3, 5}};
-                custom_matrix_light_set_pixels(points_to_light1, ARRAY_SIZE(points_to_light1), true);
+            case QK_OUT1:
+                host_raw_hid_send(data_out1, sizeof(data_out1));
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
                 
             case QK_LED_ON2:
@@ -67,11 +84,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 custom_matrix_light_set_pixels(points_to_light2, ARRAY_SIZE(points_to_light2), true);
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
                 
-            case QK_LED_OFF:
-                // 示例：熄灭 (1,2) 处的灯
-                // 现在这个操作只会熄灭指定像素，不会影响其他层或未指定的像素
-                static const matrix_pixel_t points_to_extinguish[] = {{3, 5}};
-                custom_matrix_light_set_pixels(points_to_extinguish, ARRAY_SIZE(points_to_extinguish), false);
+            case QK_OUT2:
+                host_raw_hid_send(data_out2, sizeof(data_out2));
+                return false; // 返回 false，表示这个键不传递给固件的默认处理
+                
+            case QK_OUT3:
+                host_raw_hid_send(data_out3, sizeof(data_out3));
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
             
             case ML_OFF:
