@@ -20,10 +20,9 @@
         "saturation_steps": 8,
         "brightness_steps": 8,
         "led_count": 1,
-        "max_brightness":200,   // 最大亮度 
+        "max_brightness":100,   // 最大亮度 
         "animations": {
-            "snake": true,
-            "twinkle": true
+            "static_light": true
         }
     },
     "ws2812": {
