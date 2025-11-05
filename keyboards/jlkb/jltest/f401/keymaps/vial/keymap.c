@@ -1,6 +1,6 @@
 #include QMK_KEYBOARD_H
-#include "custom_matrix_light.h" // 包含你的驱动头文件
-#include "custom_matrix_led.c"   // 处理接收到的原始数据
+#include "led_matrix_light.h" // 包含你的驱动头文件
+#include "led_matrix_on.c"   // 处理接收到的原始数据
 
 void keyboard_post_init_user(void) {
     custom_matrix_light_init();
