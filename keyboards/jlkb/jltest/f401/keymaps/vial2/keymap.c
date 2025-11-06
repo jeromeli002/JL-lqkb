@@ -47,7 +47,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 // 现在 custom_matrix_light_set_pixels 不再自动清空矩阵
                 // 如果你希望每次点亮时都只显示这些灯，需要先清空自定义像素层
                 custom_matrix_light_clear_all(); // 清空所有显示，确保只显示这些灯
-                static const matrix_pixel_t points_to_light[] = {{1, 2}, {3, 4}};
+                static const matrix_pixel_t points_to_light[] = {{7, 0}, {3, 4}};
                 custom_matrix_light_set_pixels(points_to_light, ARRAY_SIZE(points_to_light), true);
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
             

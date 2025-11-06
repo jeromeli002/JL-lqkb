@@ -1,5 +1,5 @@
-#ifndef LED_MATRIX_LIGHT_H
-#define LED_MATRIX_LIGHT_H
+#ifndef CUSTOM_MATRIX_LIGHT_H
+#define CUSTOM_MATRIX_LIGHT_H
 
 #include QMK_KEYBOARD_H
 #include <stddef.h>    
@@ -47,4 +47,4 @@ void custom_matrix_light_task(void);
 // 关闭所有点阵灯
 void custom_matrix_light_clear_all(void);
 
-#endif // LED_MATRIX_LIGHT_H
+#endif // CUSTOM_MATRIX_LIGHT_H

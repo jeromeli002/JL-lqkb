@@ -78,6 +78,14 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             // 正常重启不进入BL模式
             soft_reset_keyboard();
             return;
+        }else if (data[0] == 0xAB && data[1] == 0xA5) {
+            // 正常重启不进入BL模式
+            custom_matrix_light_start_effect(MATRIX_EFFECT_FLASH_INIT);
+            return;
+        }else if (data[0] == 0xAB && data[1] == 0xA6) {
+            // 正常重启不进入BL模式
+            custom_matrix_light_start_effect(MATRIX_EFFECT_SCAN_INIT); 
+            return;
         }
     }
 }
