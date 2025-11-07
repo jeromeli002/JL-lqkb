@@ -4,7 +4,8 @@
 #include QMK_KEYBOARD_H
 #include <stddef.h>    
 
-// --------------------------- 用户可配置项 (保留) ---------------------------
+// --------------------------- 用户可配置项 ---------------------------
+// 矩阵行列数（默认8x8，可在config.h覆盖）
 #ifndef MATRIX_LIGHT_ROWS
 #define MATRIX_LIGHT_ROWS     8
 #endif
@@ -12,6 +13,7 @@
 #define MATRIX_LIGHT_COLS     8
 #endif
 
+// 行列引脚（必须在config.h中定义）
 #ifndef MATRIX_LIGHT_ROW_PINS
 #error "MATRIX_LIGHT_ROW_PINS must be defined in config.h"
 #endif
@@ -19,32 +21,55 @@
 #error "MATRIX_LIGHT_COL_PINS must be defined in config.h"
 #endif
 
-// --- 新增：初始化效果枚举 ---
+// 电平配置（C2R=COL高/ROW低；R2C=COL低/ROW高，默认C2R）
+#ifndef MATRIX_LIGHT_LEVEL_CONFIG
+#define MATRIX_LIGHT_LEVEL_CONFIG  C2R
+#endif
+#if !defined(MATRIX_LIGHT_LEVEL_CONFIG) || (MATRIX_LIGHT_LEVEL_CONFIG != C2R && MATRIX_LIGHT_LEVEL_CONFIG != R2C)
+#error "MATRIX_LIGHT_LEVEL_CONFIG must be C2R or R2C"
+#endif
+
+// 默认亮度（0-100，默认100）
+#ifndef MATRIX_LIGHT_DEFAULT_BRIGHTNESS
+#define MATRIX_LIGHT_DEFAULT_BRIGHTNESS  100
+#endif
+#if MATRIX_LIGHT_DEFAULT_BRIGHTNESS > 100 || MATRIX_LIGHT_DEFAULT_BRIGHTNESS < 0
+#error "MATRIX_LIGHT_DEFAULT_BRIGHTNESS must be between 0 and 100"
+#endif
+
+// 闪烁效果次数（≥1，默认3次）
+#ifndef MATRIX_LIGHT_FLASH_COUNT
+#define MATRIX_LIGHT_FLASH_COUNT  3
+#endif
+#if MATRIX_LIGHT_FLASH_COUNT < 1
+#error "MATRIX_LIGHT_FLASH_COUNT must be ≥ 1"
+#endif
+
+// 是否启用特殊像素优化（最后一行第一列，默认启用）
+#ifndef MATRIX_LIGHT_ENABLE_SPECIAL_PIXEL
+#define MATRIX_LIGHT_ENABLE_SPECIAL_PIXEL  1
+#endif
+#if MATRIX_LIGHT_ENABLE_SPECIAL_PIXEL != 0 && MATRIX_LIGHT_ENABLE_SPECIAL_PIXEL != 1
+#error "MATRIX_LIGHT_ENABLE_SPECIAL_PIXEL must be 0 (disable) or 1 (enable)"
+#endif
+
+// --------------------------- 枚举和结构体 ---------------------------
 typedef enum {
-    MATRIX_EFFECT_NONE = 0,         // 无效果（默认，只显示静态像素）
-    MATRIX_EFFECT_SCAN_INIT,        // 效果1：逐颗点亮（2秒）
-    MATRIX_EFFECT_FLASH_INIT        // 新增效果：闪烁 3 次（代替呼吸）
+    MATRIX_EFFECT_NONE = 0,         // 无效果（默认）
+    MATRIX_EFFECT_SCAN_INIT,        // 逐颗点亮（2秒）
+    MATRIX_EFFECT_FLASH_INIT        // 闪烁效果
 } matrix_light_effect_t;
 
-// 定义一个结构体来表示一个像素点
 typedef struct {
     uint8_t row;
     uint8_t col;
 } matrix_pixel_t;
 
-// 初始化矩阵灯驱动（在 keyboard_post_init_user 中调用）
+// --------------------------- 外部接口 ---------------------------
 void custom_matrix_light_init(void);
-
-// **新增接口：** 设置并启动初始化效果
 void custom_matrix_light_start_effect(matrix_light_effect_t effect);
-
-// **保留：** 设置指定像素点数组的灯亮或灭 (true表示点亮，false表示熄灭)
 void custom_matrix_light_set_pixels(const matrix_pixel_t* points, size_t num_points, bool state);
-
-// 在主循环中调用，用于刷新显示和处理动画
 void custom_matrix_light_task(void);
-
-// 关闭所有点阵灯
 void custom_matrix_light_clear_all(void);
 
 #endif // CUSTOM_MATRIX_LIGHT_H

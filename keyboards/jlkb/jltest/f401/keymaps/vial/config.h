@@ -22,3 +22,9 @@
 // 定义列引脚。请根据你的单片机和实际接线修改。
 #define MATRIX_LIGHT_COL_PINS { A1, A2, A3, A4, A5, A6, A7, C4 }
 
+// 可选：覆盖默认配置（示例）
+// #define MATRIX_LIGHT_DEFAULT_BRIGHTNESS  80    // 默认亮度100%
+#define MATRIX_LIGHT_FLASH_COUNT  3          // 默认闪烁3次
+// 可选配置：C2R 或 R2C（二选一，不配置则默认 C2R）
+#define MATRIX_LIGHT_LEVEL_CONFIG  C2R  // 点亮时 COL=高电平，ROW=低电平（默认，符合需求）
+// #define MATRIX_LIGHT_LEVEL_CONFIG  R2C  // 点亮时 COL=低电平，ROW=高电平（反向配置）
