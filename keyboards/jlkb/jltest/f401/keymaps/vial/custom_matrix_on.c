@@ -71,14 +71,14 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             custom_matrix_light_start_effect(MATRIX_EFFECT_SCAN_INIT);
             break;
 
-        case 0xA7: // A14引脚置高
-            gpio_set_pin_output(A14);
-            gpio_write_pin_high(A14);
+        case 0xA7: // 高阻抗
+            gpio_set_pin_input(B5);
+            //gpio_write_pin_high(A14);
             break;
         
-        case 0xA8: // A14引脚置低
-            gpio_set_pin_output(A14);
-            gpio_write_pin_low(A14);
+        case 0xA8: // 引脚置低
+            gpio_set_pin_output(B5);
+            gpio_write_pin_low(B5);
             break;
 
         // 其他命令默认不处理
