@@ -1,82 +1,43 @@
 #include "tm1640.h"
 #include "timer.h"
+#include "gpio.h"
 #include <stdbool.h>
+#include <string.h>
 
-// QMK GPIO操作宏
-#define TM1640_DIN_HIGH()   writePinHigh(TM1640_DIN_PIN)
-#define TM1640_DIN_LOW()    writePinLow(TM1640_DIN_PIN)
-#define TM1640_SCLK_HIGH()  writePinHigh(TM1640_SCLK_PIN)
-#define TM1640_SCLK_LOW()   writePinLow(TM1640_SCLK_PIN)
-
-// -------------------------- 全局变量 --------------------------
+// -------------------------- 全局状态变量 --------------------------
 static volatile tm1640_effect_type_t g_current_effect = TM1640_EFFECT_NONE;
-static volatile bool g_effect_interrupt = false; // 中断标志
-
-// -------------------------- 内部时序和延时 --------------------------
-static inline void tm1640_delay(void) {
-    for (volatile uint8_t i = 0; i < 10; i++);
-}
-
-// 毫秒延时（循环内实时检测中断）
-static bool tm1640_delay_ms_with_check(uint16_t ms) {
-    for (uint16_t t = 0; t < ms; t++) {
-        if (g_effect_interrupt) return false; 
-        wait_ms(1);
-    }
-    return true;
-}
+static uint32_t g_last_update_timer = 0; 
+static uint8_t g_blink_step = 0;       
+static uint8_t g_running_index = 0;    // 0 到 (ROWS*COLS - 1) 的线性索引
+static uint8_t g_static_bitmap[TM1640_COLS] = {0}; 
 
 // -------------------------- TM1640 基础通信 --------------------------
+#define TM1640_DELAY() { __asm__ __volatile__ ("nop\n\t"); }
+
 static void tm1640_start(void) {
-    TM1640_SCLK_HIGH(); tm1640_delay();
-    TM1640_DIN_HIGH(); tm1640_delay();
-    TM1640_DIN_LOW(); tm1640_delay();
-    TM1640_SCLK_LOW(); tm1640_delay();
+    writePinHigh(TM1640_SCLK_PIN); TM1640_DELAY();
+    writePinHigh(TM1640_DIN_PIN); TM1640_DELAY();
+    writePinLow(TM1640_DIN_PIN); TM1640_DELAY();
+    writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
 }
 
 static void tm1640_stop(void) {
-    TM1640_DIN_LOW(); tm1640_delay();
-    TM1640_SCLK_HIGH(); tm1640_delay();
-    TM1640_DIN_HIGH(); tm1640_delay();
-    TM1640_SCLK_LOW(); tm1640_delay();
+    writePinLow(TM1640_DIN_PIN); TM1640_DELAY();
+    writePinHigh(TM1640_SCLK_PIN); TM1640_DELAY();
+    writePinHigh(TM1640_DIN_PIN); TM1640_DELAY();
+    writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
 }
 
 static void tm1640_send_byte(uint8_t data) {
     for (uint8_t i = 0; i < 8; i++) {
-        TM1640_SCLK_LOW(); tm1640_delay();
-        
-        (data & 0x01) ? TM1640_DIN_HIGH() : TM1640_DIN_LOW();
-        tm1640_delay();
-        
-        TM1640_SCLK_HIGH(); tm1640_delay();
+        writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
+        (data & 0x01) ? writePinHigh(TM1640_DIN_PIN) : writePinLow(TM1640_DIN_PIN);
+        TM1640_DELAY();
+        writePinHigh(TM1640_SCLK_PIN); TM1640_DELAY();
         data >>= 1;
     }
-    TM1640_SCLK_LOW(); tm1640_delay();
-    TM1640_DIN_LOW();
-}
-
-void tm1640_send_data(const uint8_t *data, tm1640_brightness_t brightness) {
-    if (data == NULL) return;
-    
-    tm1640_start();
-    tm1640_send_byte(0x40); 
-    tm1640_stop();
-    
-    tm1640_start();
-    tm1640_send_byte(0xC0); 
-    tm1640_delay();
-    
-    for (uint8_t i = 0; i < TM1640_COLS; i++) {
-        if (g_effect_interrupt) break; 
-        tm1640_send_byte(data[i]);
-    }
-    tm1640_stop();
-    
-    if (!g_effect_interrupt) {
-        tm1640_start();
-        tm1640_send_byte(brightness); 
-        tm1640_stop();
-    }
+    writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
+    writePinLow(TM1640_DIN_PIN);
 }
 
 void tm1640_display_off(void) {
@@ -85,89 +46,161 @@ void tm1640_display_off(void) {
     tm1640_stop();
 }
 
-// -------------------------- 外部接口实现 --------------------------
-void tm1640_stop_current_effect(void) {
-    g_effect_interrupt = true;
-    tm1640_display_off();
-    g_current_effect = TM1640_EFFECT_NONE; 
-    g_effect_interrupt = false; 
-}
-
-static void tm1640_blink_effect(void) {
-    g_current_effect = TM1640_EFFECT_BLINK; 
-    uint8_t blink_buf[TM1640_COLS] = {0};
+// -------------------------- 核心函数：数据发送 --------------------------
+void tm1640_send_data(const uint8_t *data, tm1640_brightness_t brightness) {
+    if (data == NULL) return;
     
+    // 1. 数据命令：自动地址递增 (0x40)
+    tm1640_start();
+    tm1640_send_byte(0x40);
+    tm1640_stop();
+    
+    // 2. 地址设置：起始地址 (0xC0)
+    tm1640_start();
+    tm1640_send_byte(0xC0);
+    TM1640_DELAY();
+    
+    // 3. 传输数据
     for (uint8_t i = 0; i < TM1640_COLS; i++) {
-        blink_buf[i] = 0xFF; 
+        tm1640_send_byte(data[i]);
     }
+    tm1640_stop();
     
-    for (uint8_t i = 0; i < TM1640_BLINK_COUNT; i++) {
-        if (g_effect_interrupt) break; 
-        
-        tm1640_send_data(blink_buf, TM1640_BRIGHTNESS_14_16);
-        if (!tm1640_delay_ms_with_check(TM1640_BLINK_INTERVAL)) break;
-        
-        if (g_effect_interrupt) break;
-        
-        tm1640_display_off();
-        if (!tm1640_delay_ms_with_check(TM1640_BLINK_INTERVAL)) break;
-    }
-    
-    if (g_current_effect == TM1640_EFFECT_BLINK) {
-        tm1640_display_off();
-        g_current_effect = TM1640_EFFECT_NONE; 
-    }
+    // 4. 显示控制命令 (设置亮度/开启显示)
+    tm1640_start();
+    tm1640_send_byte(brightness);
+    tm1640_stop();
 }
 
-static void tm1640_running_light_effect(void) {
-    g_current_effect = TM1640_EFFECT_RUNNING_LIGHT;
-    uint8_t light_buf[TM1640_COLS] = {0};
-    const uint8_t SINGLE_PIXEL = 0x01;
-    
-    for (uint8_t row = 0; row < TM1640_ROWS; row++) {
-        for (uint8_t col = 0; col < TM1640_COLS; col++) {
-            if (g_effect_interrupt) break;
-            
-            light_buf[col] = SINGLE_PIXEL << row; 
-            tm1640_send_data(light_buf, TM1640_BRIGHTNESS_14_16);
-            if (!tm1640_delay_ms_with_check(TM1640_RUNNING_SPEED)) break;
-            
-            light_buf[col] = 0; 
-        }
-        if (g_effect_interrupt) break;
-    }
-    
-    if (g_current_effect == TM1640_EFFECT_RUNNING_LIGHT) {
-        tm1640_display_off();
-        g_current_effect = TM1640_EFFECT_NONE; 
-    }
+// -------------------------- 外部接口（非阻塞式启动） --------------------------
+void tm1640_stop_current_effect(void) {
+    g_current_effect = TM1640_EFFECT_NONE;
+    tm1640_display_off(); 
 }
 
 void tm1640_start_blink(void) {
-    tm1640_stop_current_effect(); 
-    tm1640_blink_effect();        
+    tm1640_stop_current_effect();
+    g_current_effect = TM1640_EFFECT_BLINK;
+    g_blink_step = 1; 
+    g_last_update_timer = timer_read();
+    
+    memset(g_static_bitmap, 0xFF, TM1640_COLS);
+    tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
 }
 
 void tm1640_start_running_light(void) {
-    tm1640_stop_current_effect();     
-    tm1640_running_light_effect();    
+    tm1640_stop_current_effect();
+    g_current_effect = TM1640_EFFECT_RUNNING_LIGHT;
+    
+    g_running_index = 0; 
+    
+    memset(g_static_bitmap, 0, TM1640_COLS);
+
+    // 计算第一个点的 (col, row)
+    uint8_t start_col, start_row;
+    if (TM1640_RUNNING_DIRECTION == 0) { // 纵向：先列后行 (col = index / ROWS, row = index % ROWS)
+        start_col = 0;
+        start_row = 0;
+    } else { // 横向：先行后列 (row = index / COLS, col = index % COLS)
+        start_row = 0;
+        start_col = 0;
+    }
+
+    // 在启动时立即点亮第一个点
+    g_static_bitmap[start_col] |= (1 << start_row);
+    tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+    
+    g_last_update_timer = timer_read();
 }
 
 void tm1640_display_bitmap(const uint8_t *bitmap_data, tm1640_brightness_t brightness) {
     if (bitmap_data == NULL) return;
 
     tm1640_stop_current_effect(); 
-    tm1640_send_data(bitmap_data, brightness);
-    g_current_effect = TM1640_EFFECT_NONE;
+    
+    memcpy(g_static_bitmap, bitmap_data, TM1640_COLS);
+    tm1640_send_data(g_static_bitmap, brightness);
+    
+    g_current_effect = TM1640_EFFECT_STATIC;
 }
+
+// -------------------------- QMK 任务处理：非阻塞式 --------------------------
+void tm1640_task(void) {
+    // 联合判断，避免重复计时器检查
+    if (g_current_effect == TM1640_EFFECT_NONE || timer_elapsed(g_last_update_timer) < (g_current_effect == TM1640_EFFECT_BLINK ? TM1640_BLINK_INTERVAL : TM1640_RUNNING_SPEED)) {
+        return;
+    }
+    
+    g_last_update_timer = timer_read();
+    
+    const uint8_t TOTAL_PIXELS = TM1640_ROWS * TM1640_COLS;
+    
+    switch (g_current_effect) {
+        case TM1640_EFFECT_BLINK:
+            if (g_blink_step >= TM1640_BLINK_COUNT * 2) {
+                tm1640_stop_current_effect();
+                break;
+            }
+            
+            g_blink_step++;
+            
+            // 奇数亮，偶数灭
+            if (g_blink_step % 2 != 0) { 
+                tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+            } else { 
+                tm1640_display_off();
+            }
+            break;
+
+        case TM1640_EFFECT_RUNNING_LIGHT:
+            
+            // 1. 熄灭当前点 (g_running_index)
+            uint8_t prev_col, prev_row;
+            if (TM1640_RUNNING_DIRECTION == 0) { // 纵向
+                prev_col = g_running_index / TM1640_ROWS;
+                prev_row = g_running_index % TM1640_ROWS;
+            } else { // 横向
+                prev_row = g_running_index / TM1640_COLS;
+                prev_col = g_running_index % TM1640_COLS;
+            }
+            g_static_bitmap[prev_col] &= ~(1 << prev_row);
+
+            // 2. 推进到下一个点
+            g_running_index++;
+            
+            if (g_running_index >= TOTAL_PIXELS) {
+                tm1640_stop_current_effect();
+                break;
+            }
+            
+            // 3. 点亮新点 (g_running_index)
+            uint8_t next_col, next_row;
+            if (TM1640_RUNNING_DIRECTION == 0) { // 纵向
+                next_col = g_running_index / TM1640_ROWS;
+                next_row = g_running_index % TM1640_ROWS;
+            } else { // 横向
+                next_row = g_running_index / TM1640_COLS;
+                next_col = g_running_index % TM1640_COLS;
+            }
+            g_static_bitmap[next_col] |= (1 << next_row);
+            
+            // 4. 发送数据
+            tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+            break;
+            
+        default:
+            break;
+    }
+}
+
 
 void tm1640_init(void) {
     setPinOutput(TM1640_DIN_PIN);
     setPinOutput(TM1640_SCLK_PIN);
     
-    TM1640_SCLK_LOW();
-    TM1640_DIN_LOW();
+    writePinLow(TM1640_SCLK_PIN);
+    writePinLow(TM1640_DIN_PIN);
+    
     g_current_effect = TM1640_EFFECT_NONE;
-    g_effect_interrupt = false;
     tm1640_display_off();
 }

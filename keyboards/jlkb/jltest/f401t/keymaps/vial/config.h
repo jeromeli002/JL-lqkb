@@ -15,9 +15,13 @@
 #define TM1640_COLS 8
 
 // 自定义闪烁参数（覆盖默认值）
-#define TM1640_BLINK_COUNT 5    // 闪烁5次
+#define TM1640_BLINK_COUNT 3    // 闪烁5次
 #define TM1640_BLINK_INTERVAL 200 // 闪烁间隔300ms
 
 // 自定义流水速度（覆盖默认150ms/颗）
-#define TM1640_RUNNING_SPEED 50 // 流水速度100ms/颗（更快）
+#define TM1640_RUNNING_SPEED 1000 // 流水速度100ms/颗（更快）
 
+// 【新增配置】流水灯方向
+// 0: 纵向 (默认, 先列后行)
+// 1: 横向 (先行后列)
+#define TM1640_RUNNING_DIRECTION 1

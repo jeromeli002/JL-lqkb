@@ -2,9 +2,9 @@
 #define TM1640_H
 
 #include "quantum.h"
-#include "config.h"
 
-// -------------------------- 可配置参数（默认值，如果config.h中未定义）--------------------------
+// -------------------------- 可配置参数（默认值）--------------------------
+// 引脚
 #ifndef TM1640_DIN_PIN
 #define TM1640_DIN_PIN B7
 #endif
@@ -12,6 +12,7 @@
 #define TM1640_SCLK_PIN B6
 #endif
 
+// 尺寸
 #ifndef TM1640_ROWS
 #define TM1640_ROWS 8
 #endif
@@ -19,15 +20,20 @@
 #define TM1640_COLS 8
 #endif
 
+// 效果参数
 #ifndef TM1640_BLINK_COUNT
 #define TM1640_BLINK_COUNT 3
 #endif
 #ifndef TM1640_BLINK_INTERVAL
 #define TM1640_BLINK_INTERVAL 500
 #endif
-
 #ifndef TM1640_RUNNING_SPEED
 #define TM1640_RUNNING_SPEED 150
+#endif
+
+// 【新增默认值】流水灯方向
+#ifndef TM1640_RUNNING_DIRECTION
+#define TM1640_RUNNING_DIRECTION 0 // 默认纵向
 #endif
 
 // -------------------------- 固定配置 --------------------------
@@ -47,20 +53,20 @@ typedef enum {
 typedef enum {
     TM1640_EFFECT_NONE,
     TM1640_EFFECT_BLINK,
-    TM1640_EFFECT_RUNNING_LIGHT
+    TM1640_EFFECT_RUNNING_LIGHT,
+    TM1640_EFFECT_STATIC
 } tm1640_effect_type_t;
 
 // 函数声明
 void tm1640_init(void);
 void tm1640_send_data(const uint8_t *data, tm1640_brightness_t brightness);
 void tm1640_display_off(void);
-
-// 外部接口（同步调用，可立即中断）
+void tm1640_stop_current_effect(void);
 void tm1640_start_blink(void);
 void tm1640_start_running_light(void);
-void tm1640_stop_current_effect(void);
-
-// 新增功能：根据位图数组立即显示指定图案
 void tm1640_display_bitmap(const uint8_t *bitmap_data, tm1640_brightness_t brightness);
+
+// 非阻塞式任务函数
+void tm1640_task(void);
 
 #endif // TM1640_H
