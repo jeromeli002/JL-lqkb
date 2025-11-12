@@ -8,30 +8,31 @@
 static volatile tm1640_effect_type_t g_current_effect = TM1640_EFFECT_NONE;
 static uint32_t g_last_update_timer = 0; 
 static uint8_t g_blink_step = 0;       
-static uint8_t g_running_index = 0;    // 0 到 (ROWS*COLS - 1) 的线性索引
+static uint8_t g_running_index = 0;    
 static uint8_t g_static_bitmap[TM1640_COLS] = {0}; 
 
-// -------------------------- TM1640 基础通信 --------------------------
+// -------------------------- TM1640 基础通信 (改为 inline 优化固件大小) --------------------------
 #define TM1640_DELAY() { __asm__ __volatile__ ("nop\n\t"); }
 
-static void tm1640_start(void) {
+static inline void tm1640_start(void) {
     writePinHigh(TM1640_SCLK_PIN); TM1640_DELAY();
     writePinHigh(TM1640_DIN_PIN); TM1640_DELAY();
     writePinLow(TM1640_DIN_PIN); TM1640_DELAY();
     writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
 }
 
-static void tm1640_stop(void) {
+static inline void tm1640_stop(void) {
     writePinLow(TM1640_DIN_PIN); TM1640_DELAY();
     writePinHigh(TM1640_SCLK_PIN); TM1640_DELAY();
     writePinHigh(TM1640_DIN_PIN); TM1640_DELAY();
     writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
 }
 
-static void tm1640_send_byte(uint8_t data) {
+// 精简 send_byte 逻辑
+static inline void tm1640_send_byte(uint8_t data) {
     for (uint8_t i = 0; i < 8; i++) {
         writePinLow(TM1640_SCLK_PIN); TM1640_DELAY();
-        (data & 0x01) ? writePinHigh(TM1640_DIN_PIN) : writePinLow(TM1640_DIN_PIN);
+        writePin(TM1640_DIN_PIN, data & 0x01); // 简化位操作
         TM1640_DELAY();
         writePinHigh(TM1640_SCLK_PIN); TM1640_DELAY();
         data >>= 1;
@@ -42,7 +43,7 @@ static void tm1640_send_byte(uint8_t data) {
 
 void tm1640_display_off(void) {
     tm1640_start();
-    tm1640_send_byte(0x80); 
+    tm1640_send_byte(0x80); // DISPLAY_OFF_CMD
     tm1640_stop();
 }
 
@@ -68,7 +69,7 @@ void tm1640_send_data(const uint8_t *data, tm1640_brightness_t brightness) {
     
     // 4. 显示控制命令 (设置亮度/开启显示)
     tm1640_start();
-    tm1640_send_byte(brightness);
+    tm1640_send_byte(brightness); 
     tm1640_stop();
 }
 
@@ -85,7 +86,7 @@ void tm1640_start_blink(void) {
     g_last_update_timer = timer_read();
     
     memset(g_static_bitmap, 0xFF, TM1640_COLS);
-    tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+    tm1640_send_data(g_static_bitmap, TM1640_DEFAULT_BRIGHTNESS_CMD);
 }
 
 void tm1640_start_running_light(void) {
@@ -97,18 +98,13 @@ void tm1640_start_running_light(void) {
     memset(g_static_bitmap, 0, TM1640_COLS);
 
     // 计算第一个点的 (col, row)
-    uint8_t start_col, start_row;
-    if (TM1640_RUNNING_DIRECTION == 0) { // 纵向：先列后行 (col = index / ROWS, row = index % ROWS)
-        start_col = 0;
-        start_row = 0;
-    } else { // 横向：先行后列 (row = index / COLS, col = index % COLS)
-        start_row = 0;
-        start_col = 0;
-    }
-
+    uint8_t start_col = 0, start_row = 0;
+    
+    // 两种方向的第一个点都是 (0, 0)，无需复杂计算
+    
     // 在启动时立即点亮第一个点
     g_static_bitmap[start_col] |= (1 << start_row);
-    tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+    tm1640_send_data(g_static_bitmap, TM1640_DEFAULT_BRIGHTNESS_CMD);
     
     g_last_update_timer = timer_read();
 }
@@ -124,16 +120,17 @@ void tm1640_display_bitmap(const uint8_t *bitmap_data, tm1640_brightness_t brigh
     g_current_effect = TM1640_EFFECT_STATIC;
 }
 
-// -------------------------- QMK 任务处理：非阻塞式 --------------------------
+// -------------------------- QMK 任务处理：非阻塞式 (精简逻辑) --------------------------
 void tm1640_task(void) {
-    // 联合判断，避免重复计时器检查
-    if (g_current_effect == TM1640_EFFECT_NONE || timer_elapsed(g_last_update_timer) < (g_current_effect == TM1640_EFFECT_BLINK ? TM1640_BLINK_INTERVAL : TM1640_RUNNING_SPEED)) {
+    const uint8_t TOTAL_PIXELS = TM1640_ROWS * TM1640_COLS;
+    uint8_t current_interval = (g_current_effect == TM1640_EFFECT_BLINK) ? TM1640_BLINK_INTERVAL : TM1640_RUNNING_SPEED;
+
+    // 联合判断并使用短路逻辑
+    if (g_current_effect == TM1640_EFFECT_NONE || timer_elapsed(g_last_update_timer) < current_interval) {
         return;
     }
     
     g_last_update_timer = timer_read();
-    
-    const uint8_t TOTAL_PIXELS = TM1640_ROWS * TM1640_COLS;
     
     switch (g_current_effect) {
         case TM1640_EFFECT_BLINK:
@@ -145,8 +142,8 @@ void tm1640_task(void) {
             g_blink_step++;
             
             // 奇数亮，偶数灭
-            if (g_blink_step % 2 != 0) { 
-                tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+            if (g_blink_step & 0x01) { // 使用位操作代替 % 2
+                tm1640_send_data(g_static_bitmap, TM1640_DEFAULT_BRIGHTNESS_CMD);
             } else { 
                 tm1640_display_off();
             }
@@ -154,18 +151,21 @@ void tm1640_task(void) {
 
         case TM1640_EFFECT_RUNNING_LIGHT:
             
-            // 1. 熄灭当前点 (g_running_index)
+            // 计算当前/下一个点的位置
             uint8_t prev_col, prev_row;
-            if (TM1640_RUNNING_DIRECTION == 0) { // 纵向
+            uint8_t next_col, next_row;
+            
+            // 熄灭当前点 (g_running_index)
+            if (TM1640_RUNNING_DIRECTION == 0) { // 纵向： col/rows, row%rows
                 prev_col = g_running_index / TM1640_ROWS;
                 prev_row = g_running_index % TM1640_ROWS;
-            } else { // 横向
+            } else { // 横向： row/cols, col%cols
                 prev_row = g_running_index / TM1640_COLS;
                 prev_col = g_running_index % TM1640_COLS;
             }
             g_static_bitmap[prev_col] &= ~(1 << prev_row);
 
-            // 2. 推进到下一个点
+            // 推进到下一个点
             g_running_index++;
             
             if (g_running_index >= TOTAL_PIXELS) {
@@ -173,19 +173,17 @@ void tm1640_task(void) {
                 break;
             }
             
-            // 3. 点亮新点 (g_running_index)
-            uint8_t next_col, next_row;
-            if (TM1640_RUNNING_DIRECTION == 0) { // 纵向
+            // 点亮新点 (g_running_index)
+            if (TM1640_RUNNING_DIRECTION == 0) { 
                 next_col = g_running_index / TM1640_ROWS;
                 next_row = g_running_index % TM1640_ROWS;
-            } else { // 横向
+            } else { 
                 next_row = g_running_index / TM1640_COLS;
                 next_col = g_running_index % TM1640_COLS;
             }
             g_static_bitmap[next_col] |= (1 << next_row);
             
-            // 4. 发送数据
-            tm1640_send_data(g_static_bitmap, TM1640_BRIGHTNESS_14_16);
+            tm1640_send_data(g_static_bitmap, TM1640_DEFAULT_BRIGHTNESS_CMD);
             break;
             
         default:

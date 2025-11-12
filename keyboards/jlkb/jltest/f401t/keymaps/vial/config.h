@@ -25,3 +25,6 @@
 // 0: 纵向 (默认, 先列后行)
 // 1: 横向 (先行后列)
 #define TM1640_RUNNING_DIRECTION 1
+
+// 默认亮度7 (0-7 映射到 0x88-0x8F)
+#define TM1640_DEFAULT_BRIGHTNESS 0 // 最大亮度

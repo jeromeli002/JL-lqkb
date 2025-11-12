@@ -31,23 +31,26 @@
 #define TM1640_RUNNING_SPEED 150
 #endif
 
-// 【新增默认值】流水灯方向
+// 流水灯方向
 #ifndef TM1640_RUNNING_DIRECTION
-#define TM1640_RUNNING_DIRECTION 0 // 默认纵向
+#define TM1640_RUNNING_DIRECTION 0 
+#endif
+
+// 【新增默认值】默认亮度
+#ifndef TM1640_DEFAULT_BRIGHTNESS
+#define TM1640_DEFAULT_BRIGHTNESS 7 // 默认最大亮度
 #endif
 
 // -------------------------- 固定配置 --------------------------
-// 亮度枚举
-typedef enum {
-    TM1640_BRIGHTNESS_1_16  = 0x88,
-    TM1640_BRIGHTNESS_2_16  = 0x89,
-    TM1640_BRIGHTNESS_4_16  = 0x8A,
-    TM1640_BRIGHTNESS_10_16 = 0x8B,
-    TM1640_BRIGHTNESS_11_16 = 0x8C,
-    TM1640_BRIGHTNESS_12_16 = 0x8D,
-    TM1640_BRIGHTNESS_13_16 = 0x8E,
-    TM1640_BRIGHTNESS_14_16 = 0x8F
-} tm1640_brightness_t;
+// TM1640 亮度命令映射：将 0-7 的配置映射到 0x88-0x8F 
+#define TM1640_BRIGHTNESS_COMMAND(level) (0x88 | ((level) & 0x07))
+
+// 使用配置的默认亮度
+#define TM1640_DEFAULT_BRIGHTNESS_CMD TM1640_BRIGHTNESS_COMMAND(TM1640_DEFAULT_BRIGHTNESS)
+
+
+// 【精简】移除旧的 tm1640_brightness_t 枚举，使用 uint8_t 替代
+typedef uint8_t tm1640_brightness_t;
 
 // 灯效类型枚举
 typedef enum {
