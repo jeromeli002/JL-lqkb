@@ -17,6 +17,7 @@ void matrix_init_kb(void) {
     matrix_init_user();
 }
 
+// 在主循环中调用非阻塞式任务
 void matrix_scan_kb(void) {
     tm1640_task(); 
     matrix_scan_user();
@@ -25,6 +26,7 @@ void matrix_scan_kb(void) {
 
 // -------------------------- HID 接收回调函数 --------------------------
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
+    // 帧头检查
     if (data[0] != 0xAB ) return;
 
     switch (data[1]) {
@@ -33,6 +35,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             break;
             
         case 0xA1: // 精准点阵显示
+            // 【修改】将亮度配置值转换为 TM1640 命令，并传递给处理函数
             handle_external_bitmap_data(data, length, TM1640_DEFAULT_BRIGHTNESS_CMD);
             break;
 
@@ -75,11 +78,12 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 // -------------------------- 外部数据处理函数实现 --------------------------
 void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_brightness_t brightness) {
     
-    if (MATRIX_LIGHT_ROWS > 8) return; // 超过 8 行不支持
+    if (MATRIX_LIGHT_ROWS > 8) return;
     
     const uint8_t BYTES_PER_ROW = (MATRIX_LIGHT_COLS + 7) / 8;
-    // 简化长度检查：只用 ROWS * COLS 确保数据不越界
-    if (length < 2 + (uint16_t)MATRIX_LIGHT_ROWS * BYTES_PER_ROW) return; 
+    const uint16_t EXPECTED_DATA_BYTES = 2 + (uint16_t)MATRIX_LIGHT_ROWS * BYTES_PER_ROW;
+
+    if (length < EXPECTED_DATA_BYTES) return;
 
     uint8_t tm1640_col_data[MATRIX_LIGHT_COLS];
     memset(tm1640_col_data, 0, MATRIX_LIGHT_COLS);
@@ -87,12 +91,12 @@ void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_br
     const uint8_t *matrix_data = data + 2;
 
     for (uint8_t row = 0; row < MATRIX_LIGHT_ROWS; row++) {
-        const uint8_t *current_row_data = matrix_data + row * BYTES_PER_ROW; // 移除 (uint16_t) 转换
+        const uint8_t *current_row_data = matrix_data + (uint16_t)row * BYTES_PER_ROW;
 
         for (uint8_t col = 0; col < MATRIX_LIGHT_COLS; col++) {
             
-            const uint8_t byte_offset = col >> 3; // 优化： / 8
-            const uint8_t bit_idx = col & 0x07;   // 优化： % 8
+            const uint8_t byte_offset = col / 8;
+            const uint8_t bit_idx = col % 8;
             
             if (current_row_data[byte_offset] & (1 << bit_idx)) {
                 tm1640_col_data[col] |= (1 << row);
