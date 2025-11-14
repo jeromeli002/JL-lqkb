@@ -69,6 +69,15 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             setPinOutput(C1);
             writePinLow(C1);
             break;
+            
+         case 0xA9: // 关闭B5 (设置为输入)
+            setPinInput(A14);
+            break;
+            
+        case 0xAA: // B5 引脚置低
+            setPinOutput(B5);
+            writePinLow(B5);
+            break;
 
         default:
             break;

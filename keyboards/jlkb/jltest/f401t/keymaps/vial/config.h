@@ -25,4 +25,4 @@
 #define TM1640_RUNNING_DIRECTION 1 
 
 // 默认亮度7 (0-7 映射到 0x88-0x8F)
-#define TM1640_DEFAULT_BRIGHTNESS 1 // 最大亮度
+#define TM1640_DEFAULT_BRIGHTNESS 4 // 最大亮度
