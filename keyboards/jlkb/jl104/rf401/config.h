@@ -1,7 +1,7 @@
 #pragma once
 
-#define RAW_USAGE_PAGE   0xFF69
-#define RAW_USAGE_ID     0x66
+// #define RAW_USAGE_PAGE   0xFF69
+// #define RAW_USAGE_ID     0x66
 
  /* 层指示灯 */
 #define RGBLIGHT_LAYERS
