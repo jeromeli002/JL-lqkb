@@ -5,5 +5,4 @@ VIAL_INSECURE = yes
 LTO_ENABLE = yes
 RADIAL_CONTROLLER_ENABLE = yes
 
-EEPROM_USER_ENABLE = yes
 # SRC += custom_matrix_light.c

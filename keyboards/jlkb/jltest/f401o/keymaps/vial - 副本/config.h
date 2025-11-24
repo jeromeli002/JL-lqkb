@@ -9,8 +9,6 @@
 
 #define OLED_DISPLAY_128X64  //128x64分辨率
 
-// #define JLOLED_EEPROM_SIZE  32768
-
 //  OLED设置项
 //#define OLED_FONT_H "glcdfont.c"//自定义字体
 //#define OLED_FONT_WIDTH 6 //字体宽度

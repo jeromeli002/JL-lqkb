@@ -1,15 +1,24 @@
+// ... 确保包含 jloled.h, bootloader.h, eeconfig.h 等头文件
+
 // 接收数据处理
-// 适用于 MATRIX_LIGHT_COLS > 8 的通用版本
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
-    // 仅在数据头为 0xAB 时才继续处理，减少无效判断
-    if (data[0] == 0xAC) {
+    uint8_t magic = data[0];
+
+    // --- 1. OLED 图像数据/命令处理 (0xAC, 0xB0-0xCF, 0xAD) ---
+    // 检查是否是 OLED 相关的 Raw HID 命令
+    if (magic == JLOLED_MAGIC_REALTIME || 
+        (magic >= JLOLED_MAGIC_WRITE_EEPROM_BASE && magic < (JLOLED_MAGIC_WRITE_EEPROM_BASE + JLOLED_SLOT_COUNT)) ||
+        magic == JLOLED_MAGIC_DISPLAY_SLOT) {
+        
         jloled_receive(data, length);
-        return; // 处理完图像就直接返回，不继续执行后面的逻辑
+        return; 
     }
     
-    if (data[0] != 0xAB) return;
+    // --- 2. 系统控制命令处理 (0xAB) ---
+    // 如果不是 OLED 命令，则检查是否是系统控制命令
+    if (magic == 0xAB) ;
 
-    // 根据命令位分支处理（仅 A1 需要长度校验，其他命令无需数据体）
+    // 根据命令位分支处理
     switch (data[1]) {
 
         case 0xA2: // 重启进入BL模式
@@ -25,19 +34,17 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         case 0xA4: // 正常重启（不进入BL模式）
             soft_reset_keyboard();
             break;
-
-
-        case 0xA7: // 高阻抗
-            gpio_set_pin_input(A14);
-            //gpio_write_pin_high(A14);
+            
+        case 0xA5: // 正常重启（不进入BL模式）
+            jloled_display_slot(1);
             break;
-        
-        case 0xA8: // 引脚置低
-            gpio_set_pin_output(A14);
-            gpio_write_pin_low(A14);
+            
+        case KC_S: // 捕获标准 S 键
+            jloled_display_slot(0); 
             break;
 
-        // 其他命令默认不处理
+        // ... 其他控制命令 ...
+
         default:
             break;
     }
