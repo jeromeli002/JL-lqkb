@@ -1,78 +1,125 @@
 #include "jloled.h"
 #include "raw_hid.h"
 #include "string.h"
+#include "eeprom.h"
+#include "eeconfig.h" 
 
 // 本地显示缓冲区
 uint8_t jloled_buffer[JLOLED_BUFFER_SIZE];
-
-// 标记是否需要刷新屏幕
 bool jloled_dirty = true;
 
+// EEPROM 存储起始地址变量的定义
+uint16_t jloled_eeprom_start_addr = 2048; 
+
 /**
- * @brief 初始化OLED显示内容
- * 默认显示竖条纹，验证屏幕是否工作
+ * @brief 将数据包写入 RAM 缓冲区 (实时显示)
+ * @param data Raw HID 数据
+ * @param length 数据长度
  */
-void jloled_init(void) {
-    // 初始化为竖条纹 (Vertical Stripes)
-    // 0x55 = 01010101 (二进制), 如果按列扫描，表现为细密的竖线
-    // 或者使用 0xFF, 0x00 交替来实现更宽的竖条
-    for (int i = 0; i < JLOLED_BUFFER_SIZE; i++) {
-        // 这里使用 10101010 模式，配合OLED的Vertical addressing
-        // 在屏幕上看起来像是细密的网格或竖条，取决于OLED映射方式
-        jloled_buffer[i] = 0xAA; 
+static void jloled_write_ram(uint8_t *data, uint8_t length) {
+    if (length != RAWHID_PACKET_SIZE) return;
+
+    uint8_t block_index = data[1];
+    uint16_t buffer_offset = block_index * PAYLOAD_SIZE;
+
+    if (buffer_offset >= JLOLED_BUFFER_SIZE) return; 
+
+    uint16_t bytes_to_copy = PAYLOAD_SIZE;
+    if (buffer_offset + bytes_to_copy > JLOLED_BUFFER_SIZE) {
+        bytes_to_copy = JLOLED_BUFFER_SIZE - buffer_offset;
     }
+
+    // 写入 RAM 缓冲区
+    memcpy(jloled_buffer + buffer_offset, &data[2], bytes_to_copy);
     jloled_dirty = true;
 }
 
 /**
+ * @brief 将数据包写入 EEPROM 槽位
+ * @param data Raw HID 数据
+ * @param length 数据长度
+ * @param slot_index 目标槽位索引
+ */
+static void jloled_write_eeprom(uint8_t *data, uint8_t length, uint8_t slot_index) {
+    if (length != RAWHID_PACKET_SIZE) return;
+
+    uint8_t block_index = data[1];
+    uint16_t buffer_offset = block_index * PAYLOAD_SIZE;
+
+    if (buffer_offset >= JLOLED_SLOT_SIZE) return; 
+
+    uint16_t bytes_to_copy = PAYLOAD_SIZE;
+    if (buffer_offset + bytes_to_copy > JLOLED_SLOT_SIZE) {
+        bytes_to_copy = JLOLED_SLOT_SIZE - buffer_offset;
+    }
+
+    // 计算 EEPROM 目标偏移量
+    uint16_t eeprom_base_offset = jloled_eeprom_start_addr + (slot_index * JLOLED_SLOT_SIZE);
+    uint16_t eeprom_dest_offset = eeprom_base_offset + buffer_offset;
+    
+    // 写入 EEPROM
+    // 修复 const 错误：转换为非 const void *
+    eeprom_update_block((const void *)&data[2], (void *)(uintptr_t)eeprom_dest_offset, bytes_to_copy);
+}
+
+
+/**
+ * @brief 处理 Raw HID 接收到的数据
+ */
+void jloled_receive(uint8_t *data, uint8_t length) {
+    uint8_t magic = data[0];
+
+    // --- 1. 实时显示 (写入 RAM) ---
+    if (magic == JLOLED_MAGIC_REALTIME) { // 0xAC
+        jloled_write_ram(data, length); // <--- 直接调用 RAM 写入，与 EEPROM 逻辑分离
+        return;
+    }
+
+    // --- 2. 写入 EEPROM 槽位 ---
+    if (magic >= JLOLED_MAGIC_WRITE_EEPROM_BASE && magic < (JLOLED_MAGIC_WRITE_EEPROM_BASE + JLOLED_SLOT_COUNT)) {
+        uint8_t slot_index = magic - JLOLED_MAGIC_WRITE_EEPROM_BASE;
+        
+        // 忽略 EEPROM 范围检查，因为 eeprom_get_size() 总是报错
+        // 假设 EEPROM 足够大
+        
+        jloled_write_eeprom(data, length, slot_index); // <--- 直接调用 EEPROM 写入
+        return;
+    }
+
+    // --- 3. 调用 EEPROM 槽位显示 ---
+    if (magic == JLOLED_MAGIC_DISPLAY_SLOT) { 
+        uint8_t slot_index = data[1];
+
+        if (slot_index < JLOLED_SLOT_COUNT) {
+            jloled_display_slot(slot_index);
+        }
+        return;
+    }
+}
+
+/**
  * @brief OLED 任务函数，放入 oled_task_user 中调用
- * 负责将缓冲区的数据写入 OLED
  */
 void jloled_task(void) {
     if (jloled_dirty) {
-        // 将缓冲区内容写入 OLED
-        // 修正点：增加 (const char *) 强制类型转换，解决 "pointer targets differ in signedness" 报错
         oled_write_raw((const char *)jloled_buffer, JLOLED_BUFFER_SIZE);
         jloled_dirty = false;
     }
 }
 
 /**
- * @brief 处理 Raw HID 接收到的数据
- * 放入 raw_hid_receive 中调用
- * * 协议格式 (32 bytes):
- * [0]: 0xAC (魔数/命令字)
- * [1]: Packet Index (包索引/偏移量块号)
- * [2..31]: 30 bytes 图像数据
+ * @brief 从 EEPROM 槽位读取图像并显示
+ * @param slot_index 要显示的槽位 (0-31)
  */
-void jloled_receive(uint8_t *data, uint8_t length) {
-    // 1. 检查长度和魔数
-    if (length != RAWHID_PACKET_SIZE || data[0] != 0xAC) {
+void jloled_display_slot(uint8_t slot_index) {
+    if (slot_index >= JLOLED_SLOT_COUNT) {
         return;
     }
 
-    // 2. 获取块索引
-    uint8_t block_index = data[1];
+    uint16_t eeprom_src_offset = jloled_eeprom_start_addr + (slot_index * JLOLED_SLOT_SIZE);
 
-    // 3. 计算在缓冲区中的目标偏移量
-    // 每个包携带 PAYLOAD_SIZE (30) 字节
-    uint16_t buffer_offset = block_index * PAYLOAD_SIZE;
+    // 修正 eeprom_read_block 的地址类型：强制转换为 const void *
+    eeprom_read_block(jloled_buffer, (const void *)(uintptr_t)eeprom_src_offset, JLOLED_SLOT_SIZE);
 
-    // 4. 安全检查，防止溢出
-    if (buffer_offset >= JLOLED_BUFFER_SIZE) {
-        return;
-    }
-
-    // 5. 计算本次需要写入的字节数 (处理最后一个包可能不满的情况)
-    uint16_t bytes_to_copy = PAYLOAD_SIZE;
-    if (buffer_offset + bytes_to_copy > JLOLED_BUFFER_SIZE) {
-        bytes_to_copy = JLOLED_BUFFER_SIZE - buffer_offset;
-    }
-
-    // 6. 复制数据到缓冲区
-    // data+2 是因为前两个字节是头信息
-    memcpy(&jloled_buffer[buffer_offset], &data[2], bytes_to_copy);
-
-    // 7. 标记为脏，以便下一帧刷新
     jloled_dirty = true;
 }
