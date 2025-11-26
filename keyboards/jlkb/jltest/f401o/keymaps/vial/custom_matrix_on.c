@@ -1,4 +1,9 @@
-// ... 确保包含 jloled.h, bootloader.h, eeconfig.h 等头文件
+/**
+ * @brief 初始化OLED显示内容
+ */
+void jloled_init(void) {
+jloled_display_slot(0); //初始化第一槽位图像
+}
 
 // 接收数据处理
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
@@ -35,11 +40,11 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             soft_reset_keyboard();
             break;
             
-        case 0xA5: // 正常重启（不进入BL模式）
+        case 0xA5: //第2槽位图像）
             jloled_display_slot(1);
             break;
             
-        case KC_S: // 捕获标准 S 键
+        case KC_S: //第一槽位图像
             jloled_display_slot(0); 
             break;
 

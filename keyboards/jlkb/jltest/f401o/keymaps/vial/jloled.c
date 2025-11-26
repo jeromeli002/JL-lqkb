@@ -9,7 +9,7 @@ uint8_t jloled_buffer[JLOLED_BUFFER_SIZE];
 bool jloled_dirty = true;
 
 // EEPROM 存储起始地址变量的定义
-uint16_t jloled_eeprom_start_addr = 1024; 
+uint16_t jloled_eeprom_start_addr = 2048; 
 
 /**
  * @brief 将数据包写入 RAM 缓冲区 (实时显示)
@@ -95,16 +95,6 @@ void jloled_receive(uint8_t *data, uint8_t length) {
         }
         return;
     }
-}
-
-/**
- * @brief 初始化OLED显示内容
- */
-void jloled_init(void) {
-    for (int i = 0; i < JLOLED_BUFFER_SIZE; i++) {
-        jloled_buffer[i] = 0xAA;
-    }
-    jloled_dirty = true;
 }
 
 /**
