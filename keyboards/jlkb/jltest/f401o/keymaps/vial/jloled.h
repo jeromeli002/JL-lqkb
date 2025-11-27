@@ -3,30 +3,28 @@
 #include "quantum.h"
 
 // --- 配置参数 (请在 config.h 中定义) ---
+// 修正 1：对 OLED_DISPLAY_WIDTH 和 HEIGHT 使用 #ifndef 保护
 #ifndef OLED_DISPLAY_WIDTH
     #define OLED_DISPLAY_WIDTH 128
 #endif
-
+// 修正 1：对 OLED_DISPLAY_HEIGHT 使用 #ifndef 保护
 #ifndef OLED_DISPLAY_HEIGHT
     #define OLED_DISPLAY_HEIGHT 32
 #endif
 
-// 计算 RAM 缓冲区大小：依赖于 OLED 尺寸
-// 默认 (128x32) -> 512 字节
+// 计算缓冲区大小 (128x32 -> 512 字节; 128x64 -> 1024 字节)
 #define JLOLED_BUFFER_SIZE (OLED_DISPLAY_WIDTH * OLED_DISPLAY_HEIGHT / 8)
 
 // 图像库配置
+// 修正 2：对 JLOLED_SLOT_COUNT 使用 #ifndef 保护
 #ifndef JLOLED_SLOT_COUNT
-    // EEPROM 中可存储的图像槽位数量
     #define JLOLED_SLOT_COUNT 32
 #endif
 
-// **确保默认值的关键部分：**
-#ifndef JLOLED_SLOT_SIZE 
-    // 如果未定义，则默认与显示缓冲区大小一致 (128x32 默认为 512 字节)
-    #define JLOLED_SLOT_SIZE JLOLED_BUFFER_SIZE 
-#endif 
+// 每个槽位的图像大小等于缓冲区大小
+#define JLOLED_SLOT_SIZE JLOLED_BUFFER_SIZE
 
+// 修正 3：对 JLOLED_EEPROM_SIZE 使用 #ifndef 保护
 #ifndef JLOLED_EEPROM_SIZE
     // 整个图像库所需的 EEPROM 空间
     #define JLOLED_EEPROM_SIZE (JLOLED_SLOT_COUNT * JLOLED_SLOT_SIZE)
