@@ -1,0 +1,45 @@
+{
+ "name": "JL-Pad Rev.A",
+ "vendorId": "0xFEED",
+ "productId": "0x5004",
+ "vial": {
+    "vibl": true
+  },
+"customKeycodes": [ 
+    {"name": "下\n一层",
+	 "title": "增加一层0→1",
+	 "shortName": "点灯"
+	},
+	{"name": "下\n一层",
+	 "title": "增加一层0→1",
+	 "shortName": "数据1"
+	},
+	{"name": "下\n一层",
+	 "title": "增加一层0→1",
+	 "shortName": "数据2"
+	},
+	{"name": "上\n一层",
+	 "title": "减少一层1→0",
+	 "shortName": "数据3"
+	},
+	{"name": "一键购物",
+	 "title": "淘宝购物",
+	 "shortName": "灭-亮"
+	},
+	{"name": "按6\n放7",
+	 "title": "按下6层抬起7层",
+	 "shortName": "全灭"
+	}
+ ],
+"lighting": "vialrgb",
+ "matrix": { "rows": 1, "cols":3 },
+ "layouts": {
+      "labels": [
+      "左旋钮",
+      "右旋钮"
+      ],
+   "keymap": [
+["0,0","0,1","0,2"]
+   ]
+ }
+}

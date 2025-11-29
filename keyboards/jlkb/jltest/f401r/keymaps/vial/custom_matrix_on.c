@@ -1,8 +1,10 @@
 #include "quantum.h"
+#include "jlrgb.h"
 #include "tm1640.h"
 #include "gpio.h"
 #include <string.h>
 
+// TM1640------------------- TM1640 --------------------------
 // -------------------------- 宏定义 --------------------------
 #define MATRIX_LIGHT_ROWS TM1640_ROWS
 #define MATRIX_LIGHT_COLS TM1640_COLS
@@ -22,7 +24,18 @@ void matrix_scan_kb(void) {
     tm1640_task(); 
     matrix_scan_user();
 }
+// TM1640------------------- TM1640 --------------------------
 
+
+// RGB------------------- RGB --------------------------
+// 定义全局变量，并设置默认值 55
+remote_rgb_data_t g_remote_rgb_data = {
+    .h = 55,
+    .s = 55,
+    .v = 55,
+    .spd = 55
+};
+// RGB------------------- RGB --------------------------
 
 // -------------------------- HID 接收回调函数 --------------------------
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
@@ -77,6 +90,22 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         case 0xAA: // B5 引脚置低
             setPinOutput(B5);
             writePinLow(B5);
+            break;
+            
+        case 0xB0: // B5 引脚置低
+			g_remote_rgb_data.h = data[2]; // 第 3 字节 (索引 2)
+			g_remote_rgb_data.s = data[3]; // 第 4 字节 (索引 3)
+			g_remote_rgb_data.v = data[4]; // 第 5 字节 (索引 4)
+			g_remote_rgb_data.spd = data[5]; // 第 6 字节 (索引 5)
+        if (length >= 6 + MAX_LED_BYTE_COUNT) {
+                // 使用 memcpy 高效拷贝 26 个字节的位图数据
+                memcpy(g_remote_rgb_data.led_bitmap, &data[6], MAX_LED_BYTE_COUNT);
+            }
+            rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
+            break;
+            
+       case 0xB1: // B5 引脚置低
+            rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_off);
             break;
 
         default:
