@@ -17,7 +17,7 @@
     "rgblight": {
         "saturation_steps": 8,/* 饱和度步数 */
         "brightness_steps": 8,/* 亮度步数 */
-        "led_count": 3, /* 灯数量 */
+        "led_count": 4, /* 灯数量 */
         "hue_steps":8,/* 色调步数 */
         "max_brightness":250,/* 最大亮度 */
         "sleep": true,/* 睡眠时关闭灯 */
@@ -78,6 +78,7 @@
     "layout": [ 
         {"matrix":[0,0],"x":0,"y":0,"flags":4},
         {"matrix":[0,1],"x":75,"y":0,"flags":4},
+        {"matrix":[0,2],"x":149,"y":0,"flags":4},
         {"matrix":[0,2],"x":149,"y":0,"flags":4}
     ],
         "driver": "ws2812",
@@ -85,7 +86,8 @@
         "react_on_keyup": true
     },
     "ws2812": {
-        "pin": "B4"
+        "pin": "B4",
+       // "driver": "pwm"
     },
     "matrix_pins": {
         "cols": ["C14", "C15", "C0"],

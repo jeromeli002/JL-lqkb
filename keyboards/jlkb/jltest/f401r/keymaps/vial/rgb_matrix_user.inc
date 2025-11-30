@@ -4,7 +4,7 @@
 
 // Step 1: 声明新的自定义效果
 RGB_MATRIX_EFFECT(remote_static_color)
-RGB_MATRIX_EFFECT(remote_static_off) // <--- 新增声明
+RGB_MATRIX_EFFECT(remote_static_off) //关闭所有
 
 // Step 2: 在 RGB_MATRIX_CUSTOM_EFFECT_IMPLS 块中定义效果
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
