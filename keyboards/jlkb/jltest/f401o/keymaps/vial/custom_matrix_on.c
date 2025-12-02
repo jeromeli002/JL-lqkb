@@ -44,8 +44,13 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             jloled_display_slot(1);
             break;
             
-        case KC_S: //第一槽位图像
-            jloled_display_slot(0); 
+        case 0xA6: //第一槽位图像
+            setPinOutput(A14);
+            writePinLow(A14);
+            break;
+            
+        case 0xA7: //第一槽位图像
+            setPinInput(A14);
             break;
 
         // ... 其他控制命令 ...

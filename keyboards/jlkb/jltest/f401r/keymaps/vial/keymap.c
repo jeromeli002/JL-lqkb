@@ -35,7 +35,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
                 
             case test:
-                tm1640_start_running_light(); 
+                g_remote_rgb_data.h = 214; 
+				g_remote_rgb_data.s = 0xFF; 
+				g_remote_rgb_data.v = 0xFF; 
+				g_remote_rgb_data.spd = 0xFF; 
+				g_remote_rgb_data.led_bitmap[0] = 0xA0;
+				rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
                 return false; // 返回 false，表示这个键不传递给固件的默认处理
                 
             case QK_3:

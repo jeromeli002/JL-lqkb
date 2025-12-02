@@ -11,6 +11,11 @@
         "pid": "0x3001",
         "device_version": "0.0.1"
     },
+    "eeprom": {
+        "wear_leveling": {
+            "backing_size": 16384
+        }
+    },
    "features": {
         "rgb_matrix": true
     },
