@@ -102,6 +102,8 @@ void jloled_receive(uint8_t *data, uint8_t length) {
 
         if (slot_index < JLOLED_SLOT_COUNT) {
             jloled_display_slot(slot_index);
+            jloled_realtime_active = true;
+            jloled_realtime_timer = timer_read32();
         }
         return;
     }

@@ -31,8 +31,8 @@ static uint8_t current_layer = 0; //默认0层开始
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[0] = LAYOUT(
-		KC_TRNS, KC_A, KC_TRNS,
-		KC_TRNS, KC_B, KC_TRNS),
+		LAYERS_DOWN, LAYERS_UP, KC_TRNS,
+		LAYERS_DOWN, LAYERS_UP, KC_TRNS),
 
 	[1] = LAYOUT(
 		KC_TRNS, KC_TRNS, KC_TRNS,
