@@ -1,15 +1,16 @@
 #include QMK_KEYBOARD_H
-// #include "oled.c"
+
 #include "jloled.c"
 #include "jloled.h"
+#include "oled.c" //层信息图像显
 #include "custom_matrix_on.c"   // 处理接收到的原始数据
 
-// OLED 任务回调
-bool oled_task_user(void) {
+/* OLED 任务回调
+bool oled_task_k(void) {
     // 调用我们的自定义渲染函数
     jloled_task();
     return false; // 返回 false 表示我们已经处理了绘制，不需要QMK默认绘制
-}
+}*/
 
 // 键盘初始化回调
 void keyboard_post_init_user(void) {

@@ -2,14 +2,22 @@
 #include "raw_hid.h"
 #include "string.h"
 #include "eeprom.h"
-#include "eeconfig.h" 
+#include "eeconfig.h"
+#include "timer.h" // QMK 定时器头文件
 
+// --- 全局变量定义 ---
 // 本地显示缓冲区
 uint8_t jloled_buffer[JLOLED_BUFFER_SIZE];
 bool jloled_dirty = true;
 
 // EEPROM 存储起始地址变量的定义
-uint16_t jloled_eeprom_start_addr = 2048; 
+uint16_t jloled_eeprom_start_addr = 2048;
+
+// 新增：实时显示状态标志位
+bool jloled_realtime_active = false; 
+
+// 新增：实时显示定时器和超时设置 (单位：毫秒)
+uint32_t jloled_realtime_timer = 0;
 
 /**
  * @brief 将数据包写入 RAM 缓冲区 (实时显示)
@@ -22,7 +30,7 @@ static void jloled_write_ram(uint8_t *data, uint8_t length) {
     uint8_t block_index = data[1];
     uint16_t buffer_offset = block_index * PAYLOAD_SIZE;
 
-    if (buffer_offset >= JLOLED_BUFFER_SIZE) return; 
+    if (buffer_offset >= JLOLED_BUFFER_SIZE) return;
 
     uint16_t bytes_to_copy = PAYLOAD_SIZE;
     if (buffer_offset + bytes_to_copy > JLOLED_BUFFER_SIZE) {
@@ -32,6 +40,10 @@ static void jloled_write_ram(uint8_t *data, uint8_t length) {
     // 写入 RAM 缓冲区
     memcpy(jloled_buffer + buffer_offset, &data[2], bytes_to_copy);
     jloled_dirty = true;
+    
+    // 关键修改：激活实时显示标志并重置计时器
+    jloled_realtime_active = true;
+    jloled_realtime_timer = timer_read32();
 }
 
 /**
@@ -46,7 +58,7 @@ static void jloled_write_eeprom(uint8_t *data, uint8_t length, uint8_t slot_inde
     uint8_t block_index = data[1];
     uint16_t buffer_offset = block_index * PAYLOAD_SIZE;
 
-    if (buffer_offset >= JLOLED_SLOT_SIZE) return; 
+    if (buffer_offset >= JLOLED_SLOT_SIZE) return;
 
     uint16_t bytes_to_copy = PAYLOAD_SIZE;
     if (buffer_offset + bytes_to_copy > JLOLED_SLOT_SIZE) {
@@ -58,7 +70,6 @@ static void jloled_write_eeprom(uint8_t *data, uint8_t length, uint8_t slot_inde
     uint16_t eeprom_dest_offset = eeprom_base_offset + buffer_offset;
     
     // 写入 EEPROM
-    // 修复 const 错误：转换为非 const void *
     eeprom_update_block((const void *)&data[2], (void *)(uintptr_t)eeprom_dest_offset, bytes_to_copy);
 }
 
@@ -71,7 +82,7 @@ void jloled_receive(uint8_t *data, uint8_t length) {
 
     // --- 1. 实时显示 (写入 RAM) ---
     if (magic == JLOLED_MAGIC_REALTIME) { // 0xAC
-        jloled_write_ram(data, length); // <--- 直接调用 RAM 写入，与 EEPROM 逻辑分离
+        jloled_write_ram(data, length);
         return;
     }
 
@@ -79,10 +90,9 @@ void jloled_receive(uint8_t *data, uint8_t length) {
     if (magic >= JLOLED_MAGIC_WRITE_EEPROM_BASE && magic < (JLOLED_MAGIC_WRITE_EEPROM_BASE + JLOLED_SLOT_COUNT)) {
         uint8_t slot_index = magic - JLOLED_MAGIC_WRITE_EEPROM_BASE;
         
-        // 忽略 EEPROM 范围检查，因为 eeprom_get_size() 总是报错
         // 假设 EEPROM 足够大
         
-        jloled_write_eeprom(data, length, slot_index); // <--- 直接调用 EEPROM 写入
+        jloled_write_eeprom(data, length, slot_index);
         return;
     }
 
@@ -101,6 +111,13 @@ void jloled_receive(uint8_t *data, uint8_t length) {
  * @brief OLED 任务函数，放入 oled_task_user 中调用
  */
 void jloled_task(void) {
+    // 关键修改：实时显示超时检查
+   if (jloled_realtime_active && timer_elapsed32(jloled_realtime_timer) > JLOLED_REALTIME_TIMEOUT) {
+        jloled_realtime_active = false; // 超时：关闭实时显示标志
+        jloled_dirty = true;            
+        return;                         
+    }
+    
     if (jloled_dirty) {
         oled_write_raw((const char *)jloled_buffer, JLOLED_BUFFER_SIZE);
         jloled_dirty = false;
@@ -122,4 +139,7 @@ void jloled_display_slot(uint8_t slot_index) {
     eeprom_read_block(jloled_buffer, (const void *)(uintptr_t)eeprom_src_offset, JLOLED_SLOT_SIZE);
 
     jloled_dirty = true;
+    
+    // 关键修改：当强制显示 EEPROM 槽位时，关闭实时显示标志
+    jloled_realtime_active = false;
 }

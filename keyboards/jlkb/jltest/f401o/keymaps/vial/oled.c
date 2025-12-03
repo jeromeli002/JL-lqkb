@@ -1,68 +1,51 @@
-
 #ifdef OLED_ENABLE
- #include "logo.c"      //层logo标志
-   oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-	return OLED_ROTATION_180; /*将屏幕旋转180度*/
-}
- bool oled_task_user(void) {
-switch (get_highest_layer(layer_state)) {
-        case 0:
-            oled_write_raw_P(logo, sizeof(logo));
-            break;
-        case 1:
-            oled_write_raw_P(L1, sizeof(L1));
-            break;
-        case 2:
-            oled_write_raw_P(L2, sizeof(L2));
-            break;
-        case 3:
-            oled_write_raw_P(L3, sizeof(L3));
-            break;
-        case 4:
-            oled_write_raw_P(L4, sizeof(L4));
-            break ;
-        case 5:
-            oled_write_raw_P(L5, sizeof(L5));
-            break;
-        case 6:
-            oled_write_raw_P(L6, sizeof(L6));
-            break;           
-        case 7:
-            oled_write_raw_P(L7, sizeof(L7));
-            break;          
-        case 8:
-            oled_write_raw_P(L8, sizeof(L8));
-            break;         
-        case 9:
-            oled_write_raw_P(L9, sizeof(L9));
-            break;           
-        case 10:            
-            oled_write_raw_P(L10, sizeof(L10));
-            break;
-        case 11:            
-            oled_write_raw_P(L11, sizeof(L11));
-            break;           
-        case 12:            
-            oled_write_raw_P(L12, sizeof(L12));
-            break;           
-        case 13:            
-            oled_write_raw_P(L13, sizeof(L13));
-            break;           
-        case 14:            
-            oled_write_raw_P(L14, sizeof(L14));
-            break;           
-        case 15:            
-            oled_write_raw_P(L15, sizeof(L15));
-            break;       
+    oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+        return OLED_ROTATION_0; 
     }
-/*
-    led_t led_state = host_keyboard_led_state();
-    oled_write_P(led_state.num_lock ? PSTR("\nNUM ") : PSTR("\n    "), false);
-    oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
-    oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
-    */
-    return false;
 
-}
+    // 追踪上一次显示的层
+    uint8_t jloled_last_layer = 255; // 初始值设为一个不可能的层索引
 
+    bool oled_task_user(void) {
+        // 1. 获取当前层和检查层是否变化
+        uint8_t current_layer = get_highest_layer(layer_state);
+        bool layer_changed = (current_layer != jloled_last_layer);
+        
+        // 2. 判断是否需要更新显示
+        // 如果层刚刚切换 OR Raw HID 不活跃
+        if (layer_changed || !jloled_realtime_active) {
+            
+            // 无论 jloled_realtime_active 是否为 true，如果层变了就强制显示
+            switch (current_layer) {
+                case 0:
+                    jloled_display_slot(0); // 这一步会清除 jloled_realtime_active
+                    break;
+                case 1:
+                    jloled_display_slot(1);
+                    break;
+                case 2:
+                    jloled_display_slot(2);
+                    break;
+                case 3:
+                    jloled_display_slot(3);
+                    break;
+                case 4:
+                    jloled_display_slot(4);
+                    break ;
+                default:
+                    // 可选：处理未映射的层
+                    jloled_display_slot(0); 
+                    break;
+            }
+            
+            // 更新追踪的层状态
+            jloled_last_layer = current_layer; 
+        }
+        
+        // 3. 刷新 OLED 
+        // jloled_task() 会执行超时检查或将 buffer 内容写入 OLED
+        jloled_task();
+
+        return false;
+    }
 #endif

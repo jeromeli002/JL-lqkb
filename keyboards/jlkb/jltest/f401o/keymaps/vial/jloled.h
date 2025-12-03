@@ -37,11 +37,19 @@ extern uint16_t jloled_eeprom_start_addr;
 #define RAWHID_PACKET_SIZE 32
 #define PAYLOAD_SIZE (RAWHID_PACKET_SIZE - 2) // 30 字节有效负载 (减去 魔数 和 索引)
 
+// [新增] 定义实时显示超时的默认值 (如果未在 config.h 中定义)
+#ifndef JLOLED_REALTIME_TIMEOUT
+    // 默认值仍为 200ms
+    #define JLOLED_REALTIME_TIMEOUT 200 
+#endif
+
 // 函数声明
 void jloled_init(void);
 void jloled_task(void);
 void jloled_receive(uint8_t *data, uint8_t length);
 void jloled_display_slot(uint8_t slot_index);
+extern bool jloled_realtime_active;
+extern uint32_t jloled_realtime_timer;
 
 // Raw HID 魔数定义
 #define JLOLED_MAGIC_REALTIME 0xAC           // 实时显示图像 (写入 RAM 缓冲区)
