@@ -32,7 +32,7 @@ void matrix_init_kb(void) {
 }
 
 void keyboard_post_init_user(void) {
-    rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_mode0); // rgb默认模式0
+  rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_mode0); // rgb默认模式0
 }
 
 // 在主循环中调用非阻塞式任务

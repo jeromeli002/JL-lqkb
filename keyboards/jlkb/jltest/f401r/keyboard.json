@@ -7,8 +7,8 @@
     "board": "BLACKPILL_STM32_F401",
     "bootloader": "stm32-dfu",
     "usb": {
-        "vid": "0xF005",
-        "pid": "0x3001",
+        "vid": "0xC251",
+        "pid": "0x2005",
         "device_version": "0.0.1"
     },
     "eeprom": {
@@ -16,6 +16,7 @@
             "backing_size": 16384
         }
     },
+
    "features": {
         "rgb_matrix": true
     },
