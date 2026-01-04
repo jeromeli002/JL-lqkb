@@ -24,7 +24,7 @@
         "brightness_steps": 8,  // 亮度步数
         "led_count": 42,        //灯数量
         "hue_steps":8,          // 色调步数 
-        "max_brightness":128,   // 最大亮度 
+        "max_brightness":158,   // 最大亮度 
         "sleep": true,          // 睡眠时关闭灯 
         "animations": {
             "breathing": true,
@@ -35,8 +35,7 @@
             "christmas": true,
             "static_gradient": true,
             "rgb_test": true,
-            "alternating": true,
-            "twinkle": true
+            "alternating": true
         }
     },
     "ws2812": {

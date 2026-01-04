@@ -32,7 +32,7 @@ DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 # JOYSTICK_ENABLE = yes       # 游戏摇杆
 # JOYSTICK_DRIVER = analog
 # Enter lower-power sleep mode when on the ChibiOS idle thread
-OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
+# OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # 可编程键
 PROGRAMMABLE_BUTTON_ENABLE = yes
 
