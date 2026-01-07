@@ -11,11 +11,6 @@
         "pid": "0x3001",
         "device_version": "0.0.1"
     },
-    "eeprom": {
-        "wear_leveling": {
-            "backing_size": 16384
-        }
-    },
     "rgblight": {
         "saturation_steps": 8,/* 饱和度步数 */
         "brightness_steps": 8,/* 亮度步数 */

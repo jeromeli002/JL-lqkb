@@ -17,8 +17,8 @@
 MEMORY
 {
     flash0 (rx) : org = 0x08000000, len = 16k        /* Sector 0    - Init code as ROM bootloader assumes application starts here */
-    flash1 (rx) : org = 0x08004000, len = 16k        /* Sector 1    - Emulated eeprom */
-    flash2 (rx) : org = 0x08008000, len = f4xx_flash_size - 32k /* Sector 2..6 - Rest of firmware */
+    flash1 (rx) : org = 0x08004000, len = 48k        /* Sector 1    - Emulated eeprom */
+    flash2 (rx) : org = 0x08010000, len = f4xx_flash_size - 64k /* Sector 2..6 - Rest of firmware */
     flash3 (rx) : org = 0x00000000, len = 0
     flash4 (rx) : org = 0x00000000, len = 0
     flash5 (rx) : org = 0x00000000, len = 0

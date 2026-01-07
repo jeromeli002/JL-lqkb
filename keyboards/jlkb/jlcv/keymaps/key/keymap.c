@@ -1,22 +1,6 @@
+//#include "f103.h"
 #include QMK_KEYBOARD_H
-
-#include "jloled.c"
-#include "jloled.h"
-#include "oled.c" //层信息图像显
-#include "custom_matrix_on.c"   // 处理接收到的原始数据
-
-/* OLED 任务回调
-bool oled_task_k(void) {
-    // 调用我们的自定义渲染函数
-    jloled_task();
-    return false; // 返回 false 表示我们已经处理了绘制，不需要QMK默认绘制
-}*/
-
-// 键盘初始化回调
-void keyboard_post_init_user(void) {
-    // 初始化 OLED 缓冲区 (竖条纹)
-    jloled_init();
-}
+#include "joystick_key.c"
 
 enum custom_keycodes {
   LAYERS_DOWN = QK_KB_0,
@@ -30,22 +14,31 @@ static uint8_t current_layer = 0; //默认0层开始
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-	[0] = LAYOUT(
-		LAYERS_DOWN, LAYERS_UP, KC_TRNS,
-		LAYERS_DOWN, LAYERS_UP, KC_TRNS),
+	LAYOUT(
+		KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS),
 
-	[1] = LAYOUT(
+	LAYOUT(
+		KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS)
 };
 
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
+    [0] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
+    [1] =   { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),              ENCODER_CCW_CW(RGB_SAD, RGB_SAI) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
+
+    //                  旋钮 1                                     旋钮 2                                       旋钮 3                                旋钮 4                  
+};
+#endif
+
 // 添加新的按键
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // 下一层
-  #ifdef OLED_DRIVER_ENABLE
-    // 告知 QMK OLED 被“唤醒”了，这会清除 OLED_TIMEOUT 计时器
-    oled_on();
-#endif
   switch (keycode) {
      case LAYERS_DOWN:
       if(record->event.pressed) {
@@ -93,4 +86,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true;
   }
 }
+/*
+void matrix_scan_user(void) {
+    int16_t val = (((uint32_t)timer_read() % 5000 - 2500) * 255) / 5000;
+    joystick_set_axis(1, val);
+}
 
+//joystick config
+joystick_config_t joystick_axes[JOYSTICK_AXIS_COUNT] = {
+    [0] = JOYSTICK_AXIS_IN(A1, 1023, 512, 0),
+    [1] = JOYSTICK_AXIS_IN(A2, 0, 512, 1023)
+};
+*/

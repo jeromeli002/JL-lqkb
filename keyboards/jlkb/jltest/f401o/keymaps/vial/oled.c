@@ -32,6 +32,39 @@
                 case 4:
                     jloled_display_slot(4);
                     break ;
+                case 5:
+                    jloled_display_slot(5);
+                    break ;
+                case 6:
+                    jloled_display_slot(6);
+                    break ;
+                case 7:
+                    jloled_display_slot(7);
+                    break ;
+                case 8:
+                    jloled_display_slot(8);
+                    break ;
+                case 9:
+                    jloled_display_slot(9);
+                    break ;
+                case 10:
+                    jloled_display_slot(10);
+                    break ;
+                case 11:
+                    jloled_display_slot(11);
+                    break ;
+                case 12:
+                    jloled_display_slot(12);
+                    break ;
+                case 13:
+                    jloled_display_slot(13);
+                    break ;
+                case 14:
+                    jloled_display_slot(14);
+                    break ;
+                case 15:
+                    jloled_display_slot(15);
+                    break ;
                 default:
                     // 可选：处理未映射的层
                     jloled_display_slot(0); 
