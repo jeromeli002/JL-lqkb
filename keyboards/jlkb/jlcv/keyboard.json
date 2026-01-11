@@ -1,13 +1,13 @@
 {
-    "keyboard_name": "CV工程师键盘",
+    "keyboard_name": "设计师键盘",
     "manufacturer": "JLKB",
-    "url": "http://jlkb.jlkb.top",
+    "url": "http://wpa.qq.com/msgrd?v=3&uin=532192607&site=qq&menu=yes",
     "maintainer": "JLKB",
     "processor": "STM32F401",
     "board": "BLACKPILL_STM32_F401",
     "bootloader": "stm32-dfu",
     "usb": {
-        "vid": "0xF005",
+        "vid": "0xF008",
         "pid": "0x3001",
         "device_version": "0.0.1"
     },
@@ -22,13 +22,18 @@
       { "pin_a": "C9", "pin_b": "A8", "resolution": 4 }
     ]
   }
-  "rgblight": {
+    "matrix_pins": {
+        "cols": ["A7", "A6", "A5"],
+        "rows": ["B10", "B0", "B1", null]
+    },
+
+    "rgblight": {
         "saturation_steps": 8,  // 饱和度步数
         "brightness_steps": 8,  // 亮度步数
-        "led_count": 6,       // 灯数量 
-        "hue_steps":8,          // 色调调节步数 
+        "led_count": 6, /* 灯数量 */
+        "hue_steps":8,          // 色调步数 
         "max_brightness":250,   // 最大亮度 
-        "sleep": true,          // 键盘睡眠时是否关闭灯光
+        "sleep": true,          // 睡眠时关闭灯 
     },
     "rgb_matrix": {
         "animations": {
@@ -83,27 +88,22 @@
             "vialrgb_direct": true
         },
     "layout": [ 
-        {"matrix":[0,0],"x":0,"y":0,"flags":4},
-		{"matrix":[0,1],"x":112,"y":0,"flags":4},
-		{"matrix":[0,2],"x":224,"y":0,"flags":4},
-		{"matrix":[1,0],"x":0,"y":64,"flags":4},
-		{"matrix":[1,1],"x":112,"y":64,"flags":4},
-		{"matrix":[1,2],"x":224,"y":64,"flags":4}
+        {"matrix":[1,2],"x":0,"y":0,"flags":4},
+		{"matrix":[1,1],"x":112,"y":0,"flags":4},
+		{"matrix":[1,0],"x":224,"y":0,"flags":4},
+		{"matrix":[0,2],"x":0,"y":64,"flags":4},
+		{"matrix":[0,1],"x":112,"y":64,"flags":4},
+		{"matrix":[0,0],"x":224,"y":64,"flags":4}
     ],
-        "led_count": 6,           //灯珠数量 (与 rgblight.led_count 相同，可能是冗余或用于不同模块)
-        "driver": "ws2812",         //RGB 灯珠驱动类型
-        "center_point": [ 112, 32],  //RGB 矩阵的中心点坐标 [X, Y]，用于某些中心发散的灯效
-        "react_on_keyup": true      //是否在按键抬起时触发灯效
+        "led_count": 6,        //灯数量
+        "driver": "ws2812",
+        "center_point": [ 112, 64],
+        "react_on_keyup": true
     },
-     "ws2812": {
+    "ws2812": {
         "pin": "A3"
     },
-    "matrix_pins": {
-        "cols": ["A7", "A6", "A5" ],
-        "rows": ["B10", "B2", "B1", null ]
-    },
     "diode_direction": "COL2ROW",
-
     "layouts": {
         "LAYOUT": {
             "layout": [
@@ -121,8 +121,9 @@
 
 {"matrix":[3,0],"x":0,"y":3},
 {"matrix":[3,1],"x":1,"y":3},
-{"matrix":[3,2],"x":2,"y":3}
-			]
+{"matrix":[3,2],"x":2,"y":3}             
+                
+            ]
         }
     }
 }
