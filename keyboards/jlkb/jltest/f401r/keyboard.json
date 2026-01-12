@@ -7,8 +7,8 @@
     "board": "BLACKPILL_STM32_F401",
     "bootloader": "stm32-dfu",
     "usb": {
-        "vid": "0xC251",
-        "pid": "0x2005",
+        "vid": "0xBB00",
+        "pid": "0xBB00",
         "device_version": "0.0.1"
     },
     "eeprom": {
