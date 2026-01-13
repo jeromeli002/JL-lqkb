@@ -5,118 +5,109 @@
 #include "eeprom.h"
 #include <string.h>
 
-// ========================== 1. RGB 全局数据定义 ==========================
-// 修复链接错误：确保自定义灯效引用的变量在本项目中定义
+// ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
-    .h = 79,
-    .s = 255,
-    .v = 25,
-    .spd = 255
+    .h = 79, .s = 255, .v = 25, .spd = 255
 };
 
-// ========================== 2. 指示灯配置结构与 EEPROM ==========================
 typedef struct {
-    uint8_t index; // 灯珠索引
-    uint8_t count; // 灯珠数量
-    uint8_t h;     // 色调
-    uint8_t s;     // 饱和度
-    uint8_t v;     // 亮度
+    uint8_t index; uint8_t count; uint8_t h; uint8_t s; uint8_t v;
 } led_cfg_t;
 
 typedef struct {
     led_cfg_t caps;
     led_cfg_t num;
     led_cfg_t scrl;
+    led_cfg_t layers[16]; 
     uint8_t magic; 
 } indicator_config_t;
 
-// 校验码：用于判定 EEPROM 数据是否有效
-#define INDICATOR_MAGIC 0x8A 
-// 在 F401/Vial 环境下，建议使用较大的偏移量以防与系统配置冲突
-#define EEPROM_INDICATOR_ADDR 64
+#define INDICATOR_MAGIC 0x8E 
+#define EEPROM_INDICATOR_ADDR 4096
 
 indicator_config_t g_ind_cfg;
 
-// ========================== 3. TM1640 宏定义与声明 ==========================
+// ========================== 2. TM1640 宏与声明 ==========================
 #define MATRIX_LIGHT_ROWS TM1640_ROWS
 #define MATRIX_LIGHT_COLS TM1640_COLS
-
 void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_brightness_t brightness);
 
-// ========================== 4. 初始化流程 ==========================
-
+// ========================== 3. 初始化 ==========================
 void matrix_init_kb(void) {
-    // TM1640 初始化
     tm1640_init();
     tm1640_start_blink(); 
 
-    // 从 EEPROM 读取配置
     eeprom_read_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     
-    // 如果 Magic 不匹配，说明是首次上电，加载默认值
     if (g_ind_cfg.magic != INDICATOR_MAGIC) {
-        // 默认值：Caps(红,Idx 0), Num(绿,Idx 1), Scrl(蓝,Idx 2)
         g_ind_cfg.caps = (led_cfg_t){0, 1, 0, 255, 255};
         g_ind_cfg.num  = (led_cfg_t){1, 1, 85, 255, 255};
         g_ind_cfg.scrl = (led_cfg_t){2, 1, 170, 255, 255};
-        
+        for(uint8_t i=0; i<16; i++) {
+            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 128, 255, 255};
+        }
         g_ind_cfg.magic = INDICATOR_MAGIC;
-        // 立即同步到 EEPROM
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     }
-
     matrix_init_user();
 }
 
 void keyboard_post_init_user(void) {
-    // 默认进入自定义灯效模式 0
-    rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_mode0);
+    // 启用自定义静态模式
+    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
 }
 
-// ========================== 5. 主循环：解决闪烁与常亮 (核心修复) ==========================
+// ========================== 4. 主循环 (仅保留 TM1640) ==========================
 void matrix_scan_kb(void) {
     tm1640_task(); 
-
-#ifdef RGBLIGHT_ENABLE
-    led_t led_state = host_keyboard_led_state();
-    static led_t last_led_state;
-
-    // --- Caps Lock 强制刷新 ---
-    if (led_state.caps_lock) {
-        rgblight_sethsv_range(g_ind_cfg.caps.h, g_ind_cfg.caps.s, g_ind_cfg.caps.v, 
-                              g_ind_cfg.caps.index, g_ind_cfg.caps.index + g_ind_cfg.caps.count);
-    } else if (last_led_state.caps_lock) {
-        for (uint8_t i = g_ind_cfg.caps.index; i < g_ind_cfg.caps.index + g_ind_cfg.caps.count; i++) 
-            rgblight_sethsv_at(0, 0, 0, i);
-    }
-
-    // --- Num Lock 强制刷新 ---
-    if (led_state.num_lock) {
-        rgblight_sethsv_range(g_ind_cfg.num.h, g_ind_cfg.num.s, g_ind_cfg.num.v, 
-                              g_ind_cfg.num.index, g_ind_cfg.num.index + g_ind_cfg.num.count);
-    } else if (last_led_state.num_lock) {
-        for (uint8_t i = g_ind_cfg.num.index; i < g_ind_cfg.num.index + g_ind_cfg.num.count; i++) 
-            rgblight_sethsv_at(0, 0, 0, i);
-    }
-
-    // --- Scroll Lock 强制刷新 ---
-    if (led_state.scroll_lock) {
-        rgblight_sethsv_range(g_ind_cfg.scrl.h, g_ind_cfg.scrl.s, g_ind_cfg.scrl.v, 
-                              g_ind_cfg.scrl.index, g_ind_cfg.scrl.index + g_ind_cfg.scrl.count);
-    } else if (last_led_state.scroll_lock) {
-        for (uint8_t i = g_ind_cfg.scrl.index; i < g_ind_cfg.scrl.index + g_ind_cfg.scrl.count; i++) 
-            rgblight_sethsv_at(0, 0, 0, i);
-    }
-
-    last_led_state = led_state;
-#endif
-
     matrix_scan_user();
 }
 
-// ========================== 6. HID 接收回调 (完整指令集) ==========================
+// ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
+// 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
+bool rgb_matrix_indicators_kb(void) {
+    if (!rgb_matrix_indicators_user()) return false;
+
+    // --- 5.1 处理层灯 (较低优先级) ---
+    for (uint8_t i = 0; i < 16; i++) {
+        if (IS_LAYER_ON_STATE(layer_state, i)) {
+            RGB hsv = hsv_to_rgb((HSV){g_ind_cfg.layers[i].h, g_ind_cfg.layers[i].s, g_ind_cfg.layers[i].v});
+            for (uint8_t n = 0; n < g_ind_cfg.layers[i].count; n++) {
+                rgb_matrix_set_color(g_ind_cfg.layers[i].index + n, hsv.r, hsv.g, hsv.b);
+            }
+        }
+    }
+
+    // --- 5.2 处理系统指示灯 (最高优先级，覆盖层灯) ---
+    led_t led_state = host_keyboard_led_state();
+
+    if (led_state.caps_lock) {
+        RGB hsv = hsv_to_rgb((HSV){g_ind_cfg.caps.h, g_ind_cfg.caps.s, g_ind_cfg.caps.v});
+        for (uint8_t n = 0; n < g_ind_cfg.caps.count; n++) {
+            rgb_matrix_set_color(g_ind_cfg.caps.index + n, hsv.r, hsv.g, hsv.b);
+        }
+    }
+
+    if (led_state.num_lock) {
+        RGB hsv = hsv_to_rgb((HSV){g_ind_cfg.num.h, g_ind_cfg.num.s, g_ind_cfg.num.v});
+        for (uint8_t n = 0; n < g_ind_cfg.num.count; n++) {
+            rgb_matrix_set_color(g_ind_cfg.num.index + n, hsv.r, hsv.g, hsv.b);
+        }
+    }
+
+    if (led_state.scroll_lock) {
+        RGB hsv = hsv_to_rgb((HSV){g_ind_cfg.scrl.h, g_ind_cfg.scrl.s, g_ind_cfg.scrl.v});
+        for (uint8_t n = 0; n < g_ind_cfg.scrl.count; n++) {
+            rgb_matrix_set_color(g_ind_cfg.scrl.index + n, hsv.r, hsv.g, hsv.b);
+        }
+    }
+
+    return true;
+}
+
+// ========================== 6. RAW HID 指令集 ==========================
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
-    if (data[0] != 0xAB) return;
+    if (length < 2 || data[0] != 0xAB) return;
 
     switch (data[1]) {
         case 0xA0: tm1640_display_off(); break;
@@ -130,52 +121,48 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         case 0xA8: setPinOutput(C1); writePinLow(C1); break;
         case 0xA9: setPinInput(B5); break;
         case 0xAA: setPinOutput(B5); writePinLow(B5); break;
-            
-        case 0xB0: // RGB 全局控制
-            g_remote_rgb_data.h = data[2]; 
-            g_remote_rgb_data.s = data[3]; 
-            g_remote_rgb_data.v = data[4]; 
-            g_remote_rgb_data.spd = data[5]; 
-            if (length >= 6 + MAX_LED_BYTE_COUNT) {
-                memcpy(g_remote_rgb_data.led_bitmap, &data[6], MAX_LED_BYTE_COUNT);
-            }
+        
+        case 0xB0: 
+            g_remote_rgb_data.h = data[2]; g_remote_rgb_data.s = data[3]; 
+            g_remote_rgb_data.v = data[4]; g_remote_rgb_data.spd = data[5]; 
+            uint8_t copy_len = (length - 6 < MAX_LED_BYTE_COUNT) ? (length - 6) : MAX_LED_BYTE_COUNT;
+            memcpy(g_remote_rgb_data.led_bitmap, &data[6], copy_len);
             rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
             break;
+        
         case 0xB1: rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_off); break;
+        
         case 0xB2: 
             g_remote_rgb_data.h = 214; g_remote_rgb_data.s = 255; g_remote_rgb_data.v = 255;
             g_remote_rgb_data.led_bitmap[0] = 0xA0;
             rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
             break;
 
-        // --- 指示灯自定义指令 ---
-        case 0xC0: // Caps 预览
-            g_ind_cfg.caps.index = data[2]; g_ind_cfg.caps.count = data[3];
-            g_ind_cfg.caps.h = data[4]; g_ind_cfg.caps.s = data[5]; g_ind_cfg.caps.v = data[6];
+        case 0xC1: // Caps
+            g_ind_cfg.caps.index = data[3]; g_ind_cfg.caps.count = data[4];
+            g_ind_cfg.caps.h = data[5]; g_ind_cfg.caps.s = data[6]; g_ind_cfg.caps.v = data[7];
             break;
-        case 0xC1: // Caps 保存
+        case 0xC2: // Num
+            g_ind_cfg.num.index = data[3]; g_ind_cfg.num.count = data[4];
+            g_ind_cfg.num.h = data[5]; g_ind_cfg.num.s = data[6]; g_ind_cfg.num.v = data[7];
+            break;
+        case 0xC3: // Scrl
+            g_ind_cfg.scrl.index = data[3]; g_ind_cfg.scrl.count = data[4];
+            g_ind_cfg.scrl.h = data[5]; g_ind_cfg.scrl.s = data[6]; g_ind_cfg.scrl.v = data[7];
+            break;
+        case 0xC0: // Save
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
             break;
-
-        case 0xC2: // Num 预览
-            g_ind_cfg.num.index = data[2]; g_ind_cfg.num.count = data[3];
-            g_ind_cfg.num.h = data[4]; g_ind_cfg.num.s = data[5]; g_ind_cfg.num.v = data[6];
+        case 0xD0: // Layers
+            if (data[2] < 16) {
+                g_ind_cfg.layers[data[2]].index = data[3];
+                g_ind_cfg.layers[data[2]].count = data[4];
+                g_ind_cfg.layers[data[2]].h     = data[5];
+                g_ind_cfg.layers[data[2]].s     = data[6];
+                g_ind_cfg.layers[data[2]].v     = data[7];
+            }
             break;
-        case 0xC3: // Num 保存
-            g_ind_cfg.magic = INDICATOR_MAGIC;
-            eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
-            break;
-
-        case 0xC4: // Scrl 预览
-            g_ind_cfg.scrl.index = data[2]; g_ind_cfg.scrl.count = data[3];
-            g_ind_cfg.scrl.h = data[4]; g_ind_cfg.scrl.s = data[5]; g_ind_cfg.scrl.v = data[6];
-            break;
-        case 0xC5: // Scrl 保存
-            g_ind_cfg.magic = INDICATOR_MAGIC;
-            eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
-            break;
-
         default: break;
     }
 }
@@ -185,14 +172,12 @@ void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_br
     if (MATRIX_LIGHT_ROWS > 8) return;
     const uint8_t BYTES_PER_ROW = (MATRIX_LIGHT_COLS + 7) / 8;
     const uint16_t EXPECTED_DATA_BYTES = 2 + (uint16_t)MATRIX_LIGHT_ROWS * BYTES_PER_ROW;
-
     if (length < EXPECTED_DATA_BYTES) return;
 
     uint8_t tm1640_col_data[MATRIX_LIGHT_COLS];
     memset(tm1640_col_data, 0, MATRIX_LIGHT_COLS);
     
     const uint8_t *matrix_data = data + 2;
-
     for (uint8_t row = 0; row < MATRIX_LIGHT_ROWS; row++) {
         const uint8_t *current_row_data = matrix_data + (uint16_t)row * BYTES_PER_ROW;
         for (uint8_t col = 0; col < MATRIX_LIGHT_COLS; col++) {
@@ -204,10 +189,5 @@ void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_br
     tm1640_display_bitmap(tm1640_col_data, brightness);
 }
 
-// STM32F401 不需要 AFIO
 void board_init(void) {}
-
-// 保持为空，逻辑已移至 matrix_scan 以实现强制常亮
-bool led_update_kb(led_t led_state) {
-    return led_update_user(led_state);
-}
+bool led_update_kb(led_t led_state) { return led_update_user(led_state); }
