@@ -24,7 +24,7 @@ RGBLIGHT_ENABLE ?= yes
 # RGB_MATRIX_DRIVER = WS2812
 # WS2812_DRIVER = pwm
 # WPM_ENABLE = yes		 # Show APM.
-DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
+# DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 
 # POINTING_DEVICE_ENABLE = yes               #摇杆模拟指点杆
 # POINTING_DEVICE_DRIVER = analog_joystick   #摇杆模拟指点杆
@@ -32,11 +32,14 @@ DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 # JOYSTICK_ENABLE = yes       # 游戏摇杆/映射按键
 # JOYSTICK_DRIVER = analog
 # Enter lower-power sleep mode when on the ChibiOS idle thread
-OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
+# OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # 可编程键
-PROGRAMMABLE_BUTTON_ENABLE = yes
+# PROGRAMMABLE_BUTTON_ENABLE = yes
 
 # OLED屏幕开关
 # OLED_ENABLE = yes
 # OLED_DRIVER = ssd1306   
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
+OPT = s
+
+# RGB_MATRIX_CUSTOM_USER = yes  # 开启用户自定义特效支持

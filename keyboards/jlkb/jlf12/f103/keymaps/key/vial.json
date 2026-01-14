@@ -20,7 +20,7 @@
 	 "shortName": "按6\n放7"
 	}
  ],
- "lighting": "qmk_rgblight",
+ "lighting": "vialrgb",
  "matrix": { "rows": 4, "cols":5 },
  "layouts": {
    "keymap": [

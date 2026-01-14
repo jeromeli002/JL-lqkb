@@ -26,7 +26,7 @@
 	}
  ],
  
- "lighting": "qmk_rgblight",
+ "lighting": "vialrgb",
 
  "matrix": { "rows": 4, "cols":5 },
 
