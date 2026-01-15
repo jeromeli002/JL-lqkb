@@ -47,6 +47,9 @@
 // #define RAW_USAGE_PAGE   0xFF69
 // #define RAW_USAGE_ID     0x66
 
+#define WEAR_LEVELING_LOGICAL_SIZE 1024*24
+#define WEAR_LEVELING_BACKING_SIZE WEAR_LEVELING_LOGICAL_SIZE*2
+
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 64
 
@@ -89,12 +92,4 @@
 /* prevent stuck modifiers */
 /* #define PREVENT_STUCK_MODIFIERS */
 
-//  OLED设置项
-//#define OLED_FONT_H "glcdfont.c"//自定义字体
-//#define OLED_FONT_WIDTH 6 //字体宽度
-//#define OLED_FONT_HEIGHT 8 //字体高度
-// #define OLED_FADE_OUT         //动画淡出
-// #define OLED_FADE_OUT_INTERVAL 10     //淡出速度0~15 越大越快
-#define OLED_SCROLL_TIMEOUT	 5000 //2000毫秒后开始滚动
-// #define OLED_SCROLL_TIMEOUT_RIGHT //向右滚动 不设置默认向左滚动
-#define OLED_TIMEOUT 30000  // 10分钟（毫秒）无操作后关闭屏幕
+

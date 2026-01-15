@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "custom_matrix_on.c"   // 处理接收到的原始数据
 
 enum keycodes {
   LAYERS_DOWN = QK_KB_0,
@@ -88,41 +89,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     default:
       return true;
   }
-}
-
-/*/// 按下 Capslock 的時候，第6颗RGB之后(也就第7颗) 的4颗灯会亮与第12個灯(也就是第12个) 之后的第4颗会亮紅色。
-const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 1, RGB_AZURE}       // Light 4 LEDs, starting with LED 6
-);
- */
-// Layer 1 启用的時候，{1,2, RGB_WHITE}第 1颗开始2颗灯会亮白色
-const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {103,1, HSV_AZURE}
-);
-const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {102,1, HSV_AZURE}
-);
-const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {101,1, HSV_AZURE}
-);
-// etc..
-
-// 接着將您的 rgblight_segment_t 放到 RGBLIGHT_LAYERS_LIST 內
-const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
-//    my_capslock_layer,   // Overrides caps lock layer
-    my_layer1_layer, // Overrides other layer 
-    my_layer2_layer, // Overrides other layer 
-    my_layer3_layer     
-);
-
-void keyboard_post_init_user(void) {
-    // 启用LED层指示
-    rgblight_layers = my_rgb_layers;
-}
-layer_state_t layer_state_set_user(layer_state_t state) {
-    // 如果两个 kb 层都处于活动状态，则两个层都会亮起
-    rgblight_set_layer_state(1, layer_state_cmp(state, 1));
-    rgblight_set_layer_state(2, layer_state_cmp(state, 2));
-    rgblight_set_layer_state(3, layer_state_cmp(state, 3));
-    return state;
 }

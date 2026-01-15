@@ -7,3 +7,7 @@ VIA_CUSTOM_KEYCODE_ENABLE = yes
 RADIAL_CONTROLLER_ENABLE = yes
 POINTING_DEVICE_ENABLE = yes      # 摇杆模拟指点杆
 POINTING_DEVICE_DRIVER = analog_joystick # 摇杆模拟指点杆驱动
+
+VIALRGB_ENABLE = yes
+
+RGB_MATRIX_CUSTOM_USER = yes  # 开启用户自定义特效支持
