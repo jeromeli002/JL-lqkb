@@ -2,11 +2,6 @@
 #include "eeprom.h"
 #include <string.h>
 #include "jlrgb.h"
-#include "wait.h"
-
-// 调节这两个参数调整指示灯亮度
-#define LED_BRIGHTNESS 10  // 开启的时间（微秒），越小越暗
-#define LED_PERIOD 1000    // 总周期（微秒），1000us = 1ms (1000Hz 刷新率，绝无闪烁)
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -49,40 +44,7 @@ void matrix_init_kb(void) {
 
 void keyboard_post_init_user(void) {
     // 启用自定义静态模式
-    // 在 keyboard_post_init_user 中初始化为输入
-    setPinInput(B1);
-    setPinInput(B10);
-    setPinInput(B0);
     rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
-}
-
-// ================= 指示灯 =====================
-void matrix_scan_user(void) {
-    led_t led_state = host_keyboard_led_state();
-
-    // 1. 判断哪些灯该亮
-    bool caps_on = led_state.caps_lock;
-    bool num_on = led_state.num_lock;
-    bool scrl_on = led_state.scroll_lock;
-
-    // 2. 如果有任何一个灯需要亮
-    if (caps_on || num_on || scrl_on) {
-        // 开启需要亮的引脚
-        if (caps_on) { setPinOutput(B1); writePinHigh(B1); }
-        if (num_on)  { setPinOutput(B10); writePinHigh(B10); }
-        if (scrl_on) { setPinOutput(B0); writePinHigh(B0); }
-
-        // 保持点亮一小会儿 (极其微小的亮度)
-        wait_us(LED_BRIGHTNESS);
-
-        // 全部切回输入状态（高阻态熄灭）
-        setPinInput(B1);
-        setPinInput(B10);
-        setPinInput(B0);
-
-        // 剩余时间等待，保证频率稳定
-        wait_us(LED_PERIOD - LED_BRIGHTNESS);
-    }
 }
 
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
