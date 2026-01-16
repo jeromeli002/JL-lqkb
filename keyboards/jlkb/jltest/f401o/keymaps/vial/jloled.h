@@ -52,6 +52,6 @@ extern bool jloled_realtime_active;
 extern uint32_t jloled_realtime_timer;
 
 // Raw HID 魔数定义
-#define JLOLED_MAGIC_REALTIME 0xAC           // 实时显示图像 (写入 RAM 缓冲区)
+#define JLOLED_MAGIC_REALTIME 0xA0           // 实时显示图像 (写入 RAM 缓冲区)
 #define JLOLED_MAGIC_WRITE_EEPROM_BASE 0xB0  // 写入 EEPROM 槽位的基址 (0xB0 - 0xCF)
-#define JLOLED_MAGIC_DISPLAY_SLOT 0xAD       // 调用 EEPROM 槽位显示
+#define JLOLED_MAGIC_DISPLAY_SLOT 0xA1       // 调用 EEPROM 槽位显示

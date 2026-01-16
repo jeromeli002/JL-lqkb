@@ -82,11 +82,12 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
     
     switch (data[1]) {
-        case 0xA2: bootloader_jump(); break;
-        case 0xA3: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
-        case 0xA4: soft_reset_keyboard(); break;
         
-        case 0xB0: 
+        case 0x00: bootloader_jump(); break;
+        case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
+        case 0x02: soft_reset_keyboard(); break;
+        
+        case 0x90: 
             g_remote_rgb_data.h = data[2]; g_remote_rgb_data.s = data[3]; 
             g_remote_rgb_data.v = data[4]; g_remote_rgb_data.spd = data[5]; 
             uint8_t copy_len = (length - 6 < MAX_LED_BYTE_COUNT) ? (length - 6) : MAX_LED_BYTE_COUNT;
@@ -94,13 +95,13 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
             break;
         
-        case 0xB1: rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_off); break;
+        case 0x91: rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_off); break;
 
-        case 0xC0: // Save
+        case 0x80: // Save
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
             break;
-        case 0xD0: // Layers
+        case 0x81: // Layers
             if (data[2] < 16) {
                 g_ind_cfg.layers[data[2]].index = data[3];
                 g_ind_cfg.layers[data[2]].count = data[4];

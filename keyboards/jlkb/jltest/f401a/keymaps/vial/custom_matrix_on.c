@@ -3,7 +3,36 @@
 #include "tm1640.h"
 #include "gpio.h"
 #include "eeprom.h"
+//#include "audio.c"
 #include <string.h>
+
+#define CLICK_HZ 500
+#define CLICK_MS 2
+#define CLICK_ENABLED 0
+
+uint16_t click_hz = CLICK_HZ;
+uint16_t click_time = CLICK_MS;
+uint8_t click_toggle = CLICK_ENABLED;
+void clicking_notes(uint16_t freq, uint16_t duration) {
+#ifdef AUDIO_ENABLE
+    if (freq >= 100 && freq <= 20000 && duration < 100) {
+        play_note(freq, 10);
+        for (uint16_t i = 0; i < duration; i++) {
+            wait_ms(1);
+        }
+        stop_all_notes();
+    }
+#endif
+}
+
+bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
+    #ifdef AUDIO_ENABLE
+    if (click_toggle && record->event.pressed) {
+        clicking_notes(click_hz, click_time);
+    }
+#endif
+    return process_record_user(keycode, record);
+}
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -41,10 +70,10 @@ void matrix_init_kb(void) {
     
     if (g_ind_cfg.magic != INDICATOR_MAGIC) {
         g_ind_cfg.caps = (led_cfg_t){0, 1, 0, 255, 255};
-        g_ind_cfg.num  = (led_cfg_t){1, 1, 85, 255, 255};
+        g_ind_cfg.num  = (led_cfg_t){1, 1, 85, 10, 10};
         g_ind_cfg.scrl = (led_cfg_t){2, 1, 170, 255, 255};
         for(uint8_t i=0; i<16; i++) {
-            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 128, 255, 255};
+            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 10, 10, 10};
         }
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
@@ -52,7 +81,12 @@ void matrix_init_kb(void) {
     matrix_init_user();
 }
 
+// ========================== 4. 初始化 ==========================
 void keyboard_post_init_user(void) {
+    // 启用音频播放
+    #ifdef AUDIO_ENABLE
+        clicking_notes(880, 50);
+    #endif
     // 启用自定义静态模式
     rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
 }
@@ -110,7 +144,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
 
     switch (data[1]) {
-        
+    
         case 0x00: bootloader_jump(); break;
         case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
         case 0x02: soft_reset_keyboard(); break;

@@ -1,0 +1,174 @@
+{
+ "name": "JL-Pad Rev.A",
+ "vendorId": "0xFEED",
+ "productId": "0x5004",
+"keycodes": ["qmk_lighting"],
+    "menus": [
+        {
+            "label": "Lighting",
+            "content": [
+                {
+                    "label": "Logo RGB",
+                    "content": [
+                        {
+                            "showIf": "{id_qmk_rgblight_effect} != 0",
+                            "label": "Brightness",
+                            "type": "range",
+                            "options": [0, 105],
+                            "content": ["id_qmk_rgblight_brightness", 2, 1]
+                        },
+                        {
+                            "label": "Effect",
+                            "type": "dropdown",
+                            "content": ["id_qmk_rgblight_effect", 2, 2],
+                            "options": [
+                                ["none", 0],
+                                ["wave", 1],
+                                ["wave1", 2],
+                                ["wave2", 3],
+                                ["fixed wave", 4],
+                                ["wave rgb", 5],
+                                ["spectrum", 6],
+                                ["breathe", 7],
+                                ["breathe rgb", 8],
+                                ["light", 9]
+                            ]
+                        },
+                        {
+                            "showIf": "{id_qmk_rgblight_effect} != 0",
+                            "label": "Effect Speed",
+                            "type": "range",
+                            "options": [0, 4],
+                            "content": ["id_qmk_rgblight_effect_speed", 2, 3]
+                        },
+                        {
+                            "showIf": "{id_qmk_rgblight_effect} != 0 && {id_qmk_rgblight_effect} != 1 && {id_qmk_rgblight_effect} != 2 && {id_qmk_rgblight_effect} != 3 && {id_qmk_rgblight_effect} != 5 && {id_qmk_rgblight_effect} != 6 && {id_qmk_rgblight_effect} != 8",
+                            "label": "Color",
+                            "type": "color",
+                            "content": ["id_qmk_rgblight_color", 2, 4]
+                        }
+                    ]
+                },
+                {
+                    "label": "per-key rgb",
+                    "content": [
+                        {
+                            "showIf": "{id_qmk_rgb_matrix_effect} != 0",
+                            "label": "Brightness",
+                            "type": "range",
+                            "options": [0, 180],
+                            "content": ["id_qmk_rgb_matrix_brightness", 3, 1]
+                        },
+                        {
+                            "label": "Effect",
+                            "type": "dropdown",
+                            "content": ["id_qmk_rgb_matrix_effect", 3, 2],
+                            "options": [
+                                ["none", 0],
+                                ["solid_color", 1],
+                                ["alphas_mods", 2],
+                                ["gradient_up_down", 3],
+                                ["gradient_left_right", 4],
+                                ["breathing", 5],
+                                ["band_sat", 6],
+                                ["band_val", 7],
+                                ["band_pinwheel_sat", 8],
+                                ["band_pinwheel_val", 9],
+                                ["band_spiral_sat", 10],
+                                ["band_spiral_val", 11],
+                                ["cycle_all", 12],
+                                ["cycle_left_right", 13],
+                                ["cycle_up_down", 14],
+                                ["cycle_out_in", 15],
+                                ["cycle_out_in_dual", 16],
+                                ["rainbow_moving_chevron", 17],
+                                ["cycle_pinwheel", 18],
+                                ["cycle_spiral", 19],
+                                ["dual_beacon", 20],
+                                ["rainbow_beacon", 21],
+                                ["rainbow_pinwheels", 22],
+                                ["flower_blooming", 23],
+                                ["raindrops", 24],
+                                ["jellybean_raindrops", 25],
+                                ["hue_breathing", 26],
+                                ["hue_pendulum", 27],
+                                ["hue_wave", 28],
+                                ["pixel_fractal", 29],
+                                ["pixel_flow", 30],
+                                ["pixel_rain", 31],
+                                ["typing_heatmap", 32],
+                                ["digital_rain", 33],
+                                ["solid_reactive", 34],
+                                ["solid_reactive_wide", 35],
+                                ["solid_reactive_multiwide", 36],
+                                ["solid_reactive_cross", 37],
+                                ["solid_reactive_multicross", 38],
+                                ["solid_reactive_nexus", 39],
+                                ["solid_reactive_multinexus", 40],
+                                ["splash", 41],
+                                ["multisplash", 42],
+                                ["solid_splash", 43],
+                                ["solid_multisplash", 44],
+                                ["starlight", 45],
+                                ["starlight_smooth", 46],
+                                ["starlight_dual_hue", 47],
+                                ["starlight_dual_sat", 48],
+                                ["riverflow", 49]
+                            ]
+                        },
+                        {
+                            "showIf": "{id_qmk_rgb_matrix_effect} != 0",
+                            "label": "Effect Speed",
+                            "type": "range",
+                            "options": [0, 255],
+                            "content": ["id_qmk_rgb_matrix_effect_speed", 3, 3]
+                        },
+                        {
+                            "showIf": "{id_qmk_rgb_matrix_effect} != 0 && {id_qmk_rgb_matrix_effect} != 24 && {id_qmk_rgb_matrix_effect} != 28 && {id_qmk_rgb_matrix_effect} != 29 && {id_qmk_rgb_matrix_effect} != 32",
+                            "label": "Color",
+                            "type": "color",
+                            "content": ["id_qmk_rgb_matrix_color", 3, 4]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+"customKeycodes": [ 
+    {"name": "下\n一层",
+	 "title": "增加一层0→1",
+	 "shortName": "点灯"
+	},
+	{"name": "下\n一层",
+	 "title": "增加一层0→1",
+	 "shortName": "数据1"
+	},
+	{"name": "下\n一层",
+	 "title": "增加一层0→1",
+	 "shortName": "数据2"
+	},
+	{"name": "上\n一层",
+	 "title": "减少一层1→0",
+	 "shortName": "数据3"
+	},
+	{"name": "一键购物",
+	 "title": "淘宝购物",
+	 "shortName": "灭-亮"
+	},
+	{"name": "按6\n放7",
+	 "title": "按下6层抬起7层",
+	 "shortName": "全灭"
+	}
+ ],
+"lighting": "vialrgb",
+ "matrix": { "rows": 1, "cols":3 },
+ "layouts": {
+      "labels": [
+      "左旋钮",
+      "右旋钮"
+      ],
+   "keymap": [
+["0,0","0,1","0,2"]
+   ]
+ }
+}

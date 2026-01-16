@@ -76,19 +76,19 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
 
     switch (data[1]) {
-        case 0xA2: bootloader_jump(); break;
-        case 0xA3: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
-        case 0xA4: soft_reset_keyboard(); break;
+        case 0x00: bootloader_jump(); break;
+        case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
+        case 0x02: soft_reset_keyboard(); break;
 
-        case 0xC2: // Num
+        case 0x83: // Num
             g_ind_cfg.num.index = data[3]; g_ind_cfg.num.count = data[4];
             g_ind_cfg.num.h = data[5]; g_ind_cfg.num.s = data[6]; g_ind_cfg.num.v = data[7];
             break;
-        case 0xC0: // Save
+        case 0x80: // Save
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
             break;
-        case 0xD0: // Layers
+        case 0x81: // Layers
             if (data[2] < 16) {
                 g_ind_cfg.layers[data[2]].index = data[3];
                 g_ind_cfg.layers[data[2]].count = data[4];

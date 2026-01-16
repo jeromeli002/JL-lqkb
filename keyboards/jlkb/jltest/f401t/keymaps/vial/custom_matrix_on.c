@@ -30,54 +30,20 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (data[0] != 0xAB ) return;
 
     switch (data[1]) {
-        case 0xA0: // 关闭所有灯光
-            tm1640_display_off();
-            break;
-            
-        case 0xA1: // 精准点阵显示
-            // 【修改】将亮度配置值转换为 TM1640 命令，并传递给处理函数
-            handle_external_bitmap_data(data, length, TM1640_DEFAULT_BRIGHTNESS_CMD);
-            break;
+        
+        case 0x00: bootloader_jump(); break;
+        case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
+        case 0x02: soft_reset_keyboard(); break;
+        
+        case 0x10: tm1640_display_off(); break;
+        case 0x11: handle_external_bitmap_data(data, length, TM1640_DEFAULT_BRIGHTNESS_CMD); break;
+        case 0x12: tm1640_start_running_light(); break;
+        case 0x13: tm1640_start_blink(); break;
 
-        case 0xA2: // 重启并进入 Bootloader 模式
-            bootloader_jump();
-            break;
-
-        case 0xA3: // 清空 EEPROM 配置并重启
-            eeconfig_init();
-            wait_ms(500); 
-            soft_reset_keyboard();
-            break;
-
-        case 0xA4: // 正常重启
-            soft_reset_keyboard();
-            break;
-            
-        case 0xA5: // 流水灯 
-            tm1640_start_running_light(); 
-            break;
-
-        case 0xA6: // 闪烁效果
-            tm1640_start_blink();
-            break;
-
-        case 0xA7: // 关闭C1 (设置为输入)
-            setPinInput(C1);
-            break;
-            
-        case 0xA8: // C1 引脚置低
-            setPinOutput(C1);
-            writePinLow(C1);
-            break;
-            
-         case 0xA9: // 关闭B5 (设置为输入)
-            setPinInput(B5);
-            break;
-            
-        case 0xAA: // B5 引脚置低
-            setPinOutput(B5);
-            writePinLow(B5);
-            break;
+        case 0x20: setPinInput(C1); break;    
+        case 0x21: setPinOutput(C1); writePinLow(C1);  break;    
+        case 0x22: setPinInput(B5); break;    
+        case 0x23:  setPinOutput(B5); writePinLow(B5); break;
 
         default:
             break;
