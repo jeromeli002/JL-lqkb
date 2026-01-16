@@ -20,7 +20,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     
     // --- 2. 系统控制命令处理 (0xAB) ---
     // 如果不是 OLED 命令，则检查是否是系统控制命令
-    if (magic == 0xAB) ;
+    if (data[0] != 0xAB) return;
 
     // 根据命令位分支处理
     switch (data[1]) {
