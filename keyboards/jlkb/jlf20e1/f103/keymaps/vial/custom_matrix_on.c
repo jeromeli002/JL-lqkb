@@ -18,7 +18,7 @@ typedef struct {
 } indicator_config_t;
 
 #define INDICATOR_MAGIC 0x8E 
-#define EEPROM_INDICATOR_ADDR 1024
+#define EEPROM_INDICATOR_ADDR 2048
 
 indicator_config_t g_ind_cfg;
 
@@ -27,6 +27,7 @@ void matrix_init_kb(void) {
     eeprom_read_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     
     if (g_ind_cfg.magic != INDICATOR_MAGIC) {
+       
         for(uint8_t i=0; i<16; i++) {
             g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 128, 255, 255};
         }
@@ -35,11 +36,6 @@ void matrix_init_kb(void) {
     }
     matrix_init_user();
 }
-
-//void keyboard_post_init_user(void) {
-    // 启用自定义静态模式
- //   rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
-//}
 
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
 // 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
@@ -64,6 +60,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
 
     switch (data[1]) {
+        
         case 0x00: bootloader_jump(); break;
         case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
         case 0x02: soft_reset_keyboard(); break;

@@ -53,7 +53,7 @@ void keyboard_post_init_user(void) {
     setPinInput(B1);
     setPinInput(B10);
     setPinInput(B0);
-    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+//    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
 }
 
 // ================= 指示灯 =====================

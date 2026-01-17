@@ -43,7 +43,7 @@ void matrix_init_kb(void) {
 
 void keyboard_post_init_user(void) {
     // 启用自定义静态模式
-    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+//    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
     jloled_init();
 }
 

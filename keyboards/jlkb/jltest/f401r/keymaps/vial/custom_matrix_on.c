@@ -52,10 +52,10 @@ void matrix_init_kb(void) {
     matrix_init_user();
 }
 
-void keyboard_post_init_user(void) {
+//void keyboard_post_init_user(void) {
     // 启用自定义静态模式
-    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
-}
+//    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+//}
 
 // ========================== 4. 主循环 (仅保留 TM1640) ==========================
 void matrix_scan_kb(void) {

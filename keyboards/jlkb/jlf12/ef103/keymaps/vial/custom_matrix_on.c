@@ -37,10 +37,10 @@ void matrix_init_kb(void) {
     matrix_init_user();
 }
 
-void keyboard_post_init_user(void) {
+//void keyboard_post_init_user(void) {
     // 启用自定义静态模式
-    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
-}
+    //rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+//}
 
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
 // 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
