@@ -18,10 +18,11 @@ ENCODER_ENABLE = yes        # 启用旋转编码器支持
 ENCODER_MAP_ENABLE = yes    # 旋钮映射
 AUDIO_ENABLE = no           # 音频输出
 # RGBLIGHT_ENABLE ?= yes
-SPLIT_KEYBOARD = no
+SPLIT_KEYBOARD = yes
 # SERIAL_DRIVER = usart
 DYNAMIC_MACRO_ENABLE = yes  # 启用动态宏
 # OLED_ENABLE = yes
 # OLED_DRIVER = SSD1306    # 启用OLED屏幕
 EXTRAFLAGS+=-flto  # 如果固件太大在rule.mk 中添加EXTRAFLAGS+=-flto 
 
+SERIAL_DRIVER = usart
