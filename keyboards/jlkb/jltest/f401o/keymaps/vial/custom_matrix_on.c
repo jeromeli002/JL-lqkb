@@ -25,7 +25,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     // 根据命令位分支处理
     switch (data[1]) {
 
-        case 0x00: bootloader_jump(); break; //boot刷机
+        case 0x00: clear_keyboard();bootloader_jump(); break; //boot刷机
         case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break; //清空eeprom
         case 0x02: soft_reset_keyboard(); break; //重启
         case 0x20: setPinOutput(A14);writePinLow(A14); break;

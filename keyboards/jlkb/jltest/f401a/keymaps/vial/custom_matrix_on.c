@@ -113,7 +113,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
 
     switch (data[1]) {
     
-        case 0x00: bootloader_jump(); break;
+        case 0x00: clear_keyboard();bootloader_jump(); break;
         case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
         case 0x02: soft_reset_keyboard(); break;
         
