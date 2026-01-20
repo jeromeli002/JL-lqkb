@@ -3,36 +3,7 @@
 #include "tm1640.h"
 #include "gpio.h"
 #include "eeprom.h"
-//#include "audio.c"
 #include <string.h>
-
-#define CLICK_HZ 500
-#define CLICK_MS 2
-#define CLICK_ENABLED 0
-
-uint16_t click_hz = CLICK_HZ;
-uint16_t click_time = CLICK_MS;
-uint8_t click_toggle = CLICK_ENABLED;
-void clicking_notes(uint16_t freq, uint16_t duration) {
-#ifdef AUDIO_ENABLE
-    if (freq >= 100 && freq <= 20000 && duration < 100) {
-        play_note(freq, 10);
-        for (uint16_t i = 0; i < duration; i++) {
-            wait_ms(1);
-        }
-        stop_all_notes();
-    }
-#endif
-}
-
-bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
-    #ifdef AUDIO_ENABLE
-    if (click_toggle && record->event.pressed) {
-        clicking_notes(click_hz, click_time);
-    }
-#endif
-    return process_record_user(keycode, record);
-}
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -84,9 +55,6 @@ void matrix_init_kb(void) {
 // ========================== 4. 初始化 ==========================
 void keyboard_post_init_user(void) {
     // 启用音频播放
-    #ifdef AUDIO_ENABLE
-        clicking_notes(880, 50);
-    #endif
     // 启用自定义静态模式
     rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
 }
