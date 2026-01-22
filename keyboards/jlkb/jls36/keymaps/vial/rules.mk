@@ -4,6 +4,6 @@ QMK_SETTINGS = yes
 VIAL_INSECURE = yes
 LTO_ENABLE = yes
 RADIAL_CONTROLLER_ENABLE = yes
-# VIALRGB_ENABLE = yes
+VIALRGB_ENABLE = yes
 
-RGB_MATRIX_CUSTOM_USER = yes  # 开启用户自定义特效支持
+# RGB_MATRIX_CUSTOM_USER = yes  # 开启用户自定义特效支持

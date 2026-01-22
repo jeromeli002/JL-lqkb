@@ -12,9 +12,14 @@
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
+#define MATRIX_ROWS 8
+#define MATRIX_COLS 5
+/* 主从检测 */
+#define SPLIT_HAND_PIN A3 // 使用 A3 引脚检测（一侧接地，一侧悬空/拉高）
+#define SPLIT_HAND_PIN_LOW_IS_LEFT false
 #define SERIAL_USART_DRIVER SD1
-#define SPLIT_USB_DETECT
-#define SPLIT_USB_TIMEOUT 2500
+#define SERIAL_USART_TX_PAL_MODE 7
+#define SERIAL_USART_HALF_DUPLEX // 如果是单线通信
 
 /* 编码器01 */
 #define ENCODER_DEFAULT_POS 0x3
