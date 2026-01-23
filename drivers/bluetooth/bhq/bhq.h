@@ -20,12 +20,8 @@
 #include <stdbool.h>
 #include "debug.h"
 
-#ifdef KM_DEBUG
-#   include "km_printf.h"
-#   define bhq_printf(format, ...) km_printf(format, ##__VA_ARGS__)
-#else
-#    define bhq_printf(format, ...)
-#endif
+#include "km_printf.h"
+#define bhq_printf(format, ...) km_printf(format, ##__VA_ARGS__)
 
 typedef struct bhkDevConfigInfo_t
 {
@@ -94,8 +90,9 @@ enum {
 
 void bhq_init(void);
 void bhq_Disable(void);
-void BHQ_SendCmd(uint8_t isack, uint8_t *dat, uint8_t datLength);
+bool bhq_available(void);
 
+void BHQ_SendCmd(uint8_t isack, uint8_t *dat, uint8_t datLength);
 void bhq_ConfigRunParam(bhkDevConfigInfo_t parma);
 
 void BHQ_Protocol_Process_user(uint8_t *dat, uint16_t length) ;
