@@ -106,6 +106,7 @@ bool rgb_matrix_indicators_kb(void) {
 }
 
 // ========================== 6. RAW HID 指令集 ==========================
+//===== 原生qmk via 使用 via_command_kb ======
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
 
