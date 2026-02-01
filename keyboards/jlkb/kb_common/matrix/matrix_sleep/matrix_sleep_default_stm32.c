@@ -18,59 +18,62 @@
 #include "atomic_util.h"
 #include "gpio.h"
 #include "matrix_sleep.h"
-// use for config wakeUp Pin
+
+/* matrix wake-up pins */
 static const pin_t wakeUpRow_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
-static const pin_t wakeUpCol_pins[MATRIX_COLS]   = MATRIX_COL_PINS;
+static const pin_t wakeUpCol_pins[MATRIX_COLS] = MATRIX_COL_PINS;
+
+/* encoder wake-up pins (from info.json "rotary") */
+static const pin_t wakeUpEncA_pins[] = {
+    B9, C12, C15, B3, C0, B15, A2
+};
+
+static const pin_t wakeUpEncB_pins[] = {
+    B8, C13, C14, B4, C1, B14, A1
+};
 
 void matrix_sleepConfig(void)
 {
-
     uint8_t i = 0;
+
 #if (DIODE_DIRECTION == COL2ROW)
-    // Set row(low valid), read cols
-    for (i = 0; i < matrix_cols(); i++)
-    { // set col pull-up input
-        if(wakeUpCol_pins[i] == NO_PIN)
-        {
+    /* Set row (low valid), read cols */
+    for (i = 0; i < matrix_cols(); i++) {
+        if (wakeUpCol_pins[i] == NO_PIN) {
             continue;
-        } 
+        }
         ATOMIC_BLOCK_FORCEON {
             gpio_set_pin_input_high(wakeUpCol_pins[i]);
             palEnableLineEvent(wakeUpCol_pins[i], PAL_EVENT_MODE_RISING_EDGE);
         }
     }
-    for (i = 0; i < matrix_rows(); i++)
-    { // set row output low level
-        if(wakeUpRow_pins[i] == NO_PIN)
-        {
+
+    for (i = 0; i < matrix_rows(); i++) {
+        if (wakeUpRow_pins[i] == NO_PIN) {
             continue;
-        } 
+        }
         ATOMIC_BLOCK_FORCEON {
             gpio_set_pin_output(wakeUpRow_pins[i]);
             gpio_write_pin_low(wakeUpRow_pins[i]);
         }
     }
-#elif (DIODE_DIRECTION == ROW2COL)
 
-    // Set col(low valid), read rows
-    for (i = 0; i < matrix_rows(); i++)
-    { // set row pull-up input
-        if(wakeUpRow_pins[i] == NO_PIN)
-        {
+#elif (DIODE_DIRECTION == ROW2COL)
+    /* Set col (low valid), read rows */
+    for (i = 0; i < matrix_rows(); i++) {
+        if (wakeUpRow_pins[i] == NO_PIN) {
             continue;
-        } 
+        }
         ATOMIC_BLOCK_FORCEON {
             gpio_set_pin_input_high(wakeUpRow_pins[i]);
             palEnableLineEvent(wakeUpRow_pins[i], PAL_EVENT_MODE_FALLING_EDGE);
         }
     }
 
-    for (i = 0; i < matrix_cols(); i++)
-    { // set col output low level
-        if(wakeUpCol_pins[i] == NO_PIN)
-        {
+    for (i = 0; i < matrix_cols(); i++) {
+        if (wakeUpCol_pins[i] == NO_PIN) {
             continue;
-        } 
+        }
         ATOMIC_BLOCK_FORCEON {
             gpio_set_pin_output(wakeUpCol_pins[i]);
             gpio_write_pin_low(wakeUpCol_pins[i]);
@@ -78,4 +81,20 @@ void matrix_sleepConfig(void)
     }
 #endif
 
+    /* encoder wake-up config */
+    for (i = 0; i < ARRAY_SIZE(wakeUpEncA_pins); i++) {
+        if (wakeUpEncA_pins[i] != NO_PIN) {
+            ATOMIC_BLOCK_FORCEON {
+                gpio_set_pin_input_high(wakeUpEncA_pins[i]);
+                palEnableLineEvent(wakeUpEncA_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
+            }
+        }
+
+        if (wakeUpEncB_pins[i] != NO_PIN) {
+            ATOMIC_BLOCK_FORCEON {
+                gpio_set_pin_input_high(wakeUpEncB_pins[i]);
+                palEnableLineEvent(wakeUpEncB_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
+            }
+        }
+    }
 }

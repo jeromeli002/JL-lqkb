@@ -1,4 +1,4 @@
-KB_COMMON_DIR = keyboards/keymagichorse/kb_common
+KB_COMMON_DIR = keyboards/jlkb/kb_common
 VPATH += ${KB_COMMON_DIR}
 
 

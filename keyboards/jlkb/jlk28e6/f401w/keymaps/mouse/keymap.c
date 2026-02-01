@@ -4,6 +4,12 @@
 #include "oled.c" //层信息图像显
 #include "custom_matrix_on.c"   // 处理接收到的原始数据
 
+#include "config.h"
+#include "ws2812.h"
+#include "color.h"
+#include "bhq_common.h"
+#include "wireless.h"
+
 enum custom_keycodes {
   LAYERS_DOWN = QK_KB_0,
   LAYERS_UP,
@@ -17,14 +23,14 @@ static uint8_t current_layer = 0; //默认0层开始
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_TRNS, KC_A, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_B, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_C, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_D, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_E, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_F, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_G, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_H, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		BLE_SW1, BLE_SW2, BLE_SW3,  RF_TOG, KC_TRNS, KC_A, KC_A, KC_TRNS, 
+		KC_TRNS, KC_B, KC_TRNS, KC_TRNS, KC_TRNS, KC_B, KC_B, KC_TRNS, 
+		KC_TRNS, KC_C, KC_TRNS, KC_TRNS, KC_TRNS, KC_C, KC_C, KC_TRNS, 
+		KC_TRNS, KC_D, KC_TRNS, KC_TRNS, KC_TRNS, KC_D, KC_D, KC_TRNS, 
+		KC_TRNS, KC_E, KC_TRNS, KC_TRNS, KC_TRNS, KC_E, KC_E, KC_TRNS, 
+		KC_TRNS, KC_F, KC_TRNS, KC_TRNS, KC_TRNS, KC_F, KC_F, KC_TRNS, 
+		KC_TRNS, KC_G, KC_TRNS, KC_TRNS, KC_TRNS, KC_G, KC_G, KC_TRNS, 
+		KC_TRNS, KC_H, KC_TRNS, KC_TRNS, KC_TRNS, KC_H, KC_H, KC_TRNS),
 
 	LAYOUT(
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
@@ -46,9 +52,16 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 };
 #endif
 
+bool via_command_kb(uint8_t *data, uint8_t length) {
+    return via_command_bhq(data, length);
+}
+
 // 添加新的按键
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  // 下一层
+  if (!process_record_bhq(keycode, record)) {
+        return false;
+
+    }// 下一层
   switch (keycode) {
      case LAYERS_DOWN:
       if(record->event.pressed) {

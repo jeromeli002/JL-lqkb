@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "joystick_key.c"
+// #include "joystick_key.c"
 #include "jloled.c"
 #include "jloled.h"
 #include "oled.c" //层信息图像显
@@ -24,14 +24,14 @@ static uint8_t current_layer = 0; //默认0层开始
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		BLE_SW1, BLE_SW2, BLE_SW3,  RF_TOG, KC_TRNS, KC_A, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_B, KC_TRNS, KC_TRNS, KC_TRNS, KC_B, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_C, KC_TRNS, KC_TRNS, KC_TRNS, KC_C, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_D, KC_TRNS, KC_TRNS, KC_TRNS, KC_D, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_E, KC_TRNS, KC_TRNS, KC_TRNS, KC_E, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_F, KC_TRNS, KC_TRNS, KC_TRNS, KC_F, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_G, KC_TRNS, KC_TRNS, KC_TRNS, KC_G, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_H, KC_TRNS, KC_TRNS, KC_TRNS, KC_H, KC_TRNS, KC_TRNS),
+		BLE_SW1, BLE_SW2, BLE_SW3,  RF_TOG, KC_M, KC_N, KC_O, KC_P, 
+		KC_A, KC_B, KC_C, KC_D, KC_E, KC_F, KC_G, KC_H, 
+		KC_I, KC_J, KC_K, KC_L, KC_L, KC_C, KC_C, KC_Q, 
+		KC_R, KC_S, KC_T, KC_U, KC_U, KC_W, KC_X, KC_Y, 
+		KC_Z, KC_Z, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, 
+		KC_Z, KC_9, KC_TRNS, KC_TRNS, KC_TRNS, KC_F, KC_F, KC_TRNS, 
+		KC_TRNS, KC_G, KC_TRNS, KC_TRNS, KC_TRNS, KC_G, KC_G, KC_TRNS, 
+		KC_TRNS, KC_H, KC_TRNS, KC_TRNS, KC_TRNS, KC_H, KC_H, KC_TRNS),
 
 	LAYOUT(
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
@@ -46,8 +46,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [0] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
-    [1] =   { ENCODER_CCW_CW(RGB_HUD, RGB_HUI),              ENCODER_CCW_CW(RGB_SAD, RGB_SAI) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU) ,    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU),    ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  },
+    [0] =   { ENCODER_CCW_CW(KC_A, KC_A),    ENCODER_CCW_CW(KC_A, KC_A) ,    ENCODER_CCW_CW(KC_A, KC_A) ,    ENCODER_CCW_CW(KC_A, KC_A),    ENCODER_CCW_CW(KC_A, KC_A),    ENCODER_CCW_CW(KC_A, KC_A)  },
+    [1] =   { ENCODER_CCW_CW(KC_A, KC_A),    ENCODER_CCW_CW(KC_A, KC_A) ,    ENCODER_CCW_CW(KC_A, KC_A) ,    ENCODER_CCW_CW(KC_A, KC_A),    ENCODER_CCW_CW(KC_A, KC_A),    ENCODER_CCW_CW(KC_A, KC_A)  },
 
     //                  旋钮 1                                     旋钮 2                                       旋钮 3                                旋钮 4                                        旋钮 5                                     旋钮 6               
 };

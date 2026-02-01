@@ -27,9 +27,9 @@
 // #define OLED_FONT_HEIGHT 8 //字体高度
 // #define OLED_FADE_OUT         //动画淡出
 // #define OLED_FADE_OUT_INTERVAL 5     //淡出速度0~15 越大越快
-#define OLED_SCROLL_TIMEOUT	 5000 //2000毫秒后开始滚动
-#define OLED_SCROLL_TIMEOUT_RIGHT //向右滚动 不设置默认向左滚动
-#define OLED_TIMEOUT 0  // 10分钟（毫秒）无操作后关闭屏幕
+//#define OLED_SCROLL_TIMEOUT	 5000 //2000毫秒后开始滚动
+//#define OLED_SCROLL_TIMEOUT_RIGHT //向右滚动 不设置默认向左滚动
+//#define OLED_TIMEOUT 0  // 10分钟（毫秒）无操作后关闭屏幕
 
 // [新增] 覆盖默认的 200ms 超时，例如设置为 10s
-#define JLOLED_REALTIME_TIMEOUT 2000
+//#define JLOLED_REALTIME_TIMEOUT 2000
