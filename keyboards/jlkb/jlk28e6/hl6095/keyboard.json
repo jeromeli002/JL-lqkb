@@ -28,7 +28,7 @@
       { "pin_a": "B15", "pin_b": "B14", "resolution": 2 },
       { "pin_a": "A2", "pin_b": "A1", "resolution": 4 }
     ]
-  }
+  },
     "bluetooth":{
         "driver":"bhq"
     },

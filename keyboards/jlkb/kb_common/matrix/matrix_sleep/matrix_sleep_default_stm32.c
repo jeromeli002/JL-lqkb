@@ -18,24 +18,23 @@
 #include "atomic_util.h"
 #include "gpio.h"
 #include "matrix_sleep.h"
+#include "encoder.h"
 
-/* matrix wake-up pins */
+/* 矩阵引脚 */
 static const pin_t wakeUpRow_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
 static const pin_t wakeUpCol_pins[MATRIX_COLS] = MATRIX_COL_PINS;
 
-/* encoder wake-up pins (from info.json "rotary") */
-static const pin_t wakeUpEncA_pins[] = {
-    B9, C12, C15, B3, C0, B15, A2
-};
-
-static const pin_t wakeUpEncB_pins[] = {
-    B8, C13, C14, B4, C1, B14, A1
-};
+/* * 编码器引脚 * */
+#ifdef ENCODER_ENABLE
+    static const pin_t wakeUpEncA_pins[] = ENCODER_A_PINS;
+    static const pin_t wakeUpEncB_pins[] = ENCODER_B_PINS;
+#endif
 
 void matrix_sleepConfig(void)
 {
     uint8_t i = 0;
 
+/* ----------------- 矩阵按键唤醒配置 (保持不变) ----------------- */
 #if (DIODE_DIRECTION == COL2ROW)
     /* Set row (low valid), read cols */
     for (i = 0; i < matrix_cols(); i++) {
@@ -81,7 +80,9 @@ void matrix_sleepConfig(void)
     }
 #endif
 
-    /* encoder wake-up config */
+/* ----------------- 编码器唤醒配置 ----------------- */
+#ifdef ENCODER_ENABLE
+    // 分开配置 A 引脚
     for (i = 0; i < ARRAY_SIZE(wakeUpEncA_pins); i++) {
         if (wakeUpEncA_pins[i] != NO_PIN) {
             ATOMIC_BLOCK_FORCEON {
@@ -89,7 +90,10 @@ void matrix_sleepConfig(void)
                 palEnableLineEvent(wakeUpEncA_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
             }
         }
+    }
 
+    // 分开配置 B 引脚
+    for (i = 0; i < ARRAY_SIZE(wakeUpEncB_pins); i++) {
         if (wakeUpEncB_pins[i] != NO_PIN) {
             ATOMIC_BLOCK_FORCEON {
                 gpio_set_pin_input_high(wakeUpEncB_pins[i]);
@@ -97,4 +101,5 @@ void matrix_sleepConfig(void)
             }
         }
     }
+#endif
 }
