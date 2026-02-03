@@ -47,6 +47,10 @@
 
 #endif
 
+#define ENCODER_WAKEUP_PINS ENCODER_A_PINS
+// #define WAKEUP_PIN        A0
+// #define WAKEUP_PIN_POLARITY 0  // 0: 低电平有效(上拉+下降沿), 1: 高电平有效(下拉+上升沿)
+
 #define WS2812_POWER_PIN        C8
 #define WS2812_POWER_ON_LEVEL   0      // 0-低电平打开电源  1-高电平关闭电源，根据原理图设置
 
