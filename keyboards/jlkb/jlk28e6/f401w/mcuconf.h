@@ -1,4 +1,4 @@
-/* Copyright 2020 QMK
+/* Copyright 2024 keymagichorse
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,22 +18,16 @@
 
 #include_next <mcuconf.h>
 
-//#undef STM32_PWM_USE_TIM2
-//#define STM32_PWM_USE_TIM2 TRUE
 #define HAL_USE_SERIAL  TRUE        // enabled SERIAL
-
-#undef STM32_SERIAL_USE_USART1
-#define STM32_SERIAL_USE_USART1 TRUE
 
 #undef STM32_I2C_USE_I2C1
 #define STM32_I2C_USE_I2C1 TRUE
 
+# undef STM32_SERIAL_USE_USART1
+# define STM32_SERIAL_USE_USART1 TRUE
+
 #undef STM32_ADC_USE_ADC1
-#define STM32_ADC_USE_ADC1 TRUE
-
-#undef STM32_PWM_USE_TIM3
-#define STM32_PWM_USE_TIM3 TRUE
-
+#define STM32_ADC_USE_ADC1          TRUE
 
 #undef STM32_PLLM_VALUE
 #undef STM32_PLLN_VALUE

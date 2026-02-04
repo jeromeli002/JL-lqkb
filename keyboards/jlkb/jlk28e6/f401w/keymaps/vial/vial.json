@@ -21,8 +21,7 @@
 	}
  ],
  "matrix": { "rows": 8, "cols":8 },
- "vial": {
-    },
+ "lighting": "vialrgb",
  "layouts": {
       "labels": [
      ],

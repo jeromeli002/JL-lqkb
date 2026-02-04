@@ -1,4 +1,3 @@
-RAW_ENABLE = yes
 
 # 是否使能低功耗
 KB_LPM_ENABLED = no
@@ -11,6 +10,8 @@ KB_DEBUG = no
 
 include keyboards/jlkb/kb_common/kb_common.mk
 
+RGB_MATRIX_CUSTOM_USER = yes  # 开启用户自定义特效支持
+
 VIA_ENABLE = yes
 VIAL_ENABLE = yes
 QMK_SETTINGS = yes
@@ -18,4 +19,7 @@ VIAL_INSECURE = yes
 LTO_ENABLE = yes
 VIA_CUSTOM_KEYCODE_ENABLE = yes
 RADIAL_CONTROLLER_ENABLE = yes
+VIALRGB_ENABLE = yes
+
+
 

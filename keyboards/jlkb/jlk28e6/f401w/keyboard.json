@@ -1,26 +1,23 @@
 {
-    "keyboard_name": "设计师键盘",
-    "manufacturer": "JLKB",
-    "url": "http://wpa.qq.com/msgrd?v=3&uin=532192607&site=qq&menu=yes",
-    "maintainer": "JLKB",
+    "keyboard_name": "HL6095",
+    "manufacturer": "keymagichorse",
     "processor": "STM32F401",
-    "board": "BLACKPILL_STM32_F401",
     "bootloader": "stm32-dfu",
     "usb": {
         "vid": "0xF008",
         "pid": "0x3001",
-        "device_version": "0.0.1"
+        "device_version": "1.0.0"
     },
     "features": {
+        "bootmagic": true,
+        "command": false,
+        "console": false,
+        "extrakey": true,
+        "mousekey": true,
         "bluetooth": true,
+        "nkro": true,
+        "rgblight": true,
         "rgb_matrix": true
-    },
-    "bluetooth":{
-        "driver":"bhq"
-    },
-    "build": {
-        "debounce_type": "sym_defer_pk",
-        "lto": true
     },
     "encoder": {
     "rotary": [
@@ -28,15 +25,23 @@
       { "pin_a": "C12", "pin_b": "C13", "resolution": 4 },
       { "pin_a": "C15", "pin_b": "C14", "resolution": 4 },
       { "pin_a": "B3", "pin_b": "B4", "resolution": 4 },
-      { "pin_a": "C1", "pin_b": "C0", "resolution": 2 },
-      { "pin_a": "B14", "pin_b": "B15", "resolution": 2 }
+      { "pin_a": "C0", "pin_b": "C1", "resolution": 2 },
+      { "pin_a": "B15", "pin_b": "B14", "resolution": 2 },
+      { "pin_a": "A2", "pin_b": "A1", "resolution": 4 }
     ]
-  }
+  },
+    "bluetooth":{
+        "driver":"bhq"
+    },
+    "build": {
+        "debounce_type": "sym_defer_pk",
+        "lto": true
+    },
+    "debounce": 10,
     "matrix_pins": {
         "cols": ["C4", "C3", "C2", "A5", "A4", "A3", null, null],
         "rows": ["C5", "C6", "B1", "B0", "A7", "A6", null, null]
     },
-
     "rgblight": {
         "saturation_steps": 8,  // 饱和度步数
         "brightness_steps": 8,  // 亮度步数
@@ -134,8 +139,9 @@
     },
     "ws2812": {
         "pin": "A8"
+        // "driver": "pwm"
     },
-    "diode_direction": "COL2ROW",
+    "diode_direction": "ROW2COL",
     "layouts": {
         "LAYOUT": {
             "layout": [
