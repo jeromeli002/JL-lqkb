@@ -64,7 +64,7 @@
             "vialrgb_direct": true               //打字热力图
         },
     "layout": [ 
-    {"matrix":[4,0],"x":224,"y":0,"flags":4},
+    {"matrix":[4,4],"x":224,"y":0,"flags":4},
     {"matrix":[3,4],"x":213,"y":0,"flags":4},
     {"matrix":[3,3],"x":202,"y":0,"flags":4},
     {"matrix":[3,2],"x":190,"y":0,"flags":4},
