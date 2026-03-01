@@ -14,11 +14,11 @@ static uint8_t current_layer = 0; //默认0层开始
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		KC_KP_MINUS, KC_KP_ASTERISK, KC_KP_SLASH, KC_NUM_LOCK, KC_TRNS, 
+		KC_KP_PLUS, KC_KP_9, KC_KP_8, KC_KP_7, KC_TRNS, 
+		KC_TRNS, KC_KP_6, KC_KP_5, KC_KP_4, KC_TRNS, 
+		KC_KP_ENTER, KC_KP_3, KC_KP_2, KC_KP_1, KC_TRNS, 
+		KC_TRNS, KC_KP_DOT, KC_TRNS, KC_KP_0, KC_TRNS),
 
 	LAYOUT(
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
@@ -31,8 +31,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN) , ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)  },
-    [1] =   { ENCODER_CCW_CW(RGB_HUD, RGB_HUI)           , ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)  },
+    [0] =   {  ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)  },
+    [1] =   {  ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)  },
 
     //                  旋钮 1                                          旋钮 2                               
 };

@@ -1,0 +1,56 @@
+#pragma once
+
+// #define RAW_USAGE_PAGE   0xFF69
+// #define RAW_USAGE_ID     0x66
+
+// #define WEAR_LEVELING_LOGICAL_SIZE 1024*8
+// #define WEAR_LEVELING_BACKING_SIZE WEAR_LEVELING_LOGICAL_SIZE*2
+
+ /* 层指示灯 */
+#define RGBLIGHT_LAYERS
+#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
+#define RGBLIGHT_LAYER_BLINK   
+#define RGBLIGHT_MAX_LAYERS 16
+
+/* 层数 */
+#  define DYNAMIC_KEYMAP_LAYER_COUNT 16
+
+#ifndef SERIAL_NUMBER
+#   define SERIAL_NUMBER "mjl_hl6095"
+#endif
+
+#ifdef BLUETOOTH_BHQ
+// Its active level is "BHQ_IRQ_AND_INT_LEVEL of bhq.h " 
+#   define BHQ_IQR_PIN          C4             
+#   define BHQ_INT_PIN          C5             
+#   define USB_POWER_SENSE_PIN  C1             // USB插入检测引脚  
+
+#   define UART_DRIVER          SD1
+#   define UART_TX_PIN          A9
+#   define UART_TX_PAL_MODE     7
+#   define UART_RX_PIN          A10
+#   define UART_RX_PAL_MODE	    7
+
+// STM32使用到的高速晶振引脚号，做低功耗需要用户配置，每款芯片有可能不一样的
+#define LPM_STM32_HSE_PIN_IN     H1  
+#define LPM_STM32_HSE_PIN_OUT    H0
+
+#define REPORT_BUFFER_QUEUE_SIZE    68
+#define BATTERY_ADC_PIN              A1
+#define BATTERY_ADC_DRIVER           ADCD1
+// usb 检测
+#define USB_POWER_SENSE_PIN         C1
+#define USB_POWER_CONNECTED_LEVEL   1    
+
+#endif
+
+#define ENCODER_WAKEUP_PINS ENCODER_A_PINS
+// #define WAKEUP_PIN        A0
+// #define WAKEUP_PIN_POLARITY 0  // 0: 低电平有效(上拉+下降沿), 1: 高电平有效(下拉+上升沿)
+
+#define WS2812_POWER_PIN        B3
+#define WS2812_POWER_ON_LEVEL   0      // 0-低电平打开电源  1-高电平关闭电源，根据原理图设置
+
+#define WS2812_BYTE_ORDER   WS2812_BYTE_ORDER_GRB
+#define RGBLIGHT_LIMIT_VAL 180
+#define RGBLIGHT_LAYER_BLINK

@@ -15,6 +15,8 @@
  */
 #pragma once
 
+#define RAW_USAGE_PAGE   0xFF60
+#define RAW_USAGE_ID     0x61
 
 #ifndef SERIAL_NUMBER
 #   define SERIAL_NUMBER "mjl_hl6095"
@@ -22,14 +24,14 @@
 
 #ifdef BLUETOOTH_BHQ
 // Its active level is "BHQ_IRQ_AND_INT_LEVEL of bhq.h " 
-#   define BHQ_IQR_PIN          A1             
-#   define BHQ_INT_PIN          A0             
-#   define USB_POWER_SENSE_PIN  A10             // USB插入检测引脚  
+#   define BHQ_IQR_PIN          B13             
+#   define BHQ_INT_PIN          B12             
+#   define USB_POWER_SENSE_PIN  C10             // USB插入检测引脚  
 
-#   define UART_DRIVER          SD2
-#   define UART_TX_PIN          A2
+#   define UART_DRIVER          SD1
+#   define UART_TX_PIN          A9
 #   define UART_TX_PAL_MODE     7
-#   define UART_RX_PIN          A3
+#   define UART_RX_PIN          A10
 #   define UART_RX_PAL_MODE	    7
 
 // STM32使用到的高速晶振引脚号，做低功耗需要用户配置，每款芯片有可能不一样的
@@ -37,15 +39,15 @@
 #define LPM_STM32_HSE_PIN_OUT    H0
 
 #define REPORT_BUFFER_QUEUE_SIZE    68
-#define BATTERY_ADC_PIN              B1
+#define BATTERY_ADC_PIN              A0
 #define BATTERY_ADC_DRIVER           ADCD1
 // usb 检测
-#define USB_POWER_SENSE_PIN         A10
+#define USB_POWER_SENSE_PIN         C10
 #define USB_POWER_CONNECTED_LEVEL   1    
 
 #endif
 
-#define WS2812_POWER_PIN        B8
+#define WS2812_POWER_PIN        C8
 #define WS2812_POWER_ON_LEVEL   0      // 0-低电平打开电源  1-高电平关闭电源，根据原理图设置
 
 #define WS2812_BYTE_ORDER   WS2812_BYTE_ORDER_GRB

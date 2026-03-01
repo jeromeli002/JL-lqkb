@@ -1,3 +1,4 @@
+RAW_ENABLE = yes
 
 # 是否使能低功耗
 KB_LPM_ENABLED = yes
@@ -11,4 +12,3 @@ KB_DEBUG = no
 include keyboards/keymagichorse/kb_common/kb_common.mk
 
 VIA_ENABLE = yes
-VIAL_ENABLE = yes

@@ -1,4 +1,4 @@
-# MAKEFLAGS= -j 16
+MAKEFLAGS= -j 16
 
 # 启用/禁用不支持的硬件
 AUDIO_SUPPORTED = no
