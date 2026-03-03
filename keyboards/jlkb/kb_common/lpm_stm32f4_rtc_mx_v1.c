@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  See if not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 // Very few codes are borrowed from https://www.keychron.com
 #include "quantum.h"
@@ -25,24 +25,27 @@
 #include "report_buffer.h"
 #include "uart.h"
 #include "bhq_common.h"
+#include "encoder.h"
 
 # if defined(KB_CHECK_BATTERY_ENABLED)
 #   include "battery.h"
-// 函数原型声明
-void battery_stop(void);
-void battery_start(void);
 #endif
 
 #if SHIFT595_ENABLED
 #   include "74hc595.h"
 #endif
 
-static uint32_t     lpm_timer_buffer = 0;
+static uint32_t      lpm_timer_buffer = 0;
 static bool          lpm_time_up               = false;
 
 // use for config wakeUp Pin
 static const pin_t wakeUpRow_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
 static const pin_t wakeUpCol_pins[MATRIX_COLS]   = MATRIX_COL_PINS;
+
+#ifdef ENCODER_ENABLE
+static const pin_t encoder_a_pins[] = ENCODERS_PAD_A;
+static const pin_t encoder_b_pins[] = ENCODERS_PAD_B;
+#endif
 
 static inline uint32_t rtc_wakeup_calc(uint32_t ms) {
     uint32_t wutr = 0;
@@ -72,17 +75,6 @@ void lpm_timer_reset(void) {
 __attribute__((weak)) void lpm_device_power_open(void) ;
 __attribute__((weak)) void lpm_device_power_close(void) ;
 
-// --- 新增：电池开关函数的 Weak 实现，解决 Linking undefined reference 报错 ---
-#if defined(KB_CHECK_BATTERY_ENABLED)
-__attribute__((weak)) void battery_stop(void) {
-    // 如果你在 battery.c 里没有实现此函数，编译器将使用这个空函数
-}
-__attribute__((weak)) void battery_start(void) {
-    // 如果你在 battery.c 里没有实现此函数，编译器将使用这个空函数
-}
-#endif
-// -----------------------------------------------------------------------
-
 void lpm_init(void)
 {
     // 禁用调试功能以降低功耗
@@ -102,11 +94,11 @@ void lpm_init(void)
 }
 __attribute__((weak)) void lpm_device_power_open(void) 
 {
-    
+   
 }
 __attribute__((weak)) void lpm_device_power_close(void) 
 {
-    
+   
 }
 
 // 将未使用的引脚设置为输入模拟
@@ -212,7 +204,25 @@ void enter_low_power_mode_prepare(void)
             gpio_write_pin_low(wakeUpCol_pins[i]);
         }
     }
+#endif
 
+// 旋钮编码器唤醒配置
+#ifdef ENCODER_ENABLE
+    for (i = 0; i < sizeof(encoder_a_pins)/sizeof(pin_t); i++) {
+        if (encoder_a_pins[i] != NO_PIN) {
+            ATOMIC_BLOCK_FORCEON {
+                gpio_set_pin_input_high(encoder_a_pins[i]);
+                // 使用双边沿触发，确保无论从哪个分位转动都能唤醒
+                palEnableLineEvent(encoder_a_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
+            }
+        }
+        if (encoder_b_pins[i] != NO_PIN) {
+            ATOMIC_BLOCK_FORCEON {
+                gpio_set_pin_input_high(encoder_b_pins[i]);
+                palEnableLineEvent(encoder_b_pins[i], PAL_EVENT_MODE_BOTH_EDGES);
+            }
+        }
+    }
 #endif
 
 // rtc唤醒
@@ -261,6 +271,9 @@ void exit_low_power_mode_prepare(void)
     // invoked in matrix_init() alloc new memory to debounce_counters */
     // debounce_free();
     matrix_init();
+#ifdef ENCODER_ENABLE
+    encoder_init(); // 重新初始化编码器引脚
+#endif
 
     lpm_timer_reset();
     report_buffer_init();
@@ -291,6 +304,12 @@ bool lowpower_matrix_task(void)
             any_key_pressed = true;
         }
     } 
+#ifdef ENCODER_ENABLE
+    // 同时也扫描一下编码器状态，如果有动作也视为有按键按下
+    if (encoder_read()) {
+        any_key_pressed = true;
+    }
+#endif
     return any_key_pressed; 
 }
 
@@ -519,7 +538,7 @@ void lmp_halInit(void) {
 #endif
 
   /* Board specific initialization.*/
-//  boardInit();
+//   boardInit();
 
 /*
  * The ST driver is a special case, it is only initialized if the OSAL is

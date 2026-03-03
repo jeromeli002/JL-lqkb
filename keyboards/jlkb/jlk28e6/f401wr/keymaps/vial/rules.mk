@@ -1,6 +1,6 @@
 
 # 是否使能低功耗
-KB_LPM_ENABLED = no
+KB_LPM_ENABLED = yes
 KB_LPM_DRIVER = lpm_stm32f4
 # 是否使能QMK端读取电池电压
 KB_CHECK_BATTERY_ENABLED = yes
