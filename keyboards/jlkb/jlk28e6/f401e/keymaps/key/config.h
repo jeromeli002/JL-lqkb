@@ -19,7 +19,22 @@
 // 每个摇杆轴数量 Max 6: X, Y, Z, Rx, Ry, Rz
 #define JOYSTICK_AXIS_COUNT 2 //轴数量X/Y轴
 
+// 定义一个用户数据的基准地址，跳过前 1200 字节（通常足够 VIA 存 4-8 层键位）
+// 具体的偏移量取决于你的键盘有多少层
+#define USER_DATA_BASE_ADDR 6144 
+
+// 指示灯配置紧跟基准地址
+#define EEPROM_INDICATOR_ADDR (USER_DATA_BASE_ADDR)
+
+// OLED 槽位紧跟指示灯配置之后
+// 计算指示灯结构体的大小，确保 OLED 存储不会覆盖它
+#define EEPROM_OLED_START_ADDR (EEPROM_INDICATOR_ADDR + 100)
+
+#define WEAR_LEVELING_LOGICAL_SIZE 1024*24
+#define WEAR_LEVELING_BACKING_SIZE WEAR_LEVELING_LOGICAL_SIZE*2
 //  OLED设置项
+#define OLED_DISPLAY_128X32  //128x64分辨率
+// #define OLED_ROTATION OLED_ROTATION_180  //旋转角度
 // #define OLED_FONT_H "glcdfont.c"//自定义字体
 // #define OLED_FONT_WIDTH 6 //字体宽度
 // #define OLED_FONT_HEIGHT 8 //字体高度

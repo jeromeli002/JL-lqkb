@@ -1,6 +1,6 @@
 #ifdef OLED_ENABLE
     oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-        return OLED_ROTATION_0; 
+        return OLED_ROTATION_180; 
     }
 
     // 追踪上一次显示的层
