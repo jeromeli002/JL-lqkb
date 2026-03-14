@@ -23,7 +23,6 @@ typedef struct {
 } indicator_config_t;
 
 #define INDICATOR_MAGIC 0x8E 
-#define EEPROM_INDICATOR_ADDR 2048
 
 indicator_config_t g_ind_cfg;
 

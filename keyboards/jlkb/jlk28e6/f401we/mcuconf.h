@@ -29,15 +29,6 @@
 #undef STM32_ADC_USE_ADC1
 #define STM32_ADC_USE_ADC1          TRUE
 
-// ******** RTC ********
-#undef STM32_LSI_ENABLED
-#define STM32_LSI_ENABLED TRUE  
-
-#undef STM32_RTCSEL
-#define STM32_RTCSEL STM32_RTCSEL_LSI
-
-// ******** RTC ********
-
 #undef STM32_PLLM_VALUE
 #undef STM32_PLLN_VALUE
 #undef STM32_PLLP_VALUE

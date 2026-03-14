@@ -11,7 +11,7 @@ uint8_t jloled_buffer[JLOLED_BUFFER_SIZE];
 bool jloled_dirty = true;
 
 // EEPROM 存储起始地址变量的定义
-uint16_t jloled_eeprom_start_addr = 2048;
+uint16_t jloled_eeprom_start_addr = EEPROM_OLED_START_ADDR;
 
 // 新增：实时显示状态标志位
 bool jloled_realtime_active = false; 

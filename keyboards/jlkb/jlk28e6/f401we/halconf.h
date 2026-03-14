@@ -24,10 +24,5 @@
 
 #define HAL_USE_I2C TRUE
 
-// **************** RTC ****************
-#undef HAL_USE_RTC
-#define HAL_USE_RTC TRUE
-// **************** RTC ****************
-
 #include_next <halconf.h>
 
