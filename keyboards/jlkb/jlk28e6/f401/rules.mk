@@ -16,6 +16,7 @@ SLEEP_LED_ENABLE = no    # 禁用睡眠 LED (在 USB 挂起期间呼吸闪烁)
 
 # 如果此项不起作用，请参阅此处：https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work (if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work)
 NKRO_ENABLE = yes        # 启用 USB N 键翻转 (无限制同时按下)
+FORCE_NKRO = yes         # 启用全键无冲
 BACKLIGHT_ENABLE = no    # 禁用键盘背光功能
 ENCODER_ENABLE = yes     # 启用旋转编码器支持
 ENCODER_MAP_ENABLE = yes # 启用旋转编码器映射
