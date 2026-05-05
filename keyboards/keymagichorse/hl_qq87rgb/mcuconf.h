@@ -13,8 +13,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
 
-#define VIAL_KEYBOARD_UID {0x02, 0xF2, 0x22, 0x33, 0x49, 0x2A, 0x02, 0x08}
-#define VIAL_UNLOCK_COMBO_ROWS {0,0}
-#define VIAL_UNLOCK_COMBO_COLS {0,1}
+#include_next <mcuconf.h>
+
+#define HAL_USE_SERIAL  TRUE        // enabled SERIAL
+
+#    undef STM32_SERIAL_USE_USART2
+#    define STM32_SERIAL_USE_USART2 TRUE
+
+#undef STM32_ADC_USE_ADC1
+#define STM32_ADC_USE_ADC1          TRUE
+
+
+#undef STM32_PWM_USE_TIM3
+#define STM32_PWM_USE_TIM3 TRUE
+
+
+#undef STM32_PLLM_VALUE
+#undef STM32_PLLN_VALUE
+#undef STM32_PLLP_VALUE
+#undef STM32_PLLQ_VALUE
+
+#define STM32_PLLM_VALUE                    (STM32_HSECLK/1000000)
+#define STM32_PLLN_VALUE                    192
+#define STM32_PLLP_VALUE                    4
+#define STM32_PLLQ_VALUE                    4

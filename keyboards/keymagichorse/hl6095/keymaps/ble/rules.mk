@@ -1,4 +1,3 @@
-RAW_ENABLE = yes
 
 # 是否使能低功耗
 KB_LPM_ENABLED = yes

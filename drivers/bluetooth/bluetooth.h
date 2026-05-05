@@ -30,7 +30,6 @@ void bluetooth_init(void);
  */
 void bluetooth_task(void);
 
-
 /**
  * \brief Enable Bluetooth data transmission
  */

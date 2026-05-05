@@ -22,44 +22,45 @@
 
 /*******************************************************matrix********************************************************/
 /* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 16  // 做两列假灯
+#define MATRIX_ROWS 6
+#define MATRIX_COLS 17  // 做两列假灯
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION ROW2COL
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS { A15, B3, B4, B5, B6 }
+#define MATRIX_ROW_PINS { B6, B14, B13, B12, A8, B10 }
                         //  Q7      Q6      Q5     Q4
-#define MATRIX_COL_PINS { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN}
-// 定义列映射到 74HC595 的管脚数量  todo 名称得改改
+#define MATRIX_COL_PINS { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, B8}
+// 定义列映射到 74HC595 的管脚数量
 #define COL_TO_74HC595_PINS_COUNT   16
+// index = 595 pin
 // value = col
 #define HC595_PIN_TO_COL ((const int8_t[]){ \
-    [_1_595_Q0] = 7,    \
-    [_1_595_Q1] = 0,    \
-    [_1_595_Q2] = 1,    \
-    [_1_595_Q3] = 2,    \
-    [_1_595_Q4] = 3,    \
-    [_1_595_Q5] = 4,    \
-    [_1_595_Q6] = 5,    \
-    [_1_595_Q7] = 6,    \
+    [_1_595_Q0] = 15,    \
+    [_1_595_Q1] = 8,    \
+    [_1_595_Q2] = 9,    \
+    [_1_595_Q3] = 10,    \
+    [_1_595_Q4] = 11,    \
+    [_1_595_Q5] = 12,    \
+    [_1_595_Q6] = 13,    \
+    [_1_595_Q7] = 14,    \
                         \
-    [_2_595_Q0] = 0xff,    \
-    [_2_595_Q1] = 0xff,    \
-    [_2_595_Q2] = 12,   \
-    [_2_595_Q3] = 13,   \
-    [_2_595_Q4] = 11,   \
-    [_2_595_Q5] = 10,    \
-    [_2_595_Q6] = 9,   \
-    [_2_595_Q7] = 8,    \
+    [_2_595_Q0] = 0,    \
+    [_2_595_Q1] = 1,    \
+    [_2_595_Q2] = 2,   \
+    [_2_595_Q3] = 3,   \
+    [_2_595_Q4] = 4,   \
+    [_2_595_Q5] = 5,    \
+    [_2_595_Q6] = 6,   \
+    [_2_595_Q7] = 7,    \
 })
 #define I_595_NUM   2       // 用了多少个595
 /* Pin connected to DS of 74HC595 */
-#define DS_PIN_74HC595      B9
+#define DS_PIN_74HC595      A4
 /* Pin connected to SH_CP of 74HC595 */
-#define SHCP_PIN_74HC595    B7
+#define SHCP_PIN_74HC595    A6
 /* Pin connected to ST_CP of 74HC595 */
-#define STCP_PIN_74HC595    B8
+#define STCP_PIN_74HC595    A5
 /*******************************************************matrix********************************************************/
 
 #ifdef BLUETOOTH_BHQ
@@ -89,16 +90,13 @@
 #endif
 
 // 1-高电平打开电源  0-低电平关闭电源，根据原理图设置
-#define WS2812_POWER_PIN        B0
+#define WS2812_POWER_PIN        B7
 #define WS2812_POWER_ON_LEVEL   1  
 
-#define RGB_MATRIX_LED_FLUSH_LIMIT 30
-#define WS2812_TRST_US      380
+#define RGB_MATRIX_LED_FLUSH_LIMIT 60
 #define WS2812_BYTE_ORDER   WS2812_BYTE_ORDER_GRB
-
 #define WS2812_PWM_DRIVER   PWMD3  // default: PWMD2
 #define WS2812_PWM_CHANNEL  2  // default: 2
 #define WS2812_PWM_PAL_MODE 2  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
 #define WS2812_DMA_STREAM   STM32_DMA1_STREAM2  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
 #define WS2812_DMA_CHANNEL  5  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
-

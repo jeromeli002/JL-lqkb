@@ -49,6 +49,8 @@ void matrix_init_kb(void) {
 
 void keyboard_post_init_user(void) {
     // 启用自定义静态模式
+    // --- 新增：上电强制关闭所有 RGB 灯珠，防止随机亮灯 ---
+    rgb_matrix_set_color_all(0, 0, 0);
     // 在 keyboard_post_init_user 中初始化为输入
     setPinInput(B1);
     setPinInput(B10);
