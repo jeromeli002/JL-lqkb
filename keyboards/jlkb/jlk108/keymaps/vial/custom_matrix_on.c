@@ -35,11 +35,12 @@ void matrix_init_kb(void) {
     eeprom_read_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     
     if (g_ind_cfg.magic != INDICATOR_MAGIC) {
-        g_ind_cfg.caps = (led_cfg_t){0, 1, 0, 255, 255};
-        g_ind_cfg.num  = (led_cfg_t){1, 1, 85, 255, 255};
-        g_ind_cfg.scrl = (led_cfg_t){2, 1, 170, 255, 255};
+        // 指示灯默认都不亮，再配置工具改
+        g_ind_cfg.caps = (led_cfg_t){0, 1, 0, 0, 0};
+        g_ind_cfg.num  = (led_cfg_t){1, 1, 0, 0, 0};
+        g_ind_cfg.scrl = (led_cfg_t){2, 1, 0, 0, 0};
         for(uint8_t i=0; i<16; i++) {
-            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 128, 255, 255};
+            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 0, 0, 0};
         }
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
@@ -52,6 +53,7 @@ void keyboard_post_init_user(void) {
     // --- 新增：上电强制关闭所有 RGB 灯珠，防止随机亮灯 ---
     rgb_matrix_set_color_all(0, 0, 0);
     // 在 keyboard_post_init_user 中初始化为输入
+    setPinOutput(B8); writePinLow(B8);
     setPinInput(B1);
     setPinInput(B10);
     setPinInput(B0);
