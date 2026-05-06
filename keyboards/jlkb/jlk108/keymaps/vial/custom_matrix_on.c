@@ -2,11 +2,7 @@
 #include "eeprom.h"
 #include <string.h>
 #include "jlrgb.h"
-#include "wait.h"
-
-// 调节这两个参数调整指示灯亮度
-#define LED_BRIGHTNESS 10  // 开启的时间（微秒），越小越暗
-#define LED_PERIOD 1000    // 总周期（微秒），1000us = 1ms (1000Hz 刷新率，绝无闪烁)
+#include "timer.h" // 必须引入，用于 RGB 休眠计时
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -22,6 +18,7 @@ typedef struct {
     led_cfg_t num;
     led_cfg_t scrl;
     led_cfg_t layers[16]; 
+    uint32_t rgb_timeout; // RGB 自动休眠时间（单位：秒，0为不关闭）
     uint8_t magic; 
 } indicator_config_t;
 
@@ -29,6 +26,10 @@ typedef struct {
 #define EEPROM_INDICATOR_ADDR 1024
 
 indicator_config_t g_ind_cfg;
+
+// 用于动态处理 RGB 超时的全局状态变量
+static uint32_t custom_last_activity_time = 0;
+static bool is_rgb_timeout_sleep = false;
 
 // ========================== 3. 初始化 ==========================
 void matrix_init_kb(void) {
@@ -42,55 +43,80 @@ void matrix_init_kb(void) {
         for(uint8_t i=0; i<16; i++) {
             g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 0, 0, 0};
         }
+        g_ind_cfg.rgb_timeout = 180; // 默认 180 秒
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     }
+    
+    custom_last_activity_time = timer_read32(); // 初始化活动时间
     matrix_init_user();
 }
 
 void keyboard_post_init_user(void) {
-    // 启用自定义静态模式
-    // --- 新增：上电强制关闭所有 RGB 灯珠，防止随机亮灯 ---
+    // 上电强制关闭所有 RGB 灯珠，防止随机亮灯
     rgb_matrix_set_color_all(0, 0, 0);
-    // 在 keyboard_post_init_user 中初始化为输入
+    // 初始化指示灯引脚为输入（高阻态熄灭）
     setPinOutput(B8); writePinLow(B8);
     setPinInput(B1);
     setPinInput(B10);
     setPinInput(B0);
-//    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
 }
 
-// ================= 指示灯 =====================
+// ================= 指示灯及休眠逻辑 (非阻塞实现) =====================
 void matrix_scan_user(void) {
-    led_t led_state = host_keyboard_led_state();
+    // --- 1. RGB 动态超时休眠逻辑 ---
+    if (g_ind_cfg.rgb_timeout > 0) {
+        // 判断超过设置的秒数 (乘以1000转换为毫秒)
+        if (!is_rgb_timeout_sleep && timer_elapsed32(custom_last_activity_time) > (g_ind_cfg.rgb_timeout * 1000UL)) {
+            is_rgb_timeout_sleep = true;
+            rgb_matrix_disable_noeeprom(); // 关闭 RGB 矩阵以省电
+        }
+    } else {
+        // 设置为0 (永不休眠) 时的唤醒保护
+        if (is_rgb_timeout_sleep) {
+            is_rgb_timeout_sleep = false;
+            rgb_matrix_enable_noeeprom();
+        }
+    }
 
-    // 1. 判断哪些灯该亮
+    // --- 2. 纯软件非阻塞 PWM 指示灯亮度控制 ---
+    led_t led_state = host_keyboard_led_state();
     bool caps_on = led_state.caps_lock;
-    bool num_on = led_state.num_lock;
+    bool num_on  = led_state.num_lock;
     bool scrl_on = led_state.scroll_lock;
 
-    // 2. 如果有任何一个灯需要亮
     if (caps_on || num_on || scrl_on) {
-        // 开启需要亮的引脚
-        if (caps_on) { setPinOutput(B1); writePinHigh(B1); }
-        if (num_on)  { setPinOutput(B10); writePinHigh(B10); }
-        if (scrl_on) { setPinOutput(B0); writePinHigh(B0); }
+        // 调节这两个宏来控制亮度：PWM_CYCLE 是总周期，PWM_ON 是亮的时间
+        // 扫描率通常在 1000Hz 左右，20次扫描相当于 20ms 左右的周期，1次高电平
+        #define PWM_CYCLE 20 
+        #define PWM_ON    1  
 
-        // 保持点亮一小会儿 (极其微小的亮度)
-        wait_us(LED_BRIGHTNESS);
+        static uint8_t pwm_counter = 0;
+        pwm_counter++;
+        if (pwm_counter >= PWM_CYCLE) {
+            pwm_counter = 0;
+        }
 
-        // 全部切回输入状态（高阻态熄灭）
+        if (pwm_counter < PWM_ON) {
+            // 点亮（极短时间）
+            if (caps_on) { setPinOutput(B1); writePinHigh(B1); }
+            if (num_on)  { setPinOutput(B10); writePinHigh(B10); }
+            if (scrl_on) { setPinOutput(B0); writePinHigh(B0); }
+        } else {
+            // 熄灭（高阻态，避免过压或短路影响）
+            if (caps_on) { setPinInput(B1); }
+            if (num_on)  { setPinInput(B10); }
+            if (scrl_on) { setPinInput(B0); }
+        }
+    } else {
+        // 当灯效全关时，确保引脚处于高阻态安全状态
         setPinInput(B1);
         setPinInput(B10);
         setPinInput(B0);
-
-        // 剩余时间等待，保证频率稳定
-        wait_us(LED_PERIOD - LED_BRIGHTNESS);
     }
 }
 
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
-// 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
 bool rgb_matrix_indicators_kb(void) {
     if (!rgb_matrix_indicators_user()) return false;
 
@@ -162,6 +188,23 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             g_ind_cfg.scrl.index = data[3]; g_ind_cfg.scrl.count = data[4];
             g_ind_cfg.scrl.h = data[5]; g_ind_cfg.scrl.s = data[6]; g_ind_cfg.scrl.v = data[7];
             break;
+
+        case 0x85: // 设置动态 RGB 休眠时间
+            g_ind_cfg.rgb_timeout = ((uint32_t)data[2] << 24) | 
+                                    ((uint32_t)data[3] << 16) | 
+                                    ((uint32_t)data[4] << 8)  | 
+                                     (uint32_t)data[5];
+            
+            g_ind_cfg.magic = INDICATOR_MAGIC;
+            eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
+            
+            custom_last_activity_time = timer_read32();
+            if (is_rgb_timeout_sleep && g_ind_cfg.rgb_timeout > 0) {
+                is_rgb_timeout_sleep = false;
+                rgb_matrix_enable_noeeprom();
+            }
+            break;
+
         case 0x80: // Save
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));

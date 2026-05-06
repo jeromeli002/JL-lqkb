@@ -21,6 +21,10 @@
 //#define LED_SCROLL_LOCK_PIN B0
 //#define LED_PIN_ON_STATE 1  // 指示灯 LED“亮”时指示灯引脚的状态 1高电平，0低电平
 
+// #define WAIT_FOR_USB
+// #define RGB_DISABLE_AFTER_TIMEOUT 3000   // 闲置多久（毫秒）后自动关闭（灯带）
+// #define RGB_MATRIX_TIMEOUT 300000        // 闲置多久（毫秒）后自动关闭（矩阵）
+
 // QMK宏数量，最多128个
 #define DYNAMIC_KEYMAP_MACRO_COUNT 128
 #define DYNAMIC_MACRO_SIZE	256

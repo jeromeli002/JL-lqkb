@@ -42,7 +42,21 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 
 // 添加新的按键
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  // 下一层
+ 
+ // RGB自动关闭计时
+ // 捕获按键事件，用于重置自动休眠计时与唤醒
+ if (record->event.pressed) {
+        custom_last_activity_time = timer_read32(); // 重置计时
+        
+        // 如果按键时处于休眠状态且配置非0，则唤醒RGB矩阵
+        if (is_rgb_timeout_sleep) {
+            is_rgb_timeout_sleep = false;
+            rgb_matrix_enable_noeeprom(); 
+        }
+    }
+    return true;
+    
+    // 下一层
   switch (keycode) {
      case LAYERS_DOWN:
       if(record->event.pressed) {
