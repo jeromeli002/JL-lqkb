@@ -33,8 +33,8 @@
 #endif
 
 #ifndef WS2812_T1H
-// #    define WS2812_T1H 900 // Width of a 1 bit in ns
-#    define WS2812_T1H 600 // Width of a 1 bit in ns
+#    define WS2812_T1H 900 // Width of a 1 bit in ns
+// #    define WS2812_T1H 600 // Width of a 1 bit in ns
 #endif
 
 #ifndef WS2812_T1L
@@ -42,8 +42,8 @@
 #endif
 
 #ifndef WS2812_T0H
-// #    define WS2812_T0H 350 // Width of a 0 bit in ns
-#    define WS2812_T0H 250 // Width of a 0 bit in ns
+#    define WS2812_T0H 350 // Width of a 0 bit in ns
+// #    define WS2812_T0H 250 // Width of a 0 bit in ns
 #endif
 
 #ifndef WS2812_T0L

@@ -23,7 +23,8 @@ typedef struct {
 } indicator_config_t;
 
 #define INDICATOR_MAGIC 0x8E 
-#define EEPROM_INDICATOR_ADDR 1024
+// 【修复点 1】：将 1024 改为 512，避免地址溢出覆盖 QMK 核心 RGB 保存区
+#define EEPROM_INDICATOR_ADDR 4096
 
 indicator_config_t g_ind_cfg;
 
@@ -54,7 +55,9 @@ void matrix_init_kb(void) {
 
 void keyboard_post_init_user(void) {
     // 上电强制关闭所有 RGB 灯珠，防止随机亮灯
-    rgb_matrix_set_color_all(0, 0, 0);
+    // 注意：如果想要开机立刻看到保存的灯效，可以考虑注释掉下面这行
+    rgb_matrix_set_color_all(0, 0, 0); 
+    
     // 初始化指示灯引脚为输入（高阻态熄灭）
     setPinOutput(B8); writePinLow(B8);
     setPinInput(B1);
@@ -162,7 +165,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
 
     switch (data[1]) {
-        case 0x00: clear_keyboard();bootloader_jump(); break;
+        case 0x00: clear_keyboard(); bootloader_jump(); break;
         case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
         case 0x02: soft_reset_keyboard(); break;
         

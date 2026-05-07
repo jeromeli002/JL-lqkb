@@ -18,7 +18,8 @@ typedef struct {
     led_cfg_t caps;
     led_cfg_t num;
     led_cfg_t scrl;
-    led_cfg_t layers[16]; 
+    led_cfg_t layers[16];
+    uint32_t rgb_timeout; // RGB 自动休眠时间（单位：秒，0为不关闭） 
     uint8_t magic; 
 } indicator_config_t;
 
@@ -26,6 +27,10 @@ typedef struct {
 #define EEPROM_INDICATOR_ADDR 4096
 
 indicator_config_t g_ind_cfg;
+
+// 用于动态处理 RGB 超时的全局状态变量
+static uint32_t custom_last_activity_time = 0;
+static bool is_rgb_timeout_sleep = false;
 
 // ========================== 2. TM1640 宏与声明 ==========================
 #define MATRIX_LIGHT_ROWS TM1640_ROWS
@@ -46,16 +51,18 @@ void matrix_init_kb(void) {
         for(uint8_t i=0; i<16; i++) {
             g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 128, 255, 255};
         }
+        g_ind_cfg.rgb_timeout = 180; // 默认 180 秒
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     }
     matrix_init_user();
 }
 
-//void keyboard_post_init_user(void) {
+void keyboard_post_init_user(void) {
+    setPinOutput(B5); writePinLow(B5);
     // 启用自定义静态模式
-//    rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
-//}
+    // rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+}
 
 // ========================== 4. 主循环 (仅保留 TM1640) ==========================
 void matrix_scan_kb(void) {
@@ -63,6 +70,23 @@ void matrix_scan_kb(void) {
     matrix_scan_user();
 }
 
+void matrix_scan_user(void) {
+    // --- 1. RGB 动态超时休眠逻辑 ---
+    if (g_ind_cfg.rgb_timeout > 0) {
+        // 判断超过设置的秒数 (乘以1000转换为毫秒)
+        if (!is_rgb_timeout_sleep && timer_elapsed32(custom_last_activity_time) > (g_ind_cfg.rgb_timeout * 1000UL)) {
+            is_rgb_timeout_sleep = true;
+            rgb_matrix_disable_noeeprom(); // 关闭 RGB 矩阵以省电
+        }
+    } else {
+        // 设置为0 (永不休眠) 时的唤醒保护
+        if (is_rgb_timeout_sleep) {
+            is_rgb_timeout_sleep = false;
+            rgb_matrix_enable_noeeprom();
+        }
+    }
+  }
+    
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
 // 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
 bool rgb_matrix_indicators_kb(void) {
@@ -154,6 +178,23 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             g_ind_cfg.scrl.index = data[3]; g_ind_cfg.scrl.count = data[4];
             g_ind_cfg.scrl.h = data[5]; g_ind_cfg.scrl.s = data[6]; g_ind_cfg.scrl.v = data[7];
             break;
+        
+        case 0x85: // 设置动态 RGB 休眠时间
+            g_ind_cfg.rgb_timeout = ((uint32_t)data[2] << 24) | 
+                                    ((uint32_t)data[3] << 16) | 
+                                    ((uint32_t)data[4] << 8)  | 
+                                     (uint32_t)data[5];
+            
+            g_ind_cfg.magic = INDICATOR_MAGIC;
+            eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
+            
+            custom_last_activity_time = timer_read32();
+            if (is_rgb_timeout_sleep && g_ind_cfg.rgb_timeout > 0) {
+                is_rgb_timeout_sleep = false;
+                rgb_matrix_enable_noeeprom();
+            }
+            break;
+        
         case 0x80: // Save
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));

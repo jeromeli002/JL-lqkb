@@ -1,59 +1,59 @@
 #include QMK_KEYBOARD_H
-#include "tm1640.h" // 包含你的驱动头文件
-#include "tm1640.c"   // 处理接收到的原始数据
-#include "custom_matrix_on.c"   // 处理接收到的原始数据
+#include "tm1640.h"            // 驱动头文件
+#include "tm1640.c"            // 驱动实现
+#include "custom_matrix_on.c"  // 矩阵逻辑实现
 
 enum custom_keycodes {
-    QK_1 = QK_KB_0,  // 定义自定义键码，用于测试点亮灯
+    QK_1 = QK_KB_0,  // 定义自定义键码
     QK_2,
     test,
-    QK_3                   // 定义自定义键码，用于测试熄灭所有灯
+    QK_3
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
-    LAYOUT(
-        QK_1, QK_2, test),
-
-    LAYOUT(
-        QK_1, QK_1, QK_1)
-
+    [0] = LAYOUT(
+        QK_1, QK_2, test
+    ),
+    [1] = LAYOUT(
+        QK_1, QK_1, QK_1
+    )
 };
 
 // 按键事件处理函数
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // --- 仅在按键按下时执行的内容 ---
     if (record->event.pressed) {
         
-        // 检查自定义键码
-        switch (keycode) {
-            case QK_1:
-                tm1640_start_running_light(); 
-                return false; // 返回 false，表示这个键不传递给固件的默认处理
-            
-            case QK_2:
-                tm1640_start_running_light(); 
-                return false; // 返回 false，表示这个键不传递给固件的默认处理
-                
-            case test:
-                g_remote_rgb_data.h = 214; 
-				g_remote_rgb_data.s = 0xFF; 
-				g_remote_rgb_data.v = 0xFF; 
-				g_remote_rgb_data.spd = 0xFF; 
-				g_remote_rgb_data.led_bitmap[0] = 0xA0;
-				rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
-                return false; // 返回 false，表示这个键不传递给固件的默认处理
-                
-            case QK_3:
-                 tm1640_start_running_light(); 
-                return false; // 返回 false，表示这个键不传递给固件的默认处理
-                
-                
-            
+        // 1. RGB自动休眠逻辑：更新计时并唤醒
+        custom_last_activity_time = timer_read32(); 
+        if (is_rgb_timeout_sleep) {
+            is_rgb_timeout_sleep = false;
+            rgb_matrix_enable_noeeprom(); 
         }
 
-    } else {
-        // 当按键释放时，可以根据需要恢复下雨效果或显示其他默认图案
-        // custom_matrix_light_start_rain(); // 如果希望按键释放后自动恢复
+        // 2. 自定义键码分支处理
+        switch (keycode) {
+            case QK_1:
+            case QK_2:
+            case QK_3:
+                tm1640_start_running_light(); 
+                return false; // 拦截此键，不发送给系统
+
+            case test:
+                g_remote_rgb_data.h = 214; 
+                g_remote_rgb_data.s = 0xFF; 
+                g_remote_rgb_data.v = 0xFF; 
+                g_remote_rgb_data.spd = 0xFF; 
+                g_remote_rgb_data.led_bitmap[0] = 0xA0;
+                rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
+                return false; // 拦截此键
+        }
+    } 
+    // --- 按键释放（松开）或其他情况 ---
+    else {
+        // 如果以后有松开按键时的逻辑，写在这里
     }
-    return true; // 继续处理按键
+
+    // 默认返回 true，确保非自定义按键（如普通字母、松开动作）能正常工作
+    return true; 
 }
