@@ -179,48 +179,55 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         
         case 0x91: rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_off); break;
 
-        case 0x82: // Caps
-            g_ind_cfg.caps.index = data[3]; g_ind_cfg.caps.count = data[4];
-            g_ind_cfg.caps.h = data[5]; g_ind_cfg.caps.s = data[6]; g_ind_cfg.caps.v = data[7];
-            break;
-        case 0x83: // Num
-            g_ind_cfg.num.index = data[3]; g_ind_cfg.num.count = data[4];
-            g_ind_cfg.num.h = data[5]; g_ind_cfg.num.s = data[6]; g_ind_cfg.num.v = data[7];
-            break;
-        case 0x84: // Scrl
-            g_ind_cfg.scrl.index = data[3]; g_ind_cfg.scrl.count = data[4];
-            g_ind_cfg.scrl.h = data[5]; g_ind_cfg.scrl.s = data[6]; g_ind_cfg.scrl.v = data[7];
-            break;
-
-        case 0x85: // 设置动态 RGB 休眠时间
-            g_ind_cfg.rgb_timeout = ((uint32_t)data[2] << 24) | 
-                                    ((uint32_t)data[3] << 16) | 
-                                    ((uint32_t)data[4] << 8)  | 
-                                     (uint32_t)data[5];
-            
-            g_ind_cfg.magic = INDICATOR_MAGIC;
-            eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
-            
-            custom_last_activity_time = timer_read32();
-            if (is_rgb_timeout_sleep && g_ind_cfg.rgb_timeout > 0) {
-                is_rgb_timeout_sleep = false;
-                rgb_matrix_enable_noeeprom();
-            }
-            break;
-
-        case 0x80: // Save
+        case 0x80: // Save 指令保持独立，便于统一下发保存
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
             break;
-        case 0x81: // Layers
-            if (data[2] < 16) {
-                g_ind_cfg.layers[data[2]].index = data[3];
-                g_ind_cfg.layers[data[2]].count = data[4];
-                g_ind_cfg.layers[data[2]].h     = data[5];
-                g_ind_cfg.layers[data[2]].s     = data[6];
-                g_ind_cfg.layers[data[2]].v     = data[7];
+
+        case 0x82: // 统一指示灯及休眠配置 (基于 data[2] 区分)
+            if (data[2] == 0x00) { 
+                // Caps 指示灯
+                g_ind_cfg.caps.index = data[3]; g_ind_cfg.caps.count = data[4];
+                g_ind_cfg.caps.h = data[5]; g_ind_cfg.caps.s = data[6]; g_ind_cfg.caps.v = data[7];
+            } 
+            else if (data[2] == 0x01) { 
+                // Num 指示灯
+                g_ind_cfg.num.index = data[3]; g_ind_cfg.num.count = data[4];
+                g_ind_cfg.num.h = data[5]; g_ind_cfg.num.s = data[6]; g_ind_cfg.num.v = data[7];
+            } 
+            else if (data[2] == 0x02) { 
+                // Scrl 指示灯
+                g_ind_cfg.scrl.index = data[3]; g_ind_cfg.scrl.count = data[4];
+                g_ind_cfg.scrl.h = data[5]; g_ind_cfg.scrl.s = data[6]; g_ind_cfg.scrl.v = data[7];
+            } 
+            else if (data[2] == 0x03) { 
+                // 设置动态 RGB 休眠时间（数据向后偏移，读取 data[3] ~ data[6]）
+                g_ind_cfg.rgb_timeout = ((uint32_t)data[3] << 24) | 
+                                        ((uint32_t)data[4] << 16) | 
+                                        ((uint32_t)data[5] << 8)  | 
+                                         (uint32_t)data[6];
+                
+                // 休眠配置直接保存至 EEPROM
+                g_ind_cfg.magic = INDICATOR_MAGIC;
+                eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
+                
+                custom_last_activity_time = timer_read32();
+                if (is_rgb_timeout_sleep && g_ind_cfg.rgb_timeout > 0) {
+                    is_rgb_timeout_sleep = false;
+                    rgb_matrix_enable_noeeprom();
+                }
+            } 
+            else if (data[2] >= 0x10 && data[2] <= 0x1F) { 
+                // 层指示灯配置 (10对应层0, 11对应层1 ... 1F对应层15)
+                uint8_t layer_idx = data[2] - 0x10;
+                g_ind_cfg.layers[layer_idx].index = data[3];
+                g_ind_cfg.layers[layer_idx].count = data[4];
+                g_ind_cfg.layers[layer_idx].h     = data[5];
+                g_ind_cfg.layers[layer_idx].s     = data[6];
+                g_ind_cfg.layers[layer_idx].v     = data[7];
             }
             break;
+
         default: break;
     }
 }
