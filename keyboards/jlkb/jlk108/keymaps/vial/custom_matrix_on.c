@@ -3,7 +3,7 @@
 #include <string.h>
 #include "jlrgb.h"
 #include "raw_hid.h"
-#include "timer.h" // 必须引入，用于 RGB 休眠计时
+#include "timer.h" // 必须引入，用于 RGB 休眠计时及指示灯 PWM
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -38,7 +38,7 @@ void matrix_init_kb(void) {
     eeprom_read_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     
     if (g_ind_cfg.magic != INDICATOR_MAGIC) {
-        // 指示灯默认都不亮，再配置工具改
+        // 指示灯默认都低亮，再配置工具改
         g_ind_cfg.caps = (led_cfg_t){42, 1, 0, 0, 55};
         g_ind_cfg.num  = (led_cfg_t){90, 1, 0, 0, 55};
         g_ind_cfg.scrl = (led_cfg_t){105, 1, 0, 0, 55};
@@ -48,8 +48,7 @@ void matrix_init_kb(void) {
         g_ind_cfg.rgb_timeout = 180; // 默认 180 秒
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
-    }
-    
+    }  
     custom_last_activity_time = timer_read32(); // 初始化活动时间
     matrix_init_user();
 }
@@ -66,42 +65,24 @@ void keyboard_post_init_user(void) {
     setPinInput(B0);
 }
 
-// ================= 指示灯及休眠逻辑 (非阻塞实现) =====================
-void matrix_scan_user(void) {
-    // --- 1. RGB 动态超时休眠逻辑 ---
-    if (g_ind_cfg.rgb_timeout > 0) {
-        // 判断超过设置的秒数 (乘以1000转换为毫秒)
-        if (!is_rgb_timeout_sleep && timer_elapsed32(custom_last_activity_time) > (g_ind_cfg.rgb_timeout * 1000UL)) {
-            is_rgb_timeout_sleep = true;
-            rgb_matrix_disable_noeeprom(); // 关闭 RGB 矩阵以省电
-        }
-    } else {
-        // 设置为0 (永不休眠) 时的唤醒保护
-        if (is_rgb_timeout_sleep) {
-            is_rgb_timeout_sleep = false;
-            rgb_matrix_enable_noeeprom();
-        }
-    }
-
-    // --- 2. 纯软件非阻塞 PWM 指示灯亮度控制 ---
+// ================= 指示灯 PWM 亮度控制 (基于定时器) =====================
+void update_indicator_pwm(void) {
     led_t led_state = host_keyboard_led_state();
     bool caps_on = led_state.caps_lock;
     bool num_on  = led_state.num_lock;
     bool scrl_on = led_state.scroll_lock;
 
     if (caps_on || num_on || scrl_on) {
-        // 调节这两个宏来控制亮度：PWM_CYCLE 是总周期，PWM_ON 是亮的时间
-        // 扫描率通常在 1000Hz 左右，20次扫描相当于 20ms 左右的周期，1次高电平
-        #define PWM_CYCLE 20 
-        #define PWM_ON    1  
+        // 使用时间(毫秒)来控制 PWM，彻底脱离对键盘扫描率的依赖
+        // PWM_CYCLE_MS 为总周期 (20ms 对应 50Hz 刷新率)
+        // PWM_ON_MS 为亮起的时间 (1ms，即 5% 占空比的亮度)
+        #define PWM_CYCLE_MS 5 
+        #define PWM_ON_MS    1  
 
-        static uint8_t pwm_counter = 0;
-        pwm_counter++;
-        if (pwm_counter >= PWM_CYCLE) {
-            pwm_counter = 0;
-        }
+        uint32_t current_time = timer_read32();
+        uint32_t cycle_pos = current_time % PWM_CYCLE_MS;
 
-        if (pwm_counter < PWM_ON) {
+        if (cycle_pos < PWM_ON_MS) {
             // 点亮（极短时间）
             if (caps_on) { setPinOutput(B1); writePinHigh(B1); }
             if (num_on)  { setPinOutput(B10); writePinHigh(B10); }
@@ -118,6 +99,27 @@ void matrix_scan_user(void) {
         setPinInput(B10);
         setPinInput(B0);
     }
+}
+
+// ================= 指示灯及休眠逻辑 =====================
+void matrix_scan_user(void) {
+    // --- 1. RGB 动态超时休眠逻辑 ---
+    if (g_ind_cfg.rgb_timeout > 0) {
+        // 判断超过设置的秒数 (乘以1000转换为毫秒)
+        if (!is_rgb_timeout_sleep && timer_elapsed32(custom_last_activity_time) > (g_ind_cfg.rgb_timeout * 1000UL)) {
+            is_rgb_timeout_sleep = true;
+            rgb_matrix_disable_noeeprom(); // 关闭 RGB 矩阵以省电
+        }
+    } else {
+        // 设置为0 (永不休眠) 时的唤醒保护
+        if (is_rgb_timeout_sleep) {
+            is_rgb_timeout_sleep = false;
+            rgb_matrix_enable_noeeprom();
+        }
+    }
+
+    // --- 2. 调用指示灯定时器 PWM 逻辑 ---
+    update_indicator_pwm();
 }
 
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
@@ -188,7 +190,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         case 0x81: // 返回(读取)指示灯及休眠配置
         {
             // 创建响应包，默认填充为 0
-            uint8_t resp[32]; // QMK Raw HID 常规包长为 32，你可以用 VLA: uint8_t resp[length] 或定长处理
+            uint8_t resp[32]; // QMK Raw HID 常规包长为 32
             memset(resp, 0, sizeof(resp));
             
             resp[0] = 0xAB;     // Magic Byte

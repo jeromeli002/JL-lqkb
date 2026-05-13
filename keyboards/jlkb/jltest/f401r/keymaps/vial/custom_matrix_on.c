@@ -2,6 +2,7 @@
 #include "jlrgb.h"
 #include "tm1640.h"
 #include "gpio.h"
+#include "raw_hid.h"
 #include "eeprom.h"
 #include <string.h>
 
@@ -55,13 +56,14 @@ void matrix_init_kb(void) {
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     }
-    matrix_init_user();
+    matrix_init_user();  
 }
 
 void keyboard_post_init_user(void) {
-    setPinOutput(B5); writePinLow(B5);
+    //setPinOutput(B5);
     // 启用自定义静态模式
     // rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+    //setPinOutput(C1);
 }
 
 // ========================== 4. 主循环 (仅保留 TM1640) ==========================
@@ -170,6 +172,53 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             g_ind_cfg.magic = INDICATOR_MAGIC;
             eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
             break;
+            
+        case 0x81: // 返回(读取)指示灯及休眠配置
+        {
+            // 创建响应包，默认填充为 0
+            uint8_t resp[32]; // QMK Raw HID 常规包长为 32，你可以用 VLA: uint8_t resp[length] 或定长处理
+            memset(resp, 0, sizeof(resp));
+            
+            resp[0] = 0xAB;     // Magic Byte
+            resp[1] = 0x81;     // 返回指令标识
+            resp[2] = data[2];  // 对应的子类型 (00, 01, 02, 03, 1X)
+
+            if (data[2] == 0x00) {
+                // 读取 Caps 指示灯
+                resp[3] = g_ind_cfg.caps.index; resp[4] = g_ind_cfg.caps.count;
+                resp[5] = g_ind_cfg.caps.h;     resp[6] = g_ind_cfg.caps.s;     resp[7] = g_ind_cfg.caps.v;
+            } 
+            else if (data[2] == 0x01) {
+                // 读取 Num 指示灯
+                resp[3] = g_ind_cfg.num.index;  resp[4] = g_ind_cfg.num.count;
+                resp[5] = g_ind_cfg.num.h;      resp[6] = g_ind_cfg.num.s;      resp[7] = g_ind_cfg.num.v;
+            } 
+            else if (data[2] == 0x02) {
+                // 读取 Scrl 指示灯
+                resp[3] = g_ind_cfg.scrl.index; resp[4] = g_ind_cfg.scrl.count;
+                resp[5] = g_ind_cfg.scrl.h;     resp[6] = g_ind_cfg.scrl.s;     resp[7] = g_ind_cfg.scrl.v;
+            } 
+            else if (data[2] == 0x03) {
+                // 读取动态 RGB 休眠时间（将32位拆分成4个字节返回）
+                resp[3] = (g_ind_cfg.rgb_timeout >> 24) & 0xFF;
+                resp[4] = (g_ind_cfg.rgb_timeout >> 16) & 0xFF;
+                resp[5] = (g_ind_cfg.rgb_timeout >> 8)  & 0xFF;
+                resp[6] =  g_ind_cfg.rgb_timeout        & 0xFF;
+            } 
+            else if (data[2] >= 0x10 && data[2] <= 0x1F) {
+                // 读取层指示灯配置
+                uint8_t layer_idx = data[2] - 0x10;
+                resp[3] = g_ind_cfg.layers[layer_idx].index;
+                resp[4] = g_ind_cfg.layers[layer_idx].count;
+                resp[5] = g_ind_cfg.layers[layer_idx].h;
+                resp[6] = g_ind_cfg.layers[layer_idx].s;
+                resp[7] = g_ind_cfg.layers[layer_idx].v;
+            }
+            
+            // 将数据发回主机
+            raw_hid_send(resp, length);
+            break;
+        }
 
         case 0x82: // 统一指示灯及休眠配置 (基于 data[2] 区分)
             if (data[2] == 0x00) { 

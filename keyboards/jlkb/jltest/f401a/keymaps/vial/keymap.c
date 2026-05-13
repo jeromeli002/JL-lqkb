@@ -12,7 +12,7 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        BL_TOGG, BL_TOGG, BL_TOGG
+        QK_1, QK_2, test
     ),
     [1] = LAYOUT(
         QK_1, QK_1, QK_1
@@ -30,6 +30,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             is_rgb_timeout_sleep = false;
             rgb_matrix_enable_noeeprom(); 
         }
+        //按键蜂鸣器
+        setPinOutput(C1);
+        writePinLow(C1);                  // 拉低 -> 导通 MOS -> 蜂鸣器发声
+        wait_ms(100);                       // 持续 5ms
+        setPinInput(C1);
+        
 
         // 2. 自定义键码分支处理
         switch (keycode) {

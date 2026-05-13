@@ -9,6 +9,16 @@
 /* 层数 */
 #  define DYNAMIC_KEYMAP_LAYER_COUNT 16
 
+/* 指示灯 */
+/* #define LED_CAPS_LOCK_PIN B10
+#define LED_NUM_LOCK_PIN C13
+#define LED_SCROLL_LOCK_PIN B1
+#define LED_PIN_ON_STATE 0  指示灯 LED“亮”时指示灯引脚的状态 -1高电平，0低电平*/
+
+/* number of backlight levels */
+
+
+
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
 

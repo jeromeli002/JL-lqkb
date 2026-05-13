@@ -1,9 +1,10 @@
 #include "quantum.h"
+#include "jlrgb.h"
+#include "tm1640.h"
+#include "gpio.h"
+#include "raw_hid.h"
 #include "eeprom.h"
 #include <string.h>
-#include "jlrgb.h"
-#include "raw_hid.h"
-#include "timer.h" // 必须引入，用于 RGB 休眠计时
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -32,39 +33,46 @@ indicator_config_t g_ind_cfg;
 static uint32_t custom_last_activity_time = 0;
 static bool is_rgb_timeout_sleep = false;
 
+// ========================== 2. TM1640 宏与声明 ==========================
+#define MATRIX_LIGHT_ROWS TM1640_ROWS
+#define MATRIX_LIGHT_COLS TM1640_COLS
+void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_brightness_t brightness);
+
 // ========================== 3. 初始化 ==========================
 void matrix_init_kb(void) {
+    tm1640_init();
+    tm1640_start_blink(); 
+
     eeprom_read_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
     
     if (g_ind_cfg.magic != INDICATOR_MAGIC) {
-        // 指示灯默认都低亮，再配置工具改
-        g_ind_cfg.caps = (led_cfg_t){42, 1, 0, 0, 55};
-        g_ind_cfg.num  = (led_cfg_t){90, 1, 0, 0, 55};
-        g_ind_cfg.scrl = (led_cfg_t){105, 1, 0, 0, 55};
+        g_ind_cfg.caps = (led_cfg_t){0, 1, 0, 255, 255};
+        g_ind_cfg.num  = (led_cfg_t){1, 1, 85, 255, 255};
+        g_ind_cfg.scrl = (led_cfg_t){2, 1, 170, 255, 255};
         for(uint8_t i=0; i<16; i++) {
-            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 0, 0, 0};
+            g_ind_cfg.layers[i] = (led_cfg_t){(uint8_t)(27-i), 1, 128, 255, 255};
         }
         g_ind_cfg.rgb_timeout = 180; // 默认 180 秒
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
-    }
-    custom_last_activity_time = timer_read32(); // 初始化活动时间
-    matrix_init_user();
+    }  
+    matrix_init_user();  
 }
 
 void keyboard_post_init_user(void) {
-    // 上电强制关闭所有 RGB 灯珠，防止随机亮灯
-    // 注意：如果想要开机立刻看到保存的灯效，可以考虑注释掉下面这行
-    rgb_matrix_set_color_all(0, 0, 0); 
-    
-    // 初始化指示灯引脚为输入（高阻态熄灭）
-    setPinOutput(B8); writePinLow(B8);
-    setPinInput(B1);
-    setPinInput(B10);
-    setPinInput(B0);
+    // 启用自定义静态模式
+    // rgb_matrix_mode(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+    setPinInput(C1);
+    // setPinOutput(C1);
+    // writePinHigh(C1);
 }
 
-// ================= 指示灯及休眠逻辑 (非阻塞实现) =====================
+// ========================== 4. 主循环 (仅保留 TM1640) ==========================
+void matrix_scan_kb(void) {
+    tm1640_task(); 
+    matrix_scan_user();
+}
+
 void matrix_scan_user(void) {
     // --- 1. RGB 动态超时休眠逻辑 ---
     if (g_ind_cfg.rgb_timeout > 0) {
@@ -80,8 +88,8 @@ void matrix_scan_user(void) {
             rgb_matrix_enable_noeeprom();
         }
     }
-}
-
+  }
+    
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
 // 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
 bool rgb_matrix_indicators_kb(void) {
@@ -125,13 +133,25 @@ bool rgb_matrix_indicators_kb(void) {
 }
 
 // ========================== 6. RAW HID 指令集 ==========================
+//===== 原生qmk via 使用 via_command_kb ======
 void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
     if (length < 2 || data[0] != 0xAB) return;
 
     switch (data[1]) {
-        case 0x00: clear_keyboard(); bootloader_jump(); break;
+        
+        case 0x00: clear_keyboard();bootloader_jump(); break;
         case 0x01: eeconfig_init(); wait_ms(200); soft_reset_keyboard(); break;
         case 0x02: soft_reset_keyboard(); break;
+        
+        case 0x10: tm1640_display_off(); break;
+        case 0x11: handle_external_bitmap_data(data, length, TM1640_DEFAULT_BRIGHTNESS_CMD); break;
+        case 0x12: tm1640_start_running_light(); break;
+        case 0x13: tm1640_start_blink(); break;
+        
+        case 0x20: setPinInput(C1); break;
+        case 0x21: setPinOutput(C1); writePinLow(C1); break;
+        case 0x22: setPinInput(B5); break;
+        case 0x23: setPinOutput(B5); writePinLow(B5); break;
         
         case 0x90: 
             g_remote_rgb_data.h = data[2]; g_remote_rgb_data.s = data[3]; 
@@ -142,6 +162,12 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             break;
         
         case 0x91: rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_off); break;
+        
+        case 0x92: 
+            g_remote_rgb_data.h = 214; g_remote_rgb_data.s = 255; g_remote_rgb_data.v = 255;
+            g_remote_rgb_data.led_bitmap[0] = 0xA0;
+            rgb_matrix_mode(RGB_MATRIX_CUSTOM_remote_static_color);
+            break;
 
         case 0x80: // Save 指令保持独立，便于统一下发保存
             g_ind_cfg.magic = INDICATOR_MAGIC;
@@ -238,7 +264,32 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
                 g_ind_cfg.layers[layer_idx].v     = data[7];
             }
             break;
-
+            
         default: break;
     }
 }
+
+// ========================== 7. TM1640 处理函数 ==========================
+void handle_external_bitmap_data(const uint8_t *data, uint16_t length, tm1640_brightness_t brightness) {
+    if (MATRIX_LIGHT_ROWS > 8) return;
+    const uint8_t BYTES_PER_ROW = (MATRIX_LIGHT_COLS + 7) / 8;
+    const uint16_t EXPECTED_DATA_BYTES = 2 + (uint16_t)MATRIX_LIGHT_ROWS * BYTES_PER_ROW;
+    if (length < EXPECTED_DATA_BYTES) return;
+
+    uint8_t tm1640_col_data[MATRIX_LIGHT_COLS];
+    memset(tm1640_col_data, 0, MATRIX_LIGHT_COLS);
+    
+    const uint8_t *matrix_data = data + 2;
+    for (uint8_t row = 0; row < MATRIX_LIGHT_ROWS; row++) {
+        const uint8_t *current_row_data = matrix_data + (uint16_t)row * BYTES_PER_ROW;
+        for (uint8_t col = 0; col < MATRIX_LIGHT_COLS; col++) {
+            if (current_row_data[col / 8] & (1 << (col % 8))) {
+                tm1640_col_data[col] |= (1 << row);
+            }
+        }
+    }
+    tm1640_display_bitmap(tm1640_col_data, brightness);
+}
+
+void board_init(void) {}
+bool led_update_kb(led_t led_state) { return led_update_user(led_state); }

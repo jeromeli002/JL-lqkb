@@ -4,18 +4,6 @@
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 0 }
 #define VIAL_UNLOCK_COMBO_COLS { 0, 2 }
 
-#define BACKLIGHT_LEVELS 10
-#define BACKLIGHT_PIN  C1 
-#define BACKLIGHT_BREATHING // 开启呼吸效果
-#define BACKLIGHT_DRIVER_SOFTWARE
-/* 指示灯 */
-//#define LED_CAPS_LOCK_PIN B10
-//#define LED_NUM_LOCK_PIN C13
-//#define LED_SCROLL_LOCK_PIN B1
-#define LED_PIN_ON_STATE 1  //指示灯 LED“亮”时指示灯引脚的状态 1高电平，0低电平
-
-/* number of backlight levels */
-
 //#define WEAR_LEVELING_LOGICAL_SIZE 1024*16
 //#define WEAR_LEVELING_BACKING_SIZE WEAR_LEVELING_LOGICAL_SIZE*2
 
