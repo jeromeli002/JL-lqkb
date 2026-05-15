@@ -5,6 +5,22 @@
 #include "raw_hid.h"
 #include "timer.h" // 必须引入，用于 RGB 休眠计时及指示灯 PWM
 
+
+// 1. 声明外部变量：告诉编译器这些在 keymap.c 里定义过了
+extern bool jlk1_active;
+extern bool jlk2_active;
+extern bool jlk3_active;
+extern keypos_t jlk1_pos;
+extern keypos_t jlk2_pos;
+extern keypos_t jlk3_pos;
+extern uint16_t fire_timer;
+
+// 2. 声明外部函数：告诉编译器这个函数在别处
+void tap_layer_7_key(keypos_t pos);
+
+// 3. 定义连发速度
+#define AUTO_FIRE_TIMEOUT 50
+
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
     .h = 79, .s = 255, .v = 25, .spd = 255
@@ -57,7 +73,7 @@ void keyboard_post_init_user(void) {
     // 上电强制关闭所有 RGB 灯珠，防止随机亮灯
     // 注意：如果想要开机立刻看到保存的灯效，可以考虑注释掉下面这行
     rgb_matrix_set_color_all(0, 0, 0); 
-    
+    rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
     // 初始化指示灯引脚为输入（高阻态熄灭）
     setPinOutput(B8); writePinLow(B8);
     setPinInput(B1);
@@ -76,7 +92,7 @@ void update_indicator_pwm(void) {
         // 使用时间(毫秒)来控制 PWM，彻底脱离对键盘扫描率的依赖
         // PWM_CYCLE_MS 为总周期 (20ms 对应 50Hz 刷新率)
         // PWM_ON_MS 为亮起的时间 (1ms，即 5% 占空比的亮度)
-        #define PWM_CYCLE_MS 5 
+        #define PWM_CYCLE_MS 3 
         #define PWM_ON_MS    1  
 
         uint32_t current_time = timer_read32();
@@ -103,6 +119,22 @@ void update_indicator_pwm(void) {
 
 // ================= 指示灯及休眠逻辑 =====================
 void matrix_scan_user(void) {
+	//连发键
+	if (timer_elapsed(fire_timer) >= AUTO_FIRE_TIMEOUT) {
+        fire_timer = timer_read();
+
+        // 如果对应的标志位为 true，则执行发送
+        if (jlk1_active) {
+            tap_layer_7_key(jlk1_pos);
+        }
+        if (jlk2_active) {
+            tap_layer_7_key(jlk2_pos);
+        }
+        if (jlk3_active) {
+            tap_layer_7_key(jlk3_pos);
+        }
+    }
+    //完
     // --- 1. RGB 动态超时休眠逻辑 ---
     if (g_ind_cfg.rgb_timeout > 0) {
         // 判断超过设置的秒数 (乘以1000转换为毫秒)

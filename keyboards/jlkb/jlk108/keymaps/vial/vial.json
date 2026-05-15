@@ -16,8 +16,20 @@
 	 "shortName": "一键\n购物"
 	},
 	{"name": "按6\n放7",
-	 "title": "按下6层抬起7层",
+	 "title": "按下层6抬起层7",
 	 "shortName": "按6\n放7"
+	},
+	{"name": "连发\n键1",
+	 "title": "按下连发层7的键，释放停止",
+	 "shortName": "连发\n键1"
+	},
+	{"name": "连发\n键2",
+	 "title": "点击连发层7的键，再次点击停止",
+	 "shortName": "连发\n键2"
+	},
+	{"name": "连发\n键3",
+	 "title": "短按触发层7的键，长按连发7层的键，再次点击停止",
+	 "shortName": "连发\n键3"
 	}
  ],
  "lighting": "vialrgb",

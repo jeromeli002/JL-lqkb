@@ -3,7 +3,7 @@
 #include <string.h>
 #include "jlrgb.h"
 #include "raw_hid.h"
-#include "timer.h" // 必须引入，用于 RGB 休眠计时
+#include "timer.h" // 必须引入，用于 RGB 休眠计时及指示灯 PWM
 
 // ========================== 1. 数据结构与全局变量 ==========================
 remote_rgb_data_t g_remote_rgb_data = {
@@ -18,12 +18,13 @@ typedef struct {
     led_cfg_t caps;
     led_cfg_t num;
     led_cfg_t scrl;
-    led_cfg_t layers[16];
-    uint32_t rgb_timeout; // RGB 自动休眠时间（单位：秒，0为不关闭） 
+    led_cfg_t layers[16]; 
+    uint32_t rgb_timeout; // RGB 自动休眠时间（单位：秒，0为不关闭）
     uint8_t magic; 
 } indicator_config_t;
 
 #define INDICATOR_MAGIC 0x8E 
+// 【修复点 1】：将 1024 改为 512，避免地址溢出覆盖 QMK 核心 RGB 保存区
 #define EEPROM_INDICATOR_ADDR 4096
 
 indicator_config_t g_ind_cfg;
@@ -47,7 +48,7 @@ void matrix_init_kb(void) {
         g_ind_cfg.rgb_timeout = 180; // 默认 180 秒
         g_ind_cfg.magic = INDICATOR_MAGIC;
         eeprom_update_block(&g_ind_cfg, (void*)EEPROM_INDICATOR_ADDR, sizeof(g_ind_cfg));
-    }
+    }  
     custom_last_activity_time = timer_read32(); // 初始化活动时间
     matrix_init_user();
 }
@@ -59,12 +60,9 @@ void keyboard_post_init_user(void) {
     
     // 初始化指示灯引脚为输入（高阻态熄灭）
     setPinOutput(B8); writePinLow(B8);
-    setPinInput(B1);
-    setPinInput(B10);
-    setPinInput(B0);
 }
 
-// ================= 指示灯及休眠逻辑 (非阻塞实现) =====================
+// ================= 指示灯及休眠逻辑 =====================
 void matrix_scan_user(void) {
     // --- 1. RGB 动态超时休眠逻辑 ---
     if (g_ind_cfg.rgb_timeout > 0) {
@@ -83,7 +81,6 @@ void matrix_scan_user(void) {
 }
 
 // ========================== 5. RGB 指示灯核心逻辑 (最高优先级) ==========================
-// 此函数在每一帧渲染最后执行，确保指示灯常亮且不被特效覆盖
 bool rgb_matrix_indicators_kb(void) {
     if (!rgb_matrix_indicators_user()) return false;
 
@@ -151,7 +148,7 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
         case 0x81: // 返回(读取)指示灯及休眠配置
         {
             // 创建响应包，默认填充为 0
-            uint8_t resp[32]; // QMK Raw HID 常规包长为 32，你可以用 VLA: uint8_t resp[length] 或定长处理
+            uint8_t resp[32]; // QMK Raw HID 常规包长为 32
             memset(resp, 0, sizeof(resp));
             
             resp[0] = 0xAB;     // Magic Byte

@@ -5,8 +5,34 @@ enum keycodes {
   LAYERS_DOWN = QK_KB_0,
   LAYERS_UP,
   jltb,
-  jld6u7
+  jld6u7,
+  JLK1,
+  JLK2,
+  JLK3
 };
+
+// 1. 定义常量
+#define LONG_PRESS_TERM 200 // 长按判定阈值 (ms)
+
+// 3. 定义全局状态变量 (注意：这里不能加 static，否则外层文件找不到)
+bool jlk1_active = false;
+bool jlk2_active = false;
+bool jlk3_active = false;
+
+keypos_t jlk1_pos;
+keypos_t jlk2_pos;
+keypos_t jlk3_pos;
+
+uint16_t jlk3_timer = 0;
+uint16_t fire_timer = 0;
+
+// 4. 实现发送函数：获取 Layer 7 对应位置的键值并发送
+void tap_layer_7_key(keypos_t pos) {
+    uint16_t keycode = keymap_key_to_keycode(7, pos);
+    if (keycode != KC_NO) {
+        tap_code16(keycode);
+    }
+}
 
 #define HIGHEST_LAYER 15 //最高层数 0开始算起默认15(16层)
 static uint8_t current_layer = 0; //默认0层开始
@@ -54,7 +80,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             rgb_matrix_enable_noeeprom(); 
         }
     }
-    return true;
     
     // 下一层
   switch (keycode) {
@@ -98,6 +123,45 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
            tap_code16(keymap_key_to_keycode(7, record->event.key)); 
       }
     return false;
+    
+    // 连发键 1：按下连发，松开停止
+        case JLK1:
+            if (record->event.pressed) {
+                jlk1_active = true;
+                jlk1_pos = record->event.key;
+            } else {
+                jlk1_active = false;
+            }
+            return false;
+
+        // 连发键 2：按下切换开关
+        case JLK2:
+            if (record->event.pressed) {
+                jlk2_active = !jlk2_active;
+                jlk2_pos = record->event.key;
+            }
+            return false;
+
+        // 连发键 3：短按触发，长按松开后持续连发
+        case JLK3:
+            if (record->event.pressed) {
+                if (jlk3_active) {
+                    jlk3_active = false; // 正在连发时按下，立即停止
+                } else {
+                    jlk3_timer = timer_read();
+                    jlk3_pos = record->event.key;
+                }
+            } else {
+                if (!jlk3_active && jlk3_timer != 0) {
+                    if (timer_elapsed(jlk3_timer) < LONG_PRESS_TERM) {
+                        tap_layer_7_key(jlk3_pos); // 短按逻辑
+                    } else {
+                        jlk3_active = true;        // 长按松开开启连发
+                    }
+                    jlk3_timer = 0;
+                }
+            }
+            return false;
 
    // 下一个自定义键
     default:

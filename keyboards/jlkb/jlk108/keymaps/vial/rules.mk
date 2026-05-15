@@ -8,5 +8,5 @@ VIALRGB_ENABLE = yes
 
 RGB_MATRIX_CUSTOM_USER = yes  # 开启用户自定义特效支持
 
-BACKLIGHT_ENABLE = yes
-BACKLIGHT_DRIVER = software
+# BACKLIGHT_ENABLE = yes
+# BACKLIGHT_DRIVER = custom
