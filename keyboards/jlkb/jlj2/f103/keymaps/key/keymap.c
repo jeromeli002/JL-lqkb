@@ -32,8 +32,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // 添加新的按键
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  // 下一层
-  switch (keycode) {
+  if (record->event.pressed) {
+  // 1. RGB自动休眠逻辑：更新计时并唤醒
+        custom_last_activity_time = timer_read32(); 
+        if (is_rgb_timeout_sleep) {
+            is_rgb_timeout_sleep = false;
+            rgb_matrix_enable_noeeprom(); 
+        }
+        }
+        // 下一层
+  switch (keycode) {    
      case LAYERS_DOWN:
       if(record->event.pressed) {
       if (current_layer == HIGHEST_LAYER){

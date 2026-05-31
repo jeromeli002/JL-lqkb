@@ -5,7 +5,7 @@
     "maintainer": "JLKB",
     "processor": "STM32F103",
     "board": "STM32_F103_STM32DUINO",
-    "bootloader": "vibl",
+    "bootloader": "custom",
     "usb": {
         "vid": "0xF001",
         "pid": "0x5009",
