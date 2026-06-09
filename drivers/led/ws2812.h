@@ -34,7 +34,6 @@
 
 #ifndef WS2812_T1H
 #    define WS2812_T1H 900 // Width of a 1 bit in ns
-// #    define WS2812_T1H 600 // Width of a 1 bit in ns
 #endif
 
 #ifndef WS2812_T1L
@@ -43,7 +42,6 @@
 
 #ifndef WS2812_T0H
 #    define WS2812_T0H 350 // Width of a 0 bit in ns
-// #    define WS2812_T0H 250 // Width of a 0 bit in ns
 #endif
 
 #ifndef WS2812_T0L
@@ -55,7 +53,8 @@
  * component revisions require a minimum of 280us.
  */
 #if !defined(WS2812_TRST_US)
-#    define WS2812_TRST_US 280
+// #    define WS2812_TRST_US 280
+#    define WS2812_TRST_US 380
 #endif
 
 #if defined(RGBLIGHT_WS2812)

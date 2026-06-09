@@ -24,9 +24,12 @@
 #include "wireless.h"
 #include "transport.h"
 #include "report_buffer.h"
+# if defined(KB_CHECK_BATTERY_ENABLED)
+#   include "battery.h"
+#endif
+
 
 led_t kb_led_state = {0};
-uint8_t bat_low_flag = 0;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_all(
     QK_GESC, KC_1,    KC_2,     KC_3,     KC_4,    KC_5,    KC_6,    KC_7,    KC_8,      KC_9,     KC_0,     KC_MINS,  KC_EQL,  KC_BSLS, KC_BSPC,
@@ -87,11 +90,13 @@ bool led_update_user(led_t led_state) {
     kb_led_state = led_state;
     return true;
 }
-
-
+static bool wireless_update_led_block  = false;
+static uint32_t wireless_update_led_block_timer  = 0;
 // 无线蓝牙回调函数
 void wireless_ble_hanlde_kb(uint8_t host_index,uint8_t advertSta,uint8_t connectSta,uint8_t pairingSta)
 {
+    wireless_update_led_block  = true;
+    wireless_update_led_block_timer = timer_read32();
     rgblight_disable();
     rgb_adv_unblink_all_layer();
     // 蓝牙没有连接 && 蓝牙广播开启  && 蓝牙配对模式
@@ -114,6 +119,8 @@ void wireless_ble_hanlde_kb(uint8_t host_index,uint8_t advertSta,uint8_t connect
 // 24g回调函数
 void wireless_rf24g_hanlde_kb(uint8_t connectSta,uint8_t pairingSta)
 {
+    wireless_update_led_block  = true;
+    wireless_update_led_block_timer = timer_read32();
     rgblight_disable_noeeprom();
     rgb_adv_unblink_all_layer();
     if(connectSta == 1)
@@ -122,19 +129,7 @@ void wireless_rf24g_hanlde_kb(uint8_t connectSta,uint8_t pairingSta)
     }
 }
 
-// 电量回调函数 红灯 慢闪
-void battery_percent_changed_kb(uint8_t level)
-{
-    if(level <= 10)
-    {
-        rgb_adv_unblink_all_layer();
-        bat_low_flag = 1;
-    }
-    else
-    {
-        bat_low_flag = 0;
-    }
-}
+
 
 // 2812 电源开关
 void ws2812_set_power(uint8_t on)
@@ -172,11 +167,10 @@ void keyboard_post_init_kb(void)
 void housekeeping_task_user(void) 
 {
     static uint32_t kb_led_cut = 0;
+# if defined(KB_CHECK_BATTERY_ENABLED)
     static uint32_t low_led_blink_timer = 0;
     static uint8_t low_led_sta = 0;
-
-    
-    if (bat_low_flag == 1)
+    if (battery_driver_sample_percent() <= 10)
     {
         if (timer_elapsed32(low_led_blink_timer) > 500)
         {
@@ -191,7 +185,14 @@ void housekeeping_task_user(void)
         low_led_blink_timer = 0;
         low_led_sta = 0;
     }
-
+#endif
+    if (wireless_update_led_block  && timer_elapsed32(wireless_update_led_block_timer ) > 500) {
+        wireless_update_led_block  = false;
+    }
+    if(wireless_update_led_block)
+    {
+        return;
+    }
     // 如果当前是USB连接，或者是蓝牙/2.4G连接且已配对连接状态
     if( (transport_get() > KB_TRANSPORT_USB && wireless_get() == WT_STATE_CONNECTED) || ( usb_power_connected() == true && transport_get() == KB_TRANSPORT_USB))
     {

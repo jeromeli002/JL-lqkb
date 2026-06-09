@@ -4,6 +4,9 @@
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 0 }
 #define VIAL_UNLOCK_COMBO_COLS { 0, 2 }
 
+#define RAW_USAGE_PAGE   0xFF69
+// #define RAW_USAGE_ID     0x66
+
 // 矩阵位置
 #define JOYSTICK_ACTUATION 256  // 触发点，即摇杆偏移多少开始触发按键 (0-511)
 #define JOYSTICK_HYSTERESIS 50  // 滞后量，防止抖动，调整此值以达到最佳效果
