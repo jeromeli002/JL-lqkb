@@ -50,7 +50,7 @@ quantum/version.h
 /keyboards/**/kb.c
 
 # mykeyboard
-/keyboards/jlkb
+/keyboards/jlkb/
 
 # Eclipse/PyCharm/Other IDE Settings
 *.iml
