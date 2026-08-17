@@ -31,3 +31,7 @@
 [submodule "modules/emolitor"]
 	path = modules/emolitor
 	url = https://github.com/emolitor/qmk_modules.git
+
+[submodule "modules/modules"]
+	path = modules/modules
+	url = https://github.com/jeromeli002/qmk_modules.git
