@@ -1,7 +1,17 @@
-/* via0.c - VIA3 + Vial support
+/* Copyright 2019 Jason Williams (Wilba)
  *
- * Copyright 2019 Jason Williams (Wilba)
- * Updated for VIA protocol 0x000C while keeping Vial compatibility
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef RAW_ENABLE
@@ -171,7 +181,6 @@ void via_set_layout_options(uint32_t value) {
 
 #if VIA_EEPROM_CUSTOM_CONFIG_SIZE > 0
 uint32_t via_read_custom_config(void *buf, uint32_t offset, uint32_t length) {
-    // kept for compatibility; real implementation lives in NVM layer if present
     return 0;
 }
 uint32_t via_update_custom_config(const void *buf, uint32_t offset, uint32_t length) {
@@ -197,9 +206,6 @@ __attribute__((weak)) void via_set_device_indication(uint8_t value) {
 #endif
 #if defined(LED_MATRIX_ENABLE)
     led_matrix_toggle_noeeprom();
-#endif
-#if defined(AUDIO_ENABLE)
-    // optional: play a short indication sound on first call
 #endif
 }
 
@@ -232,16 +238,14 @@ __attribute__((weak)) bool via_command_kb(uint8_t *data, uint8_t length) {
     return false;
 }
 
-// Default handler for "extra" custom values (keyboard-specific).
+// 默认处理键盘自定义值
 __attribute__((weak)) void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id = &(data[0]);
     *command_id         = id_unhandled;
 }
 
-// Default handler that routes channel IDs to the appropriate Core handlers.
+// VIA3 风格通道路由
 __attribute__((weak)) void via_custom_value_command(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *channel_id = &(data[1]);
 
 #if defined(VIA_QMK_BACKLIGHT_ENABLE)
@@ -250,28 +254,24 @@ __attribute__((weak)) void via_custom_value_command(uint8_t *data, uint8_t lengt
         return;
     }
 #endif
-
 #if defined(VIA_QMK_RGBLIGHT_ENABLE)
     if (*channel_id == id_qmk_rgblight_channel) {
         via_qmk_rgblight_command(data, length);
         return;
     }
 #endif
-
 #if defined(VIA_QMK_RGB_MATRIX_ENABLE)
     if (*channel_id == id_qmk_rgb_matrix_channel) {
         via_qmk_rgb_matrix_command(data, length);
         return;
     }
 #endif
-
 #if defined(LED_MATRIX_ENABLE)
     if (*channel_id == id_qmk_led_matrix_channel) {
         via_qmk_led_matrix_command(data, length);
         return;
     }
 #endif
-
 #if defined(AUDIO_ENABLE)
     if (*channel_id == id_qmk_audio_channel) {
         via_qmk_audio_command(data, length);
@@ -280,8 +280,6 @@ __attribute__((weak)) void via_custom_value_command(uint8_t *data, uint8_t lengt
 #endif
 
     (void)channel_id;
-
-    // Fall through to keyboard-level handler
     via_custom_value_command_kb(data, length);
 }
 
@@ -409,9 +407,61 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
             dynamic_keymap_reset();
             break;
         }
-        case id_custom_set_value:
-        case id_custom_get_value:
+        // 注意：只写一个 case，因为 id_custom_* 和 id_lighting_* 值相同
+        case id_custom_set_value: {
+#if defined(VIA_QMK_BACKLIGHT_ENABLE)
+            via_qmk_backlight_set_value(command_data);
+#endif
+#if defined(VIA_QMK_RGBLIGHT_ENABLE)
+            via_qmk_rgblight_set_value(command_data);
+#endif
+#if defined(VIALRGB_ENABLE)
+            vialrgb_set_value(data, length);
+#endif
+#if defined(VIA_QMK_RGB_MATRIX_ENABLE)
+            via_qmk_rgb_matrix_set_value(command_data);
+#endif
+#if defined(VIA_CUSTOM_LIGHTING_ENABLE)
+            raw_hid_receive_kb(data, length);
+#endif
+            via_custom_value_command(data, length);
+            break;
+        }
+        case id_custom_get_value: {
+#if defined(VIA_QMK_BACKLIGHT_ENABLE)
+            via_qmk_backlight_get_value(command_data);
+#endif
+#if defined(VIA_QMK_RGBLIGHT_ENABLE)
+            via_qmk_rgblight_get_value(command_data);
+#endif
+#if defined(VIALRGB_ENABLE)
+            vialrgb_get_value(data, length);
+#endif
+#if defined(VIA_QMK_RGB_MATRIX_ENABLE)
+            via_qmk_rgb_matrix_get_value(command_data);
+#endif
+#if defined(VIA_CUSTOM_LIGHTING_ENABLE)
+            raw_hid_receive_kb(data, length);
+#endif
+            via_custom_value_command(data, length);
+            break;
+        }
         case id_custom_save: {
+#if defined(VIA_QMK_BACKLIGHT_ENABLE)
+            eeconfig_update_backlight_current();
+#endif
+#if defined(VIA_QMK_RGBLIGHT_ENABLE)
+            eeconfig_update_rgblight_current();
+#endif
+#if defined(VIALRGB_ENABLE)
+            vialrgb_save(data, length);
+#endif
+#if defined(VIA_QMK_RGB_MATRIX_ENABLE)
+            eeconfig_force_flush_rgb_matrix();
+#endif
+#if defined(VIA_CUSTOM_LIGHTING_ENABLE)
+            raw_hid_receive_kb(data, length);
+#endif
             via_custom_value_command(data, length);
             break;
         }
@@ -527,7 +577,6 @@ skip:
 #    endif
 
 void via_qmk_backlight_command(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *value_id_and_data = &(data[2]);
 
@@ -552,13 +601,11 @@ void via_qmk_backlight_command(uint8_t *data, uint8_t length) {
 }
 
 void via_qmk_backlight_get_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
         case id_qmk_backlight_brightness: {
-            // level / BACKLIGHT_LEVELS * 255
-            value_data[0] = ((uint16_t)get_backlight_level() * UINT8_MAX) / BACKLIGHT_LEVELS;
+            value_data[0] = ((uint16_t)get_backlight_level()) * 255 / BACKLIGHT_LEVELS;
             break;
         }
         case id_qmk_backlight_effect: {
@@ -573,13 +620,11 @@ void via_qmk_backlight_get_value(uint8_t *data) {
 }
 
 void via_qmk_backlight_set_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
         case id_qmk_backlight_brightness: {
-            // level / 255 * BACKLIGHT_LEVELS
-            backlight_level_noeeprom(((uint16_t)value_data[0] * BACKLIGHT_LEVELS) / UINT8_MAX);
+            backlight_level_noeeprom(((uint16_t)value_data[0]) * BACKLIGHT_LEVELS / 255);
             break;
         }
         case id_qmk_backlight_effect: {
@@ -603,12 +648,7 @@ void via_qmk_backlight_save(void) {
 
 #if defined(VIA_QMK_RGBLIGHT_ENABLE)
 
-#    ifndef RGBLIGHT_LIMIT_VAL
-#        define RGBLIGHT_LIMIT_VAL 255
-#    endif
-
 void via_qmk_rgblight_command(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *value_id_and_data = &(data[2]);
 
@@ -633,16 +673,15 @@ void via_qmk_rgblight_command(uint8_t *data, uint8_t length) {
 }
 
 void via_qmk_rgblight_get_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
         case id_qmk_rgblight_brightness: {
-            value_data[0] = ((uint16_t)rgblight_get_val() * UINT8_MAX) / RGBLIGHT_LIMIT_VAL;
+            value_data[0] = rgblight_get_val();
             break;
         }
         case id_qmk_rgblight_effect: {
-            value_data[0] = rgblight_is_enabled() ? rgblight_get_mode() : 0;
+            value_data[0] = rgblight_get_mode();
             break;
         }
         case id_qmk_rgblight_effect_speed: {
@@ -658,20 +697,19 @@ void via_qmk_rgblight_get_value(uint8_t *data) {
 }
 
 void via_qmk_rgblight_set_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
         case id_qmk_rgblight_brightness: {
-            rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), ((uint16_t)value_data[0] * RGBLIGHT_LIMIT_VAL) / UINT8_MAX);
+            rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), value_data[0]);
             break;
         }
         case id_qmk_rgblight_effect: {
+            rgblight_mode_noeeprom(value_data[0]);
             if (value_data[0] == 0) {
                 rgblight_disable_noeeprom();
             } else {
                 rgblight_enable_noeeprom();
-                rgblight_mode_noeeprom(value_data[0]);
             }
             break;
         }
@@ -694,8 +732,38 @@ void via_qmk_rgblight_save(void) {
 
 #if defined(VIA_QMK_RGB_MATRIX_ENABLE)
 
+// VIA supports only 4 discrete values for effect speed; map these to some
+// useful speed values for RGB Matrix.
+enum speed_values {
+    RGBLIGHT_SPEED_0 = UINT8_MAX / 16,
+    RGBLIGHT_SPEED_1 = UINT8_MAX / 4,
+    RGBLIGHT_SPEED_2 = UINT8_MAX / 2,
+    RGBLIGHT_SPEED_3 = UINT8_MAX / 4 * 3,
+};
+
+static uint8_t speed_from_rgblight(uint8_t rgblight_speed) {
+    switch (rgblight_speed) {
+        case 0:  return RGBLIGHT_SPEED_0;
+        case 1:  return RGBLIGHT_SPEED_1;
+        case 2:
+        default: return RGBLIGHT_SPEED_2;
+        case 3:  return RGBLIGHT_SPEED_3;
+    }
+}
+
+static uint8_t speed_to_rgblight(uint8_t rgb_matrix_speed) {
+    if (rgb_matrix_speed < ((RGBLIGHT_SPEED_0 + RGBLIGHT_SPEED_1) / 2)) {
+        return 0;
+    } else if (rgb_matrix_speed < ((RGBLIGHT_SPEED_1 + RGBLIGHT_SPEED_2) / 2)) {
+        return 1;
+    } else if (rgb_matrix_speed < ((RGBLIGHT_SPEED_2 + RGBLIGHT_SPEED_3) / 2)) {
+        return 2;
+    } else {
+        return 3;
+    }
+}
+
 void via_qmk_rgb_matrix_command(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *value_id_and_data = &(data[2]);
 
@@ -720,57 +788,46 @@ void via_qmk_rgb_matrix_command(uint8_t *data, uint8_t length) {
 }
 
 void via_qmk_rgb_matrix_get_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
-
     switch (*value_id) {
-        case id_qmk_rgb_matrix_brightness: {
-            value_data[0] = ((uint16_t)rgb_matrix_get_val() * UINT8_MAX) / RGB_MATRIX_MAXIMUM_BRIGHTNESS;
+        case id_qmk_rgb_matrix_brightness:
+            value_data[0] = rgb_matrix_get_val();
             break;
-        }
-        case id_qmk_rgb_matrix_effect: {
-            value_data[0] = rgb_matrix_is_enabled() ? rgb_matrix_get_mode() : 0;
+        case id_qmk_rgb_matrix_effect:
+            value_data[0] = rgb_matrix_get_mode();
             break;
-        }
-        case id_qmk_rgb_matrix_effect_speed: {
-            value_data[0] = rgb_matrix_get_speed();
+        case id_qmk_rgb_matrix_effect_speed:
+            value_data[0] = speed_to_rgblight(rgb_matrix_get_speed());
             break;
-        }
-        case id_qmk_rgb_matrix_color: {
+        case id_qmk_rgb_matrix_color:
             value_data[0] = rgb_matrix_get_hue();
             value_data[1] = rgb_matrix_get_sat();
             break;
-        }
     }
 }
 
 void via_qmk_rgb_matrix_set_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
-        case id_qmk_rgb_matrix_brightness: {
-            rgb_matrix_sethsv_noeeprom(rgb_matrix_get_hue(), rgb_matrix_get_sat(), scale8(value_data[0], RGB_MATRIX_MAXIMUM_BRIGHTNESS));
+        case id_qmk_rgb_matrix_brightness:
+            rgb_matrix_sethsv_noeeprom(rgb_matrix_get_hue(), rgb_matrix_get_sat(), value_data[0]);
             break;
-        }
-        case id_qmk_rgb_matrix_effect: {
+        case id_qmk_rgb_matrix_effect:
+            rgb_matrix_mode_noeeprom(value_data[0]);
             if (value_data[0] == 0) {
                 rgb_matrix_disable_noeeprom();
             } else {
                 rgb_matrix_enable_noeeprom();
-                rgb_matrix_mode_noeeprom(value_data[0]);
             }
             break;
-        }
-        case id_qmk_rgb_matrix_effect_speed: {
-            rgb_matrix_set_speed_noeeprom(value_data[0]);
+        case id_qmk_rgb_matrix_effect_speed:
+            rgb_matrix_set_speed_noeeprom(speed_from_rgblight(value_data[0]));
             break;
-        }
-        case id_qmk_rgb_matrix_color: {
+        case id_qmk_rgb_matrix_color:
             rgb_matrix_sethsv_noeeprom(value_data[0], value_data[1], rgb_matrix_get_val());
             break;
-        }
     }
 }
 
@@ -783,7 +840,6 @@ void via_qmk_rgb_matrix_save(void) {
 #if defined(LED_MATRIX_ENABLE)
 
 void via_qmk_led_matrix_command(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *value_id_and_data = &(data[2]);
 
@@ -808,10 +864,8 @@ void via_qmk_led_matrix_command(uint8_t *data, uint8_t length) {
 }
 
 void via_qmk_led_matrix_get_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
-
     switch (*value_id) {
         case id_qmk_led_matrix_brightness: {
             value_data[0] = ((uint16_t)led_matrix_get_val() * UINT8_MAX) / LED_MATRIX_MAXIMUM_BRIGHTNESS;
@@ -829,7 +883,6 @@ void via_qmk_led_matrix_get_value(uint8_t *data) {
 }
 
 void via_qmk_led_matrix_set_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
@@ -864,7 +917,6 @@ void via_qmk_led_matrix_save(void) {
 extern audio_config_t audio_config;
 
 void via_qmk_audio_command(uint8_t *data, uint8_t length) {
-    // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *value_id_and_data = &(data[2]);
 
@@ -889,7 +941,6 @@ void via_qmk_audio_command(uint8_t *data, uint8_t length) {
 }
 
 void via_qmk_audio_get_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
@@ -905,7 +956,6 @@ void via_qmk_audio_get_value(uint8_t *data) {
 }
 
 void via_qmk_audio_set_value(uint8_t *data) {
-    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
