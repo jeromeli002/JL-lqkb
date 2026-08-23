@@ -1,7 +1,17 @@
-/* via0.h - VIA3 + Vial support
+/* Copyright 2019 Jason Williams (Wilba)
  *
- * Copyright 2019 Jason Williams (Wilba)
- * Updated for VIA protocol 0x000C while keeping Vial compatibility
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
@@ -29,7 +39,7 @@
 
 // This is changed only when the command IDs change,
 // so VIA Configurator can detect compatible firmware.
-#define VIA_PROTOCOL_VERSION 0x000C
+#define VIA_PROTOCOL_VERSION 0x0009
 
 // This is a version number for the firmware for the keyboard.
 // It can be used to ensure the VIA keyboard definition and the firmware
@@ -51,6 +61,9 @@ enum via_command_id {
     id_custom_set_value                     = 0x07,
     id_custom_get_value                     = 0x08,
     id_custom_save                          = 0x09,
+    id_lighting_set_value                   = 0x07,
+    id_lighting_get_value                   = 0x08,
+    id_lighting_save                        = 0x09,
     id_eeprom_reset                         = 0x0A,
     id_bootloader_jump                      = 0x0B,
     id_dynamic_keymap_macro_get_count       = 0x0C,
@@ -61,9 +74,7 @@ enum via_command_id {
     id_dynamic_keymap_get_layer_count       = 0x11,
     id_dynamic_keymap_get_buffer            = 0x12,
     id_dynamic_keymap_set_buffer            = 0x13,
-    id_dynamic_keymap_get_encoder           = 0x14,
-    id_dynamic_keymap_set_encoder           = 0x15,
-    id_vial_prefix                          = 0xFE,   // kept for Vial
+    id_vial_prefix                          = 0xFE,
     id_unhandled                            = 0xFF,
 };
 
@@ -85,15 +96,15 @@ enum via_channel_id {
 };
 
 enum via_qmk_backlight_value {
-    id_qmk_backlight_brightness = 1,
-    id_qmk_backlight_effect     = 2,
+    id_qmk_backlight_brightness = 0x09,
+    id_qmk_backlight_effect     = 0x0A,
 };
 
 enum via_qmk_rgblight_value {
-    id_qmk_rgblight_brightness   = 1,
-    id_qmk_rgblight_effect       = 2,
-    id_qmk_rgblight_effect_speed = 3,
-    id_qmk_rgblight_color        = 4,
+    id_qmk_rgblight_brightness   = 0x80,
+    id_qmk_rgblight_effect       = 0x81,
+    id_qmk_rgblight_effect_speed = 0x82,
+    id_qmk_rgblight_color        = 0x83,
 };
 
 enum via_qmk_rgb_matrix_value {

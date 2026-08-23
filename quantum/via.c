@@ -1,777 +1,927 @@
-/* Copyright 2020 Ilya Zhuravlev
+/* via0.c - VIA3 + Vial support
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright 2019 Jason Williams (Wilba)
+ * Updated for VIA protocol 0x000C while keeping Vial compatibility
  */
 
-#include "vial.h"
+#ifndef RAW_ENABLE
+#    error "RAW_ENABLE is not enabled"
+#endif
 
-#include <string.h>
+#ifndef DYNAMIC_KEYMAP_ENABLE
+#    error "DYNAMIC_KEYMAP_ENABLE is not enabled"
+#endif
 
-#include "dynamic_keymap.h"
+#ifndef VIAL_ENABLE
+#    error Compiling VIA keymaps is not supported with the vial-qmk repo, please use qmk_firmware instead, or set VIAL_ENABLE=yes
+#endif
+
+// If VIA_CUSTOM_LIGHTING_ENABLE is not defined, then VIA_QMK_BACKLIGHT_ENABLE is set
+// if BACKLIGHT_ENABLE is set, so handling of QMK Backlight values happens here by default.
+// if VIA_CUSTOM_LIGHTING_ENABLE is defined, then VIA_QMK_BACKLIGHT_ENABLE must be explicitly
+// set in keyboard-level config.h, so handling of QMK Backlight values happens here
+#if defined(BACKLIGHT_ENABLE) && !defined(VIA_CUSTOM_LIGHTING_ENABLE)
+#    define VIA_QMK_BACKLIGHT_ENABLE
+#endif
+
+// If VIA_CUSTOM_LIGHTING_ENABLE is not defined, then VIA_QMK_RGBLIGHT_ENABLE is set
+// if RGBLIGHT_ENABLE is set, so handling of QMK RGBLIGHT values happens here by default.
+// If VIA_CUSTOM_LIGHTING_ENABLE is defined, then VIA_QMK_RGBLIGHT_ENABLE must be explicitly
+// set in keyboard-level config.h, so handling of QMK RGBLIGHT values happens here
+#if defined(RGBLIGHT_ENABLE) && !defined(VIA_CUSTOM_LIGHTING_ENABLE)
+#    define VIA_QMK_RGBLIGHT_ENABLE
+#endif
+
+#if defined(RGB_MATRIX_ENABLE) && !defined(VIA_QMK_RGBLIGHT_ENABLE) && !defined(VIA_CUSTOM_LIGHTING_ENABLE) && !defined(VIALRGB_ENABLE)
+#    define VIA_QMK_RGB_MATRIX_ENABLE
+#endif
+
 #include "quantum.h"
-#include "vial_generated_keyboard_definition.h"
 
-#include "vial_ensure_keycode.h"
+#include "via.h"
 
-#define VIAL_UNLOCK_COUNTER_MAX 50
+#include "raw_hid.h"
+#include "dynamic_keymap.h"
+#include "eeprom.h"
+#include "version.h" // for QMK_BUILDDATE used in EEPROM magic
+#include "quantum/nvm/eeprom/nvm_eeprom_eeconfig_internal.h"
+#include "quantum/nvm/eeprom/nvm_eeprom_via_internal.h"
 
-#ifdef VIAL_INSECURE
-#pragma message "Building Vial-enabled firmware in insecure mode."
-int vial_unlocked = 1;
-#else
-int vial_unlocked = 0;
-#endif
-int vial_unlock_in_progress = 0;
-static int vial_unlock_counter = 0;
-static uint16_t vial_unlock_timer;
-
-#ifndef VIAL_INSECURE
-static uint8_t vial_unlock_combo_rows[] = VIAL_UNLOCK_COMBO_ROWS;
-static uint8_t vial_unlock_combo_cols[] = VIAL_UNLOCK_COMBO_COLS;
-#define VIAL_UNLOCK_NUM_KEYS (sizeof(vial_unlock_combo_rows)/sizeof(vial_unlock_combo_rows[0]))
-_Static_assert(VIAL_UNLOCK_NUM_KEYS < 15, "Max 15 unlock keys");
-_Static_assert(sizeof(vial_unlock_combo_rows) == sizeof(vial_unlock_combo_cols), "The number of unlock cols and rows should be the same");
+#ifdef VIAL_ENABLE
+#    include "vial.h"
 #endif
 
-#include "qmk_settings.h"
-
-#ifdef VIAL_TAP_DANCE_ENABLE
-static void reload_tap_dance(void);
-#endif
-
-#ifdef VIAL_COMBO_ENABLE
-static void reload_combo(void);
-#endif
-
-#ifdef VIAL_KEY_OVERRIDE_ENABLE
-static void reload_key_override(void);
-#endif
-
-#ifdef VIAL_ALT_REPEAT_KEY_ENABLE
-static void reload_alt_repeat_key(void);
-#endif
-
-void vial_init(void) {
-#ifdef VIAL_TAP_DANCE_ENABLE
-    reload_tap_dance();
-#endif
-#ifdef VIAL_COMBO_ENABLE
-    reload_combo();
-#endif
-#ifdef VIAL_KEY_OVERRIDE_ENABLE
-    reload_key_override();
-#endif
-#ifdef VIAL_ALT_REPEAT_KEY_ENABLE
-    reload_alt_repeat_key();
-#endif
-}
-
-__attribute__((unused)) static uint16_t vial_keycode_firewall(uint16_t in) {
-    if (in == QK_BOOT && !vial_unlocked)
-        return 0;
-    return in;
-}
-
-void vial_handle_cmd(uint8_t *msg, uint8_t length) {
-    /* All packets must be fixed 32 bytes */
-    if (length != VIAL_RAW_EPSIZE)
-        return;
-
-    /* msg[0] is 0xFE -- prefix vial magic */
-    switch (msg[1]) {
-        /* Get keyboard ID and Vial protocol version */
-        case vial_get_keyboard_id: {
-            uint8_t keyboard_uid[] = VIAL_KEYBOARD_UID;
-
-            memset(msg, 0, length);
-            msg[0] = VIAL_PROTOCOL_VERSION & 0xFF;
-            msg[1] = (VIAL_PROTOCOL_VERSION >> 8) & 0xFF;
-            msg[2] = (VIAL_PROTOCOL_VERSION >> 16) & 0xFF;
-            msg[3] = (VIAL_PROTOCOL_VERSION >> 24) & 0xFF;
-            memcpy(&msg[4], keyboard_uid, 8);
 #ifdef VIALRGB_ENABLE
-            msg[12] = 1; /* bit flag to indicate vialrgb is supported - so third-party apps don't have to query json */
+#    include "vialrgb.h"
 #endif
-            break;
-        }
-        /* Retrieve keyboard definition size */
-        case vial_get_size: {
-            uint32_t sz = sizeof(keyboard_definition);
-            msg[0] = sz & 0xFF;
-            msg[1] = (sz >> 8) & 0xFF;
-            msg[2] = (sz >> 16) & 0xFF;
-            msg[3] = (sz >> 24) & 0xFF;
-            break;
-        }
-        /* Retrieve 32-bytes block of the definition, page ID encoded within 2 bytes */
-        case vial_get_def: {
-            uint32_t page = msg[2] + (msg[3] << 8);
-            uint32_t start = page * VIAL_RAW_EPSIZE;
-            uint32_t end = start + VIAL_RAW_EPSIZE;
-            if (end < start || start >= sizeof(keyboard_definition))
-                return;
-            if (end > sizeof(keyboard_definition))
-                end = sizeof(keyboard_definition);
-            memcpy_P(msg, &keyboard_definition[start], end - start);
-            break;
-        }
-#ifdef ENCODER_MAP_ENABLE
-        case vial_get_encoder: {
-            uint8_t layer = msg[2];
-            uint8_t idx = msg[3];
-            uint16_t keycode = dynamic_keymap_get_encoder(layer, idx, 0);
-            msg[0]  = keycode >> 8;
-            msg[1]  = keycode & 0xFF;
-            keycode = dynamic_keymap_get_encoder(layer, idx, 1);
-            msg[2] = keycode >> 8;
-            msg[3] = keycode & 0xFF;
-            break;
-        }
-        case vial_set_encoder: {
-            dynamic_keymap_set_encoder(msg[2], msg[3], msg[4], vial_keycode_firewall((msg[5] << 8) | msg[6]));
-            break;
-        }
-#endif
-        case vial_get_unlock_status: {
-            /* Reset message to all FF's */
-            memset(msg, 0xFF, length);
-            /* First byte of message contains the status: whether board is unlocked */
-            msg[0] = vial_unlocked;
-            /* Second byte is whether unlock is in progress */
-            msg[1] = vial_unlock_in_progress;
-#ifndef VIAL_INSECURE
-            /* Rest of the message are keys in the matrix that should be held to unlock the board */
-            for (size_t i = 0; i < VIAL_UNLOCK_NUM_KEYS; ++i) {
-                msg[2 + i * 2] = vial_unlock_combo_rows[i];
-                msg[2 + i * 2 + 1] = vial_unlock_combo_cols[i];
-            }
-#endif
-            break;
-        }
-        case vial_unlock_start: {
-            vial_unlock_in_progress = 1;
-            vial_unlock_counter = VIAL_UNLOCK_COUNTER_MAX;
-            vial_unlock_timer = timer_read();
-            break;
-        }
-        case vial_unlock_poll: {
-#ifndef VIAL_INSECURE
-            if (vial_unlock_in_progress) {
-                int holding = 1;
-                for (size_t i = 0; i < VIAL_UNLOCK_NUM_KEYS; ++i)
-                    holding &= matrix_is_on(vial_unlock_combo_rows[i], vial_unlock_combo_cols[i]);
 
-                if (timer_elapsed(vial_unlock_timer) > 100 && holding) {
-                    vial_unlock_timer = timer_read();
+// Forward declare some helpers.
+#if defined(VIA_QMK_BACKLIGHT_ENABLE)
+void via_qmk_backlight_set_value(uint8_t *data);
+void via_qmk_backlight_get_value(uint8_t *data);
+#endif
 
-                    vial_unlock_counter--;
-                    if (vial_unlock_counter == 0) {
-                        /* ok unlock succeeded */
-                        vial_unlock_in_progress = 0;
-                        vial_unlocked = 1;
-                    }
-                } else {
-                    vial_unlock_counter = VIAL_UNLOCK_COUNTER_MAX;
-                }
-            }
+#if defined(VIA_QMK_RGBLIGHT_ENABLE)
+void via_qmk_rgblight_set_value(uint8_t *data);
+void via_qmk_rgblight_get_value(uint8_t *data);
 #endif
-            msg[0] = vial_unlocked;
-            msg[1] = vial_unlock_in_progress;
-            msg[2] = vial_unlock_counter;
-            break;
-        }
-        case vial_lock: {
-#ifndef VIAL_INSECURE
-            vial_unlocked = 0;
+
+#if defined(VIA_QMK_RGB_MATRIX_ENABLE)
+void via_qmk_rgb_matrix_set_value(uint8_t *data);
+void via_qmk_rgb_matrix_get_value(uint8_t *data);
 #endif
-            break;
-        }
-        case vial_qmk_settings_query: {
-#ifdef QMK_SETTINGS
-            uint16_t qsid_greater_than = msg[2] | (msg[3] << 8);
-            qmk_settings_query(qsid_greater_than, msg, length);
+
+// Can be called in an overriding via_init_kb() to test if keyboard level code usage of
+// EEPROM is invalid and use/save defaults.
+bool via_eeprom_is_valid(void) {
+#ifdef VIAL_ENABLE
+    uint8_t magic0 = BUILD_ID & 0xFF;
+    uint8_t magic1 = (BUILD_ID >> 8) & 0xFF;
+    uint8_t magic2 = (BUILD_ID >> 16) & 0xFF;
 #else
-            memset(msg, 0xFF, length); /* indicate that we don't support any qsid */
+    char *  p      = QMK_BUILDDATE; // e.g. "2019-11-05-11:29:54"
+    uint8_t magic0 = ((p[2] & 0x0F) << 4) | (p[3] & 0x0F);
+    uint8_t magic1 = ((p[5] & 0x0F) << 4) | (p[6] & 0x0F);
+    uint8_t magic2 = ((p[8] & 0x0F) << 4) | (p[9] & 0x0F);
 #endif
-            break;
-        }
-#ifdef QMK_SETTINGS
-        case vial_qmk_settings_get: {
-            uint16_t qsid = msg[2] | (msg[3] << 8);
-            msg[0] = qmk_settings_get(qsid, &msg[1], length - 1);
 
-            break;
-        }
-        case vial_qmk_settings_set: {
-            uint16_t qsid = msg[2] | (msg[3] << 8);
-            msg[0] = qmk_settings_set(qsid, &msg[4], length - 4);
-
-            break;
-        }
-        case vial_qmk_settings_reset: {
-            qmk_settings_reset();
-            break;
-        }
-#endif
-        case vial_dynamic_entry_op: {
-            switch (msg[2]) {
-            case dynamic_vial_get_number_of_entries: {
-                memset(msg, 0, length);
-                msg[0] = VIAL_TAP_DANCE_ENTRIES;
-                msg[1] = VIAL_COMBO_ENTRIES;
-                msg[2] = VIAL_KEY_OVERRIDE_ENTRIES;
-                msg[3] = VIAL_ALT_REPEAT_KEY_ENTRIES;
-
-                // The last byte of msg indicates optionally supported features.
-                msg[length - 1] = (0
-#ifdef CAPS_WORD_ENABLE
-                        | (1 << 0)  // Bit 0: Caps Word.
-#endif
-#ifdef LAYER_LOCK_ENABLE
-                        | (1 << 1)  // Bit 1: Layer Lock.
-#endif
-                        );
-                break;
-            }
-#ifdef VIAL_TAP_DANCE_ENABLE
-            case dynamic_vial_tap_dance_get: {
-                uint8_t idx = msg[3];
-                vial_tap_dance_entry_t td = { 0 };
-                msg[0] = dynamic_keymap_get_tap_dance(idx, &td);
-                memcpy(&msg[1], &td, sizeof(td));
-                break;
-            }
-            case dynamic_vial_tap_dance_set: {
-                uint8_t idx = msg[3];
-                vial_tap_dance_entry_t td;
-                memcpy(&td, &msg[4], sizeof(td));
-                td.on_tap = vial_keycode_firewall(td.on_tap);
-                td.on_hold = vial_keycode_firewall(td.on_hold);
-                td.on_double_tap = vial_keycode_firewall(td.on_double_tap);
-                td.on_tap_hold = vial_keycode_firewall(td.on_tap_hold);
-                msg[0] = dynamic_keymap_set_tap_dance(idx, &td);
-                reload_tap_dance();
-                break;
-            }
-#endif
-#ifdef VIAL_COMBO_ENABLE
-            case dynamic_vial_combo_get: {
-                uint8_t idx = msg[3];
-                vial_combo_entry_t entry = { 0 };
-                msg[0] = dynamic_keymap_get_combo(idx, &entry);
-                memcpy(&msg[1], &entry, sizeof(entry));
-                break;
-            }
-            case dynamic_vial_combo_set: {
-                uint8_t idx = msg[3];
-                vial_combo_entry_t entry;
-                memcpy(&entry, &msg[4], sizeof(entry));
-                entry.output = vial_keycode_firewall(entry.output);
-                msg[0] = dynamic_keymap_set_combo(idx, &entry);
-                reload_combo();
-                break;
-            }
-#endif
-#ifdef VIAL_KEY_OVERRIDE_ENABLE
-            case dynamic_vial_key_override_get: {
-                uint8_t idx = msg[3];
-                vial_key_override_entry_t entry = { 0 };
-                msg[0] = dynamic_keymap_get_key_override(idx, &entry);
-                memcpy(&msg[1], &entry, sizeof(entry));
-                break;
-            }
-            case dynamic_vial_key_override_set: {
-                uint8_t idx = msg[3];
-                vial_key_override_entry_t entry;
-                memcpy(&entry, &msg[4], sizeof(entry));
-                entry.replacement = vial_keycode_firewall(entry.replacement);
-                msg[0] = dynamic_keymap_set_key_override(idx, &entry);
-                reload_key_override();
-                break;
-            }
-#endif
-#ifdef VIAL_ALT_REPEAT_KEY_ENABLE
-            case dynamic_vial_alt_repeat_key_get: {
-                uint8_t idx = msg[3];
-                vial_alt_repeat_key_entry_t entry = { 0 };
-                msg[0] = dynamic_keymap_get_alt_repeat_key(idx, &entry);
-                memcpy(&msg[1], &entry, sizeof(entry));
-                break;
-            }
-            case dynamic_vial_alt_repeat_key_set: {
-                uint8_t idx = msg[3];
-                vial_alt_repeat_key_entry_t entry;
-                memcpy(&entry, &msg[4], sizeof(entry));
-                entry.keycode = vial_keycode_firewall(entry.keycode);
-                entry.alt_keycode = vial_keycode_firewall(entry.alt_keycode);
-                msg[0] = dynamic_keymap_set_alt_repeat_key(idx, &entry);
-                reload_alt_repeat_key();
-                break;
-            }
-#endif
-            }
-
-            break;
-        }
-    }
+    return (eeprom_read_byte((void *)VIA_EEPROM_MAGIC_ADDR + 0) == magic0 && eeprom_read_byte((void *)VIA_EEPROM_MAGIC_ADDR + 1) == magic1 && eeprom_read_byte((void *)VIA_EEPROM_MAGIC_ADDR + 2) == magic2);
 }
 
-uint16_t g_vial_magic_keycode_override;
-
-void vial_keycode_down(uint16_t keycode) {
-    g_vial_magic_keycode_override = keycode;
-
-    if (keycode <= QK_MODS_MAX) {
-        register_code16(keycode);
-    } else {
-        action_exec((keyevent_t){
-            .type = KEY_EVENT,
-            .key = (keypos_t){.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC}, .pressed = 1, .time = (timer_read() | 1) /* time should not be 0 */
-        });
-    }
-}
-
-void vial_keycode_up(uint16_t keycode) {
-    g_vial_magic_keycode_override = keycode;
-
-    if (keycode <= QK_MODS_MAX) {
-        unregister_code16(keycode);
-    } else {
-        action_exec((keyevent_t){
-            .type = KEY_EVENT,
-            .key = (keypos_t){.row = VIAL_MATRIX_MAGIC, .col = VIAL_MATRIX_MAGIC}, .pressed = 0, .time = (timer_read() | 1) /* time should not be 0 */
-        });
-    }
-}
-
-void vial_keycode_tap(uint16_t keycode) {
-    vial_keycode_down(keycode);
-    qs_wait_ms(QS_tap_code_delay);
-    vial_keycode_up(keycode);
-}
-
-#ifdef VIAL_TAP_DANCE_ENABLE
-#include "process_tap_dance.h"
-
-/* based on ZSA configurator generated code */
-
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP,
-    DOUBLE_HOLD,
-    DOUBLE_SINGLE_TAP,
-    MORE_TAPS
-};
-
-static uint8_t dance_state[VIAL_TAP_DANCE_ENTRIES];
-static vial_tap_dance_entry_t td_entry;
-
-static uint8_t dance_step(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted) return DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return DOUBLE_HOLD;
-        else return DOUBLE_TAP;
-    }
-    return MORE_TAPS;
-}
-
-static void on_dance(tap_dance_state_t *state, void *user_data) {
-    uint8_t index = (uintptr_t)user_data;
-    if (dynamic_keymap_get_tap_dance(index, &td_entry) != 0)
-        return;
-    uint16_t kc = td_entry.on_tap;
-    if (kc) {
-        if (state->count == 3) {
-            vial_keycode_tap(kc);
-            vial_keycode_tap(kc);
-            vial_keycode_tap(kc);
-        } else if (state->count > 3) {
-            vial_keycode_tap(kc);
-        }
-    }
-}
-
-static void on_dance_finished(tap_dance_state_t *state, void *user_data) {
-    uint8_t index = (uintptr_t)user_data;
-    if (dynamic_keymap_get_tap_dance(index, &td_entry) != 0)
-        return;
-    dance_state[index] = dance_step(state);
-    switch (dance_state[index]) {
-        case SINGLE_TAP: {
-            if (td_entry.on_tap)
-                vial_keycode_down(td_entry.on_tap);
-            break;
-        }
-        case SINGLE_HOLD: {
-            if (td_entry.on_hold)
-                vial_keycode_down(td_entry.on_hold);
-            else if (td_entry.on_tap)
-                vial_keycode_down(td_entry.on_tap);
-            break;
-        }
-        case DOUBLE_TAP: {
-            if (td_entry.on_double_tap) {
-                vial_keycode_down(td_entry.on_double_tap);
-            } else if (td_entry.on_tap) {
-                vial_keycode_tap(td_entry.on_tap);
-                vial_keycode_down(td_entry.on_tap);
-            }
-            break;
-        }
-        case DOUBLE_HOLD: {
-            if (td_entry.on_tap_hold) {
-                vial_keycode_down(td_entry.on_tap_hold);
-            } else {
-                if (td_entry.on_tap) {
-                    vial_keycode_tap(td_entry.on_tap);
-                    if (td_entry.on_hold)
-                        vial_keycode_down(td_entry.on_hold);
-                    else
-                        vial_keycode_down(td_entry.on_tap);
-                } else if (td_entry.on_hold) {
-                    vial_keycode_down(td_entry.on_hold);
-                }
-            }
-            break;
-        }
-        case DOUBLE_SINGLE_TAP: {
-            if (td_entry.on_tap) {
-                vial_keycode_tap(td_entry.on_tap);
-                vial_keycode_down(td_entry.on_tap);
-            }
-            break;
-        }
-    }
-}
-
-static void on_dance_reset(tap_dance_state_t *state, void *user_data) {
-    uint8_t index = (uintptr_t)user_data;
-    if (dynamic_keymap_get_tap_dance(index, &td_entry) != 0)
-        return;
-    qs_wait_ms(QS_tap_code_delay);
-    uint8_t st = dance_state[index];
-    state->count = 0;
-    dance_state[index] = 0;
-    switch (st) {
-        case SINGLE_TAP: {
-            if (td_entry.on_tap)
-                vial_keycode_up(td_entry.on_tap);
-            break;
-        }
-        case SINGLE_HOLD: {
-            if (td_entry.on_hold)
-                vial_keycode_up(td_entry.on_hold);
-            else if (td_entry.on_tap)
-                vial_keycode_up(td_entry.on_tap);
-            break;
-        }
-        case DOUBLE_TAP: {
-            if (td_entry.on_double_tap) {
-                vial_keycode_up(td_entry.on_double_tap);
-            } else if (td_entry.on_tap) {
-                vial_keycode_up(td_entry.on_tap);
-            }
-            break;
-        }
-        case DOUBLE_HOLD: {
-            if (td_entry.on_tap_hold) {
-                vial_keycode_up(td_entry.on_tap_hold);
-            } else {
-                if (td_entry.on_tap) {
-                    if (td_entry.on_hold)
-                        vial_keycode_up(td_entry.on_hold);
-                    else
-                        vial_keycode_up(td_entry.on_tap);
-                } else if (td_entry.on_hold) {
-                    vial_keycode_up(td_entry.on_hold);
-                }
-            }
-            break;
-        }
-        case DOUBLE_SINGLE_TAP: {
-            if (td_entry.on_tap) {
-                vial_keycode_up(td_entry.on_tap);
-            }
-            break;
-        }
-    }
-}
-
-tap_dance_action_t tap_dance_actions[VIAL_TAP_DANCE_ENTRIES] = { };
-
-/* Load timings from eeprom into custom_tapping_term */
-static void reload_tap_dance(void) {
-    for (size_t i = 0; i < VIAL_TAP_DANCE_ENTRIES; ++i) {
-        tap_dance_actions[i].fn.on_each_tap = on_dance;
-        tap_dance_actions[i].fn.on_dance_finished = on_dance_finished;
-        tap_dance_actions[i].fn.on_reset = on_dance_reset;
-        tap_dance_actions[i].user_data = (void*)i;
-    }
-}
-#endif
-
-#ifdef TAPPING_TERM_PER_KEY
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-#ifdef VIAL_TAP_DANCE_ENABLE
-    if (keycode >= QK_TAP_DANCE && keycode <= QK_TAP_DANCE_MAX) {
-        vial_tap_dance_entry_t td;
-        if (dynamic_keymap_get_tap_dance(keycode & 0xFF, &td) == 0)
-            return td.custom_tapping_term;
-    }
-#endif
-#ifdef QMK_SETTINGS
-    return qs_get_tapping_term(keycode, record);
+// Sets VIA/keyboard level usage of EEPROM to valid/invalid
+// Keyboard level code (eg. via_init_kb()) should not call this
+void via_eeprom_set_valid(bool valid) {
+#ifdef VIAL_ENABLE
+    uint8_t magic0 = BUILD_ID & 0xFF;
+    uint8_t magic1 = (BUILD_ID >> 8) & 0xFF;
+    uint8_t magic2 = (BUILD_ID >> 16) & 0xFF;
 #else
-    return TAPPING_TERM;
+    char *  p      = QMK_BUILDDATE; // e.g. "2019-11-05-11:29:54"
+    uint8_t magic0 = ((p[2] & 0x0F) << 4) | (p[3] & 0x0F);
+    uint8_t magic1 = ((p[5] & 0x0F) << 4) | (p[6] & 0x0F);
+    uint8_t magic2 = ((p[8] & 0x0F) << 4) | (p[9] & 0x0F);
+#endif
+
+    eeprom_update_byte((void *)VIA_EEPROM_MAGIC_ADDR + 0, valid ? magic0 : 0xFF);
+    eeprom_update_byte((void *)VIA_EEPROM_MAGIC_ADDR + 1, valid ? magic1 : 0xFF);
+    eeprom_update_byte((void *)VIA_EEPROM_MAGIC_ADDR + 2, valid ? magic2 : 0xFF);
+}
+
+// Override this at the keyboard code level to check
+// VIA's EEPROM valid state and reset to defaults as needed.
+// Used by keyboards that store their own state in EEPROM,
+// for backlight, rotary encoders, etc.
+// The override should not set via_eeprom_set_valid(true) as
+// the caller also needs to check the valid state.
+__attribute__((weak)) void via_init_kb(void) {}
+
+// Called by QMK core to initialize dynamic keymaps etc.
+void via_init(void) {
+    // Let keyboard level test EEPROM valid state,
+    // but not set it valid, it is done here.
+    via_init_kb();
+    via_set_layout_options_kb(via_get_layout_options());
+
+    // If the EEPROM has the magic, the data is good.
+    // OK to load from EEPROM.
+    if (!via_eeprom_is_valid()) {
+        eeconfig_init_via();
+    }
+}
+
+void eeconfig_init_via(void) {
+    // set the magic number to false, in case this gets interrupted
+    via_eeprom_set_valid(false);
+    // This resets the layout options
+    via_set_layout_options(VIA_EEPROM_LAYOUT_OPTIONS_DEFAULT);
+    // This resets the keymaps in EEPROM to what is in flash.
+    dynamic_keymap_reset();
+    // This resets the macros in EEPROM to nothing.
+    dynamic_keymap_macro_reset();
+    // Save the magic number last, in case saving was interrupted
+    via_eeprom_set_valid(true);
+}
+
+// This is generalized so the layout options EEPROM usage can be
+// variable, between 1 and 4 bytes.
+uint32_t via_get_layout_options(void) {
+    uint32_t value = 0;
+    // Start at the most significant byte
+    void *source = (void *)(VIA_EEPROM_LAYOUT_OPTIONS_ADDR);
+    for (uint8_t i = 0; i < VIA_EEPROM_LAYOUT_OPTIONS_SIZE; i++) {
+        value = value << 8;
+        value |= eeprom_read_byte(source);
+        source++;
+    }
+    return value;
+}
+
+__attribute__((weak)) void via_set_layout_options_kb(uint32_t value) {}
+
+void via_set_layout_options(uint32_t value) {
+    via_set_layout_options_kb(value);
+    // Start at the least significant byte
+    void *target = (void *)(VIA_EEPROM_LAYOUT_OPTIONS_ADDR + VIA_EEPROM_LAYOUT_OPTIONS_SIZE - 1);
+    for (uint8_t i = 0; i < VIA_EEPROM_LAYOUT_OPTIONS_SIZE; i++) {
+        eeprom_update_byte(target, value & 0xFF);
+        value = value >> 8;
+        target--;
+    }
+}
+
+#if VIA_EEPROM_CUSTOM_CONFIG_SIZE > 0
+uint32_t via_read_custom_config(void *buf, uint32_t offset, uint32_t length) {
+    // kept for compatibility; real implementation lives in NVM layer if present
+    return 0;
+}
+uint32_t via_update_custom_config(const void *buf, uint32_t offset, uint32_t length) {
+    return 0;
+}
+#endif
+
+// Used by VIA to tell a device to flash LEDs (or do something else) when that
+// device becomes the active device being configured, on startup or switching
+// between devices. This function will be called six times, at 200ms interval,
+// with an incrementing value starting at zero. Since this function is called
+// an even number of times, it can call a toggle function and leave things in
+// the original state.
+__attribute__((weak)) void via_set_device_indication(uint8_t value) {
+#if defined(BACKLIGHT_ENABLE)
+    backlight_toggle();
+#endif
+#if defined(RGBLIGHT_ENABLE)
+    rgblight_toggle_noeeprom();
+#endif
+#if defined(RGB_MATRIX_ENABLE)
+    rgb_matrix_toggle_noeeprom();
+#endif
+#if defined(LED_MATRIX_ENABLE)
+    led_matrix_toggle_noeeprom();
+#endif
+#if defined(AUDIO_ENABLE)
+    // optional: play a short indication sound on first call
 #endif
 }
 
-uint16_t tap_dance_count(void) {
-    return VIAL_TAP_DANCE_ENTRIES;
-}
-
-tap_dance_action_t* tap_dance_get(uint16_t tap_dance_idx) {
-    if (tap_dance_idx >= VIAL_TAP_DANCE_ENTRIES)
-        return NULL;
-    return &tap_dance_actions[tap_dance_idx];
-}
-#endif
-
-#ifdef VIAL_COMBO_ENABLE
-combo_t key_combos[VIAL_COMBO_ENTRIES] = { };
-uint16_t key_combos_keys[VIAL_COMBO_ENTRIES][5];
-
-static void reload_combo(void) {
-    /* initialize with all keys = COMBO_END */
-    memset(key_combos_keys, 0, sizeof(key_combos_keys));
-    memset(key_combos, 0, sizeof(key_combos));
-
-    /* reload from eeprom */
-    for (size_t i = 0; i < VIAL_COMBO_ENTRIES; ++i) {
-        uint16_t *seq = key_combos_keys[i];
-        key_combos[i].keys = seq;
-
-        vial_combo_entry_t entry;
-        if (dynamic_keymap_get_combo(i, &entry) == 0) {
-            memcpy(seq, entry.input, sizeof(entry.input));
-            key_combos[i].keycode = entry.output;
+// Called by QMK core to process VIA-specific keycodes.
+bool process_record_via(uint16_t keycode, keyrecord_t *record) {
+    // Handle macros
+    if (record->event.pressed) {
+        if (keycode >= QK_MACRO && keycode <= QK_MACRO_MAX) {
+            uint8_t id = keycode - QK_MACRO;
+            dynamic_keymap_macro_send(id);
+            return false;
         }
     }
-}
-#endif
-
-#ifdef VIAL_TAP_DANCE_ENABLE
-void process_tap_dance_action_on_dance_finished(tap_dance_action_t *action);
-#endif
-
-bool process_record_vial(uint16_t keycode, keyrecord_t *record) {
-#ifdef VIAL_TAP_DANCE_ENABLE
-    /* process releases before tap-dance timeout arrives */
-    if (!record->event.pressed && keycode >= QK_TAP_DANCE && keycode <= QK_TAP_DANCE_MAX) {
-        uint16_t idx = keycode - QK_TAP_DANCE;
-        if (dynamic_keymap_get_tap_dance(idx, &td_entry) != 0)
-            return true;
-
-        tap_dance_action_t *action = &tap_dance_actions[idx];
-
-        /* only care about 2 possibilities here
-           - tap and hold set, everything else unset: process first release early (count == 1)
-           - double tap set: process second release early (count == 2)
-         */
-        if ((action->state.count == 1 && td_entry.on_tap && td_entry.on_hold && !td_entry.on_double_tap && !td_entry.on_tap_hold)
-            || (action->state.count == 2 && td_entry.on_double_tap)) {
-                action->state.pressed = false;
-                process_tap_dance_action_on_dance_finished(action);
-                /* reset_tap_dance() will get called in process_tap_dance() */
-            }
-    }
-#endif
 
     return true;
 }
 
-#ifdef VIAL_KEY_OVERRIDE_ENABLE
-static bool vial_key_override_disabled = 0;
-static key_override_t vial_key_overrides[VIAL_KEY_OVERRIDE_ENTRIES] = { 0 };
-
-static int vial_get_key_override(uint8_t index, key_override_t *out) {
-    vial_key_override_entry_t entry;
-    int ret;
-    if ((ret = dynamic_keymap_get_key_override(index, &entry)) != 0)
-        return ret;
-
-    memset(out, 0, sizeof(*out));
-    out->trigger = entry.trigger;
-    out->trigger_mods = entry.trigger_mods;
-    out->layers = entry.layers;
-    out->negative_mod_mask = entry.negative_mod_mask;
-    out->suppressed_mods = entry.suppressed_mods;
-    out->replacement = entry.replacement;
-    out->options = 0;
-    uint8_t opt = entry.options;
-    if (opt & vial_ko_enabled)
-        out->enabled = NULL;
-    else
-        out->enabled = &vial_key_override_disabled;
-    /* right now these options match one-to-one so this isn't strictly necessary,
-       nevertheless future-proof the code by parsing them out to ensure "stable" abi */
-    if (opt & vial_ko_option_activation_trigger_down) out->options |= ko_option_activation_trigger_down;
-    if (opt & vial_ko_option_activation_required_mod_down) out->options |= ko_option_activation_required_mod_down;
-    if (opt & vial_ko_option_activation_negative_mod_up) out->options |= ko_option_activation_negative_mod_up;
-    if (opt & vial_ko_option_one_mod) out->options |= ko_option_one_mod;
-    if (opt & vial_ko_option_no_reregister_trigger) out->options |= ko_option_no_reregister_trigger;
-    if (opt & vial_ko_option_no_unregister_on_other_key_down) out->options |= ko_option_no_unregister_on_other_key_down;
-
-    return 0;
+// Keyboard level code can override this to handle custom messages from VIA.
+// See raw_hid_receive() implementation.
+// DO NOT call raw_hid_send() in the override function.
+__attribute__((weak)) void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
+    uint8_t *command_id = &(data[0]);
+    *command_id         = id_unhandled;
 }
 
-static void reload_key_override(void) {
-    for (size_t i = 0; i < VIAL_KEY_OVERRIDE_ENTRIES; ++i)
-        vial_get_key_override(i, &vial_key_overrides[i]);
+// Keyboard level code can override this, but shouldn't need to.
+// Controlling custom features should be done by overriding
+// via_custom_value_command_kb() instead.
+__attribute__((weak)) bool via_command_kb(uint8_t *data, uint8_t length) {
+    return false;
 }
 
-uint16_t key_override_count(void) {
-    return VIAL_KEY_OVERRIDE_ENTRIES;
+// Default handler for "extra" custom values (keyboard-specific).
+__attribute__((weak)) void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id = &(data[0]);
+    *command_id         = id_unhandled;
 }
 
-const key_override_t* key_override_get(uint16_t key_override_idx) {
-    if (key_override_idx >= VIAL_KEY_OVERRIDE_ENTRIES)
-        return NULL;
-    return &vial_key_overrides[key_override_idx];
-}
+// Default handler that routes channel IDs to the appropriate Core handlers.
+__attribute__((weak)) void via_custom_value_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *channel_id = &(data[1]);
+
+#if defined(VIA_QMK_BACKLIGHT_ENABLE)
+    if (*channel_id == id_qmk_backlight_channel) {
+        via_qmk_backlight_command(data, length);
+        return;
+    }
 #endif
 
-#ifdef VIAL_ALT_REPEAT_KEY_ENABLE
-typedef struct {
-    uint16_t keycode;
-    uint16_t alt_keycode;
-    uint8_t required_mods;
-    uint8_t alt_required_mods;
-    uint8_t allowed_mods;
-    uint8_t options;
-} alt_repeat_key_t;
-
-static alt_repeat_key_t vial_alt_repeat_key[VIAL_ALT_REPEAT_KEY_ENTRIES] = { 0 };
-
-static uint8_t unpack_mods5(uint8_t mods5) {
-  return (mods5 & 0x10) != 0 ? (mods5 << 4) : mods5;
-}
-
-static uint16_t alt_repeat_key_normalize_keycode(uint16_t keycode, uint8_t *mods) {
-    switch (keycode) {
-        case QK_MODS ... QK_MODS_MAX: // Unpack modifier + basic key.
-            *mods |= unpack_mods5(QK_MODS_GET_MODS(keycode));
-            keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
-            break;
-        case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            keycode = QK_MOD_TAP_GET_TAP_KEYCODE(keycode);
-            break;
-        case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-            keycode = QK_LAYER_TAP_GET_TAP_KEYCODE(keycode);
-            break;
+#if defined(VIA_QMK_RGBLIGHT_ENABLE)
+    if (*channel_id == id_qmk_rgblight_channel) {
+        via_qmk_rgblight_command(data, length);
+        return;
     }
-    return keycode;
-}
-
-static int vial_get_alt_repeat_key(uint8_t index, alt_repeat_key_t *out) {
-    vial_alt_repeat_key_entry_t entry;
-    int ret;
-    if ((ret = dynamic_keymap_get_alt_repeat_key(index, &entry)) != 0) {
-        return ret;
-    }
-
-    memset(out, 0, sizeof(*out));
-    out->keycode = alt_repeat_key_normalize_keycode(entry.keycode, &out->required_mods);
-    out->alt_keycode = alt_repeat_key_normalize_keycode(entry.alt_keycode, &out->alt_required_mods);
-    out->allowed_mods = entry.allowed_mods;
-    out->options = entry.options;
-
-    return 0;
-}
-
-static void reload_alt_repeat_key(void) {
-    for (size_t i = 0; i < VIAL_ALT_REPEAT_KEY_ENTRIES; ++i) {
-        vial_get_alt_repeat_key(i, &vial_alt_repeat_key[i]);
-    }
-}
-
-uint16_t alt_repeat_key_count(void) {
-    return VIAL_ALT_REPEAT_KEY_ENTRIES;
-}
-
-static bool alt_repeat_key_mods_match(uint8_t mods, uint8_t required_mods, uint8_t allowed_mods, uint8_t options) {
-    allowed_mods |= required_mods; // Required mods, if any, are allowed.
-
-    // If ignoring mod handedness, bitwise-or low (lhs) 4 bits with upper (rhs) 4 bits.
-    if ((options & vial_arep_option_ignore_mod_handedness)) {
-        mods = (mods & 0xf) | (mods >> 4);
-        required_mods = (required_mods & 0xf) | (required_mods >> 4);
-        allowed_mods = (allowed_mods & 0xf) | (allowed_mods >> 4);
-    }
-
-    // Check that all required mods are set and all disallowed mods are unset.
-    return (mods & required_mods) == required_mods && (mods & ~allowed_mods) == 0;
-}
-
-uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-    uint16_t alt_keycode = KC_TRNS;
-    int8_t best_fit = -1;
-
-    keycode = alt_repeat_key_normalize_keycode(keycode, &mods);
-
-    for (size_t i = 0; i < VIAL_ALT_REPEAT_KEY_ENTRIES; ++i) {
-        const alt_repeat_key_t* entry = &vial_alt_repeat_key[i];
-        const uint8_t options = entry->options;
-        if (!(options & vial_arep_enabled)) { // Skip disabled entries.
-            continue;
-        }
-
-        // Search for an entry with matching keycode and mods. If there is more
-        // than one match, the entry with the most mods wins.
-        if (entry->keycode == keycode &&
-                alt_repeat_key_mods_match(mods, entry->required_mods, entry->allowed_mods, options)) {
-            const int8_t fit = bitpop(entry->required_mods);
-            if (fit > best_fit) {
-                alt_keycode = (entry->alt_required_mods << 8) | entry->alt_keycode;
-                best_fit = fit;
-            }
-        }
-
-        // If the entry is bidirectional, check for match with the alt keycode.
-        if (entry->alt_keycode == keycode &&
-                (options & vial_arep_option_bidirectional) != 0 &&
-                alt_repeat_key_mods_match(mods, entry->alt_required_mods, entry->allowed_mods, options)) {
-            const int8_t fit = bitpop(entry->alt_required_mods);
-            if (fit > best_fit) {
-                alt_keycode = (entry->required_mods << 8) | entry->keycode;
-                best_fit = fit;
-            }
-        }
-
-        // If this entry is the default alt key and allowed mods are satisfied,
-        // use it if no there is no other match.
-        if ((options & vial_arep_option_default_to_this_alt_key) != 0 &&
-                best_fit == -1 && alt_keycode == KC_TRNS &&
-                alt_repeat_key_mods_match(mods, 0, entry->allowed_mods, options)) {
-            alt_keycode = (entry->alt_required_mods << 8) | entry->alt_keycode;
-        }
-    }
-
-    return alt_keycode;
-}
 #endif
+
+#if defined(VIA_QMK_RGB_MATRIX_ENABLE)
+    if (*channel_id == id_qmk_rgb_matrix_channel) {
+        via_qmk_rgb_matrix_command(data, length);
+        return;
+    }
+#endif
+
+#if defined(LED_MATRIX_ENABLE)
+    if (*channel_id == id_qmk_led_matrix_channel) {
+        via_qmk_led_matrix_command(data, length);
+        return;
+    }
+#endif
+
+#if defined(AUDIO_ENABLE)
+    if (*channel_id == id_qmk_audio_channel) {
+        via_qmk_audio_command(data, length);
+        return;
+    }
+#endif
+
+    (void)channel_id;
+
+    // Fall through to keyboard-level handler
+    via_custom_value_command_kb(data, length);
+}
+
+// VIA handles received HID messages first, and will route to
+// raw_hid_receive_kb() for command IDs that are not handled here.
+// This gives the keyboard code level the ability to handle the command
+// specifically.
+//
+// raw_hid_send() is called at the end, with the same buffer, which was
+// possibly modified with returned values.
+void raw_hid_receive(uint8_t *data, uint8_t length) {
+    uint8_t *command_id   = &(data[0]);
+    uint8_t *command_data = &(data[1]);
+
+    // If via_command_kb() returns true, the command was fully
+    // handled, including calling raw_hid_send()
+    if (via_command_kb(data, length)) {
+        return;
+    }
+
+#ifdef VIAL_ENABLE
+    /* When unlock is in progress, we can only react to a subset of commands */
+    if (vial_unlock_in_progress) {
+        if (data[0] != id_vial_prefix)
+            goto skip;
+        uint8_t cmd = data[1];
+        if (cmd != vial_get_keyboard_id && cmd != vial_get_size && cmd != vial_get_def && cmd != vial_get_unlock_status && cmd != vial_unlock_start && cmd != vial_unlock_poll)
+            goto skip;
+    }
+#endif
+
+    switch (*command_id) {
+        case id_get_protocol_version: {
+            command_data[0] = VIA_PROTOCOL_VERSION >> 8;
+            command_data[1] = VIA_PROTOCOL_VERSION & 0xFF;
+            break;
+        }
+        case id_get_keyboard_value: {
+            switch (command_data[0]) {
+                case id_uptime: {
+                    uint32_t value  = timer_read32();
+                    command_data[1] = (value >> 24) & 0xFF;
+                    command_data[2] = (value >> 16) & 0xFF;
+                    command_data[3] = (value >> 8) & 0xFF;
+                    command_data[4] = value & 0xFF;
+                    break;
+                }
+                case id_layout_options: {
+                    uint32_t value  = via_get_layout_options();
+                    command_data[1] = (value >> 24) & 0xFF;
+                    command_data[2] = (value >> 16) & 0xFF;
+                    command_data[3] = (value >> 8) & 0xFF;
+                    command_data[4] = value & 0xFF;
+                    break;
+                }
+                case id_switch_matrix_state: {
+#ifdef VIAL_ENABLE
+                    /* Disable wannabe keylogger unless unlocked */
+                    if (!vial_unlocked)
+                        goto skip;
+#endif
+#if ((MATRIX_COLS / 8 + 1) * MATRIX_ROWS <= 28)
+                    uint8_t i = 1;
+                    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+                        matrix_row_t value = matrix_get_row(row);
+#    if (MATRIX_COLS > 24)
+                        command_data[i++] = (value >> 24) & 0xFF;
+#    endif
+#    if (MATRIX_COLS > 16)
+                        command_data[i++] = (value >> 16) & 0xFF;
+#    endif
+#    if (MATRIX_COLS > 8)
+                        command_data[i++] = (value >> 8) & 0xFF;
+#    endif
+                        command_data[i++] = value & 0xFF;
+                    }
+#endif
+                    break;
+                }
+                case id_firmware_version: {
+                    uint32_t value  = VIA_FIRMWARE_VERSION;
+                    command_data[1] = (value >> 24) & 0xFF;
+                    command_data[2] = (value >> 16) & 0xFF;
+                    command_data[3] = (value >> 8) & 0xFF;
+                    command_data[4] = value & 0xFF;
+                    break;
+                }
+                default: {
+                    raw_hid_receive_kb(data, length);
+                    break;
+                }
+            }
+            break;
+        }
+        case id_set_keyboard_value: {
+            switch (command_data[0]) {
+                case id_layout_options: {
+                    uint32_t value = ((uint32_t)command_data[1] << 24) | ((uint32_t)command_data[2] << 16) | ((uint32_t)command_data[3] << 8) | (uint32_t)command_data[4];
+                    via_set_layout_options(value);
+                    break;
+                }
+                case id_device_indication: {
+                    uint8_t value = command_data[1];
+                    via_set_device_indication(value);
+                    break;
+                }
+                default: {
+                    raw_hid_receive_kb(data, length);
+                    break;
+                }
+            }
+            break;
+        }
+        case id_dynamic_keymap_get_keycode: {
+            uint16_t keycode = dynamic_keymap_get_keycode(command_data[0], command_data[1], command_data[2]);
+            command_data[3]  = keycode >> 8;
+            command_data[4]  = keycode & 0xFF;
+            break;
+        }
+        case id_dynamic_keymap_set_keycode: {
+            dynamic_keymap_set_keycode(command_data[0], command_data[1], command_data[2], (command_data[3] << 8) | command_data[4]);
+            break;
+        }
+        case id_dynamic_keymap_reset: {
+            dynamic_keymap_reset();
+            break;
+        }
+        case id_custom_set_value:
+        case id_custom_get_value:
+        case id_custom_save: {
+            via_custom_value_command(data, length);
+            break;
+        }
+#ifdef VIA_EEPROM_ALLOW_RESET
+        case id_eeprom_reset: {
+            via_eeprom_set_valid(false);
+            eeconfig_init_via();
+            break;
+        }
+#endif
+        case id_dynamic_keymap_macro_get_count: {
+            command_data[0] = dynamic_keymap_macro_get_count();
+            break;
+        }
+        case id_dynamic_keymap_macro_get_buffer_size: {
+            uint16_t size   = dynamic_keymap_macro_get_buffer_size();
+            command_data[0] = size >> 8;
+            command_data[1] = size & 0xFF;
+            break;
+        }
+        case id_dynamic_keymap_macro_get_buffer: {
+            uint16_t offset = (command_data[0] << 8) | command_data[1];
+            uint16_t size   = command_data[2]; // size <= 28
+            if (size <= 28)
+                dynamic_keymap_macro_get_buffer(offset, size, &command_data[3]);
+            break;
+        }
+        case id_dynamic_keymap_macro_set_buffer: {
+#ifdef VIAL_ENABLE
+            /* Until keyboard is unlocked, don't allow changing macros */
+            if (!vial_unlocked)
+                goto skip;
+#endif
+            uint16_t offset = (command_data[0] << 8) | command_data[1];
+            uint16_t size   = command_data[2]; // size <= 28
+            if (size <= 28)
+                dynamic_keymap_macro_set_buffer(offset, size, &command_data[3]);
+            break;
+        }
+        case id_dynamic_keymap_macro_reset: {
+            dynamic_keymap_macro_reset();
+            break;
+        }
+        case id_dynamic_keymap_get_layer_count: {
+            command_data[0] = dynamic_keymap_get_layer_count();
+            break;
+        }
+        case id_dynamic_keymap_get_buffer: {
+            uint16_t offset = (command_data[0] << 8) | command_data[1];
+            uint16_t size   = command_data[2]; // size <= 28
+            if (size <= 28)
+                dynamic_keymap_get_buffer(offset, size, &command_data[3]);
+            break;
+        }
+        case id_dynamic_keymap_set_buffer: {
+            uint16_t offset = (command_data[0] << 8) | command_data[1];
+            uint16_t size   = command_data[2]; // size <= 28
+            if (size <= 28)
+                dynamic_keymap_set_buffer(offset, size, &command_data[3]);
+            break;
+        }
+#ifdef ENCODER_MAP_ENABLE
+        case id_dynamic_keymap_get_encoder: {
+            uint16_t keycode = dynamic_keymap_get_encoder(command_data[0], command_data[1], command_data[2] != 0);
+            command_data[3]  = keycode >> 8;
+            command_data[4]  = keycode & 0xFF;
+            break;
+        }
+        case id_dynamic_keymap_set_encoder: {
+            dynamic_keymap_set_encoder(command_data[0], command_data[1], command_data[2] != 0, (command_data[3] << 8) | command_data[4]);
+            break;
+        }
+#endif
+#if defined(VIAL_ENABLE) && !defined(VIAL_INSECURE)
+        /* As VIA removed bootloader jump entirely, we shall only keep it for secure builds */
+        case id_bootloader_jump: {
+            /* Until keyboard is unlocked, don't allow jumping to bootloader */
+            if (!vial_unlocked)
+                goto skip;
+            // Need to send data back before the jump
+            // Informs host that the command is handled
+            raw_hid_send(data, length);
+            // Give host time to read it
+            wait_ms(100);
+            bootloader_jump();
+            break;
+        }
+#endif
+#ifdef VIAL_ENABLE
+        case id_vial_prefix: {
+            vial_handle_cmd(data, length);
+            break;
+        }
+#endif
+        default: {
+            // The command ID is not known let the keyboard implement it
+            raw_hid_receive_kb(data, length);
+            break;
+        }
+    }
+#ifdef VIAL_ENABLE
+skip:
+#endif
+    // Return the same buffer, optionally with values changed
+    // (i.e. returning state to the host, or the unhandled state).
+    raw_hid_send(data, length);
+}
+
+#if defined(VIA_QMK_BACKLIGHT_ENABLE)
+
+#    if BACKLIGHT_LEVELS == 0
+#        error BACKLIGHT_LEVELS == 0
+#    endif
+
+void via_qmk_backlight_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    switch (*command_id) {
+        case id_custom_set_value: {
+            via_qmk_backlight_set_value(value_id_and_data);
+            break;
+        }
+        case id_custom_get_value: {
+            via_qmk_backlight_get_value(value_id_and_data);
+            break;
+        }
+        case id_custom_save: {
+            via_qmk_backlight_save();
+            break;
+        }
+        default: {
+            *command_id = id_unhandled;
+            break;
+        }
+    }
+}
+
+void via_qmk_backlight_get_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_backlight_brightness: {
+            // level / BACKLIGHT_LEVELS * 255
+            value_data[0] = ((uint16_t)get_backlight_level() * UINT8_MAX) / BACKLIGHT_LEVELS;
+            break;
+        }
+        case id_qmk_backlight_effect: {
+#    ifdef BACKLIGHT_BREATHING
+            value_data[0] = is_backlight_breathing() ? 1 : 0;
+#    else
+            value_data[0] = 0;
+#    endif
+            break;
+        }
+    }
+}
+
+void via_qmk_backlight_set_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_backlight_brightness: {
+            // level / 255 * BACKLIGHT_LEVELS
+            backlight_level_noeeprom(((uint16_t)value_data[0] * BACKLIGHT_LEVELS) / UINT8_MAX);
+            break;
+        }
+        case id_qmk_backlight_effect: {
+#    ifdef BACKLIGHT_BREATHING
+            if (value_data[0] == 0) {
+                backlight_disable_breathing();
+            } else {
+                backlight_enable_breathing();
+            }
+#    endif
+            break;
+        }
+    }
+}
+
+void via_qmk_backlight_save(void) {
+    eeconfig_update_backlight_current();
+}
+
+#endif // VIA_QMK_BACKLIGHT_ENABLE
+
+#if defined(VIA_QMK_RGBLIGHT_ENABLE)
+
+#    ifndef RGBLIGHT_LIMIT_VAL
+#        define RGBLIGHT_LIMIT_VAL 255
+#    endif
+
+void via_qmk_rgblight_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    switch (*command_id) {
+        case id_custom_set_value: {
+            via_qmk_rgblight_set_value(value_id_and_data);
+            break;
+        }
+        case id_custom_get_value: {
+            via_qmk_rgblight_get_value(value_id_and_data);
+            break;
+        }
+        case id_custom_save: {
+            via_qmk_rgblight_save();
+            break;
+        }
+        default: {
+            *command_id = id_unhandled;
+            break;
+        }
+    }
+}
+
+void via_qmk_rgblight_get_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_rgblight_brightness: {
+            value_data[0] = ((uint16_t)rgblight_get_val() * UINT8_MAX) / RGBLIGHT_LIMIT_VAL;
+            break;
+        }
+        case id_qmk_rgblight_effect: {
+            value_data[0] = rgblight_is_enabled() ? rgblight_get_mode() : 0;
+            break;
+        }
+        case id_qmk_rgblight_effect_speed: {
+            value_data[0] = rgblight_get_speed();
+            break;
+        }
+        case id_qmk_rgblight_color: {
+            value_data[0] = rgblight_get_hue();
+            value_data[1] = rgblight_get_sat();
+            break;
+        }
+    }
+}
+
+void via_qmk_rgblight_set_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_rgblight_brightness: {
+            rgblight_sethsv_noeeprom(rgblight_get_hue(), rgblight_get_sat(), ((uint16_t)value_data[0] * RGBLIGHT_LIMIT_VAL) / UINT8_MAX);
+            break;
+        }
+        case id_qmk_rgblight_effect: {
+            if (value_data[0] == 0) {
+                rgblight_disable_noeeprom();
+            } else {
+                rgblight_enable_noeeprom();
+                rgblight_mode_noeeprom(value_data[0]);
+            }
+            break;
+        }
+        case id_qmk_rgblight_effect_speed: {
+            rgblight_set_speed_noeeprom(value_data[0]);
+            break;
+        }
+        case id_qmk_rgblight_color: {
+            rgblight_sethsv_noeeprom(value_data[0], value_data[1], rgblight_get_val());
+            break;
+        }
+    }
+}
+
+void via_qmk_rgblight_save(void) {
+    eeconfig_update_rgblight_current();
+}
+
+#endif // VIA_QMK_RGBLIGHT_ENABLE
+
+#if defined(VIA_QMK_RGB_MATRIX_ENABLE)
+
+void via_qmk_rgb_matrix_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    switch (*command_id) {
+        case id_custom_set_value: {
+            via_qmk_rgb_matrix_set_value(value_id_and_data);
+            break;
+        }
+        case id_custom_get_value: {
+            via_qmk_rgb_matrix_get_value(value_id_and_data);
+            break;
+        }
+        case id_custom_save: {
+            via_qmk_rgb_matrix_save();
+            break;
+        }
+        default: {
+            *command_id = id_unhandled;
+            break;
+        }
+    }
+}
+
+void via_qmk_rgb_matrix_get_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+
+    switch (*value_id) {
+        case id_qmk_rgb_matrix_brightness: {
+            value_data[0] = ((uint16_t)rgb_matrix_get_val() * UINT8_MAX) / RGB_MATRIX_MAXIMUM_BRIGHTNESS;
+            break;
+        }
+        case id_qmk_rgb_matrix_effect: {
+            value_data[0] = rgb_matrix_is_enabled() ? rgb_matrix_get_mode() : 0;
+            break;
+        }
+        case id_qmk_rgb_matrix_effect_speed: {
+            value_data[0] = rgb_matrix_get_speed();
+            break;
+        }
+        case id_qmk_rgb_matrix_color: {
+            value_data[0] = rgb_matrix_get_hue();
+            value_data[1] = rgb_matrix_get_sat();
+            break;
+        }
+    }
+}
+
+void via_qmk_rgb_matrix_set_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_rgb_matrix_brightness: {
+            rgb_matrix_sethsv_noeeprom(rgb_matrix_get_hue(), rgb_matrix_get_sat(), scale8(value_data[0], RGB_MATRIX_MAXIMUM_BRIGHTNESS));
+            break;
+        }
+        case id_qmk_rgb_matrix_effect: {
+            if (value_data[0] == 0) {
+                rgb_matrix_disable_noeeprom();
+            } else {
+                rgb_matrix_enable_noeeprom();
+                rgb_matrix_mode_noeeprom(value_data[0]);
+            }
+            break;
+        }
+        case id_qmk_rgb_matrix_effect_speed: {
+            rgb_matrix_set_speed_noeeprom(value_data[0]);
+            break;
+        }
+        case id_qmk_rgb_matrix_color: {
+            rgb_matrix_sethsv_noeeprom(value_data[0], value_data[1], rgb_matrix_get_val());
+            break;
+        }
+    }
+}
+
+void via_qmk_rgb_matrix_save(void) {
+    eeconfig_force_flush_rgb_matrix();
+}
+
+#endif // VIA_QMK_RGB_MATRIX_ENABLE
+
+#if defined(LED_MATRIX_ENABLE)
+
+void via_qmk_led_matrix_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    switch (*command_id) {
+        case id_custom_set_value: {
+            via_qmk_led_matrix_set_value(value_id_and_data);
+            break;
+        }
+        case id_custom_get_value: {
+            via_qmk_led_matrix_get_value(value_id_and_data);
+            break;
+        }
+        case id_custom_save: {
+            via_qmk_led_matrix_save();
+            break;
+        }
+        default: {
+            *command_id = id_unhandled;
+            break;
+        }
+    }
+}
+
+void via_qmk_led_matrix_get_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+
+    switch (*value_id) {
+        case id_qmk_led_matrix_brightness: {
+            value_data[0] = ((uint16_t)led_matrix_get_val() * UINT8_MAX) / LED_MATRIX_MAXIMUM_BRIGHTNESS;
+            break;
+        }
+        case id_qmk_led_matrix_effect: {
+            value_data[0] = led_matrix_is_enabled() ? led_matrix_get_mode() : 0;
+            break;
+        }
+        case id_qmk_led_matrix_effect_speed: {
+            value_data[0] = led_matrix_get_speed();
+            break;
+        }
+    }
+}
+
+void via_qmk_led_matrix_set_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_led_matrix_brightness: {
+            led_matrix_set_val_noeeprom(scale8(value_data[0], LED_MATRIX_MAXIMUM_BRIGHTNESS));
+            break;
+        }
+        case id_qmk_led_matrix_effect: {
+            if (value_data[0] == 0) {
+                led_matrix_disable_noeeprom();
+            } else {
+                led_matrix_enable_noeeprom();
+                led_matrix_mode_noeeprom(value_data[0]);
+            }
+            break;
+        }
+        case id_qmk_led_matrix_effect_speed: {
+            led_matrix_set_speed_noeeprom(value_data[0]);
+            break;
+        }
+    }
+}
+
+void via_qmk_led_matrix_save(void) {
+    eeconfig_force_flush_led_matrix();
+}
+
+#endif // LED_MATRIX_ENABLE
+
+#if defined(AUDIO_ENABLE)
+
+extern audio_config_t audio_config;
+
+void via_qmk_audio_command(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    switch (*command_id) {
+        case id_custom_set_value: {
+            via_qmk_audio_set_value(value_id_and_data);
+            break;
+        }
+        case id_custom_get_value: {
+            via_qmk_audio_get_value(value_id_and_data);
+            break;
+        }
+        case id_custom_save: {
+            via_qmk_audio_save();
+            break;
+        }
+        default: {
+            *command_id = id_unhandled;
+            break;
+        }
+    }
+}
+
+void via_qmk_audio_get_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_audio_enable: {
+            value_data[0] = audio_config.enable ? 1 : 0;
+            break;
+        }
+        case id_qmk_audio_clicky_enable: {
+            value_data[0] = audio_config.clicky_enable ? 1 : 0;
+            break;
+        }
+    }
+}
+
+void via_qmk_audio_set_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+    switch (*value_id) {
+        case id_qmk_audio_enable: {
+            audio_config.enable = value_data[0] ? 1 : 0;
+            break;
+        }
+        case id_qmk_audio_clicky_enable: {
+            audio_config.clicky_enable = value_data[0] ? 1 : 0;
+            break;
+        }
+    }
+}
+
+void via_qmk_audio_save(void) {
+    eeconfig_update_audio(&audio_config);
+}
+
+#endif // AUDIO_ENABLE
